@@ -10,7 +10,7 @@ status: Pre-launch
 link: /contact/
 linkLabel: Talk to me about investing
 order: 102
-cover: /uploads/peaceably-site.webp
+cover: /uploads/peaceably-crop.webp
 coverFit: cover
 coverBg: ''
 heroImage: ''
