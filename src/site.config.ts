@@ -1,9 +1,9 @@
 // Site-wide settings. Change these and the whole site follows.
 export const SITE = {
-  title: "Paul's Project Site",          // placeholder until the real title is chosen
-  tagline: "Projects & workshop log",
+  title: "PKM - Ideas | Projects | Art",
+  tagline: "Ideas | Projects | Art",
   description: "Art, objects and digital pieces, shown from the first sketch to the finished thing.",
-  logoWord: "paul",                       // spelled in the Coalition Alphabet Collider letters
+  logoWord: "pkm",                        // spelled in the Coalition Alphabet Collider letters
   owner: "Paul",                          // copyright line, and the name on your own comment replies
   email: "hello@pkm.nz",
   location: "Aotearoa New Zealand",
