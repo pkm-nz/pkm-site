@@ -5,7 +5,7 @@ import Cover from "./Cover.astro";
 const { u, p } = Astro.props as { u: Update; p: Project };
 const n = u.data.comments.length;
 ---
-<a class="entry pa" href={`/journal/${u.id}/`} style={paStyle(p)} data-project={p.id}>
+<a class="entry pa" href={`/updates/${u.id}/`} style={paStyle(p)} data-project={p.id}>
   <time datetime={isoDate(u.data.date)}>{fmtDate(u.data.date)}</time>
   <div class="txt">
     <span class="tag">{fullTitle(p)} · {u.data.stage}</span>

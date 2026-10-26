@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#2f6f68"/>
+  <g fill="none" stroke="#bfe6df" stroke-width="3" opacity=".5">
+    <path d="M0 400 C 150 360, 250 440, 400 400 S 650 360, 800 400"/>
+    <path d="M0 440 C 150 400, 250 480, 400 440 S 650 400, 800 440" opacity=".7"/>
+    <path d="M0 480 C 150 440, 250 520, 400 480 S 650 440, 800 480" opacity=".45"/>
+  </g>
+  <text x="400" y="290" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#f2faf8">Peaceably</text>
+</svg>

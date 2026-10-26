@@ -12,7 +12,12 @@ export async function getUpdates() {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
-export const fullTitle = (p: Project) => `${p.data.title} ${p.data.titleEnd}`;
+export const getArt = async () => (await getProjects()).filter(p => p.data.section === "art");
+export const getNotArt = async () => (await getProjects()).filter(p => p.data.section === "not-art");
+
+export const projectHref = (p: Project) => `/${p.data.section === "not-art" ? "not-art" : "projects"}/${p.id}/`;
+
+export const fullTitle = (p: Project) => `${p.data.title} ${p.data.titleEnd}`.trim();
 
 // The project's colours, read by the .pa class (switches for dark mode).
 export const paStyle = (p: Project) =>
@@ -31,3 +36,6 @@ export function videoEmbed(url: string) {
   if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
   return url;
 }
+
+// "https://www.example.co.nz/" -> "example.co.nz"
+export const linkHost = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");

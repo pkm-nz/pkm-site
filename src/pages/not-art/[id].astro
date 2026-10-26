@@ -1,0 +1,9 @@
+---
+import ProjectPage from "../../components/ProjectPage.astro";
+import { getNotArt } from "../../lib/content";
+
+export async function getStaticPaths() {
+  return (await getNotArt()).map(p => ({ params: { id: p.id }, props: { p } }));
+}
+---
+<ProjectPage p={Astro.props.p} />

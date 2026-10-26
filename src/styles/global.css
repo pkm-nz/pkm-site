@@ -203,3 +203,7 @@ body { margin: 0; }
 .btn { justify-self: start; background: var(--ink); color: var(--paper); border: 0; border-radius: 4px; padding: 10px 16px; font-weight: 650; cursor: pointer; }
 .toast { font: 500 13px var(--mono); color: var(--soft); min-height: 1.4em; }
 .logo svg path { fill: var(--pa); opacity: .85; }
+
+/* outside link on Not Art pages */
+.golink { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; padding: 9px 16px; border-radius: 999px; background: var(--pa); color: var(--paper); }
+.golink:hover { filter: brightness(1.08); }

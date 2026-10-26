@@ -15,7 +15,7 @@ Photos can come straight off the phone (including iPhone HEIC); they're resized 
 | --- | --- |
 | Site title, email, form address | `src/site.config.ts` |
 | Project pages | `src/content/projects/*.md` |
-| Journal updates | `src/content/updates/*.md` |
+| Updates | `src/content/updates/*.md` |
 | Uploaded photos | `public/uploads/` |
 | Card and hero images | `public/images/projects/` |
 | Interactive pieces and 3D models | `public/play/<project>/` |

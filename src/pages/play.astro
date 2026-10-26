@@ -1,13 +1,13 @@
 ---
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
-import { getProjects } from "../lib/content";
-const projects = await getProjects();
+import { getArt } from "../lib/content";
+const projects = await getArt();
 const digital = projects.filter(p => p.data.mode === "digital");
 const models = projects.filter(p => p.data.mode === "model" && p.data.embed);
 ---
-<Base title="Play & explore" nav="play" description="A digital piece you can only experience here, and 3D models of the physical work.">
-  <section class="phead"><span class="eyebrow">Play &amp; explore</span><h1>Try them here</h1>
+<Base title="Hands On" nav="play" description="A digital piece you can only experience here, and 3D models of the physical work.">
+  <section class="phead"><span class="eyebrow">Hands On</span><h1>Try them here</h1>
     <p class="lede">A digital piece you can only experience on this site, and 3D models of the physical work to turn, take apart and look inside.</p></section>
   <section style="display:grid;gap:18px"><div class="sechead"><h2>Play</h2><span class="eyebrow">digital work</span></div>
     <div class="grid">{digital.map(p => <Card p={p} />)}</div></section>

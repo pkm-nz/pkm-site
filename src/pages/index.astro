@@ -2,10 +2,10 @@
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
 import Entry from "../components/Entry.astro";
-import { getProjects, getUpdates } from "../lib/content";
-const projects = await getProjects();
+import { getProjects, getArt, getUpdates } from "../lib/content";
+const projects = await getArt();
 const updates = (await getUpdates()).slice(0, 3);
-const byId = Object.fromEntries(projects.map(p => [p.id, p]));
+const byId = Object.fromEntries((await getProjects()).map(p => [p.id, p]));
 ---
 <Base nav="home">
   <section class="intro">
@@ -18,7 +18,7 @@ const byId = Object.fromEntries(projects.map(p => [p.id, p]));
   </section>
   {updates.length > 0 && (
     <section style="display:grid;gap:8px">
-      <div class="sechead"><h2>Latest from the workshop</h2><a href="/journal/">All updates →</a></div>
+      <div class="sechead"><h2>Latest from the workshop</h2><a href="/updates/">All updates →</a></div>
       <div class="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
     </section>
   )}

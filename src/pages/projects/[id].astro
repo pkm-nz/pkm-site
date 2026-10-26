@@ -1,66 +1,9 @@
 ---
-import Base from "../../layouts/Base.astro";
-import Entry from "../../components/Entry.astro";
-import Gallery from "../../components/Gallery.astro";
-import { render } from "astro:content";
-import { getProjects, getUpdates, paStyle, fullTitle } from "../../lib/content";
+import ProjectPage from "../../components/ProjectPage.astro";
+import { getArt } from "../../lib/content";
 
 export async function getStaticPaths() {
-  return (await getProjects()).map(p => ({ params: { id: p.id }, props: { p } }));
+  return (await getArt()).map(p => ({ params: { id: p.id }, props: { p } }));
 }
-const { p } = Astro.props;
-const d = p.data;
-const { Content } = await render(p);
-const updates = (await getUpdates()).filter(u => u.data.project === p.id);
-const finished = d.stage === "Finished";
-const galleryTitle = d.mode === "drawing" ? "Progress" : finished ? "Photos and video" : "As it gets made";
 ---
-<Base title={fullTitle(p)} description={d.summary} image={d.cover} nav="home">
-  <div class="view pa" style={paStyle(p)}>
-    <section class="phead">
-      <span class="eyebrow">{d.kind}</span>
-      <h1>{d.title} <em>{d.titleEnd}</em></h1>
-      <p class="lede">{d.summary}</p>
-    </section>
-
-    {d.embed ? (
-      <section class="frame">
-        <div class="bar"><span>{d.embedNote}</span><a href={d.embed} target="_blank" rel="noopener">Open full screen ↗</a></div>
-        <iframe src={d.embed} title={fullTitle(p)} loading="lazy" allow="fullscreen"></iframe>
-      </section>
-    ) : d.heroImage && (
-      <section class="frame">
-        <div class="hero"><a href={d.heroImage}><img src={d.heroImage} alt={fullTitle(p)} /></a></div>
-        {d.heroNote && <div class="foot">{d.heroNote}</div>}
-      </section>
-    )}
-
-    <section class="two">
-      <div style="display:grid;gap:20px">
-        <div class="sechead"><h2>{d.mode === "drawing" ? "The approach" : "The thinking"}</h2><span class="eyebrow">from the planning</span></div>
-        <div class="prose"><Content /></div>
-        {d.decisions.length > 0 && <ul class="decisions">{d.decisions.map(x => <li><b>{x.title}</b><span>{x.text}</span></li>)}</ul>}
-      </div>
-      {d.facts.length > 0 && (
-        <aside class="side">
-          <div class="box"><span class="eyebrow">At a glance</span>
-            <dl>{d.facts.map(f => <><dt>{f.label}</dt><dd>{f.value}</dd></>)}<dt>Stage</dt><dd>{d.stage}</dd></dl></div>
-        </aside>
-      )}
-    </section>
-
-    {d.mode !== "digital" && d.gallery.length > 0 && (
-      <section style="display:grid;gap:14px">
-        <div class="sechead"><h2>{galleryTitle}</h2><span class="eyebrow">{finished ? "the real piece" : "updated as I work"}</span></div>
-        <Gallery items={d.gallery} />
-      </section>
-    )}
-
-    <section style="display:grid;gap:8px">
-      <div class="sechead"><h2>Updates</h2><a href={`/journal/?p=${p.id}`}>Full journal →</a></div>
-      <div class="feed">
-        {updates.length ? updates.map(u => <Entry u={u} p={p} />) : <p class="lede" style="color:var(--soft);padding-block:16px">No updates yet.</p>}
-      </div>
-    </section>
-  </div>
-</Base>
+<ProjectPage p={Astro.props.p} />

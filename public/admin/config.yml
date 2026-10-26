@@ -23,7 +23,7 @@ collections:
   - name: updates
     label: Updates
     label_singular: Update
-    description: Journal posts. Each one belongs to a project and shows on that project's page too.
+    description: Updates. Each one belongs to a project and shows on that project's page too.
     folder: src/content/updates
     create: true
     slug: "{{slug}}"
@@ -69,20 +69,24 @@ collections:
   - name: projects
     label: Projects
     label_singular: Project
-    description: The six project pages. Change the stage here when a project moves on.
+    description: The project pages and the Not art pages. Change the stage here when a project moves on.
     folder: src/content/projects
     create: true
     delete: false
     slug: "{{slug}}"
-    summary: "{{title}} {{titleEnd}} · {{stage}}"
+    summary: "{{title}}{{titleEnd}} · {{section}}"
     sortable_fields: { fields: [order], default: { field: order } }
     fields:
       - { name: title, label: Title (first part), widget: string }
       - { name: titleEnd, label: Title (last part, shown in colour), widget: string }
-      - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished] }
+      - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished], required: false }
       - { name: summary, label: Short intro, widget: text }
       - { name: kind, label: "Type line (e.g. Physical · layered acrylic)", widget: string }
-      - { name: mode, label: Page type, widget: select, options: [{ label: Digital, value: digital }, { label: Physical with 3D model, value: model }, { label: Drawing, value: drawing }] }
+      - { name: section, label: Section, widget: select, options: [{ label: Projects (art), value: art }, { label: Not art, value: not-art }], default: art }
+      - { name: mode, label: Page type, widget: select, options: [{ label: Digital, value: digital }, { label: Physical with 3D model, value: model }, { label: Drawing, value: drawing }, { label: Not art (business or venture), value: venture }] }
+      - { name: status, label: "Status (Not art only, e.g. Live)", widget: string, required: false }
+      - { name: link, label: "Website link (Not art only)", widget: string, required: false }
+      - { name: linkLabel, label: "Website button text (optional)", widget: string, required: false }
       - { name: order, label: Position on the home page, widget: number, value_type: int }
       - { name: cover, label: Home page card image, widget: image }
       - { name: coverFit, label: Card image fit, widget: select, options: [cover, contain], default: cover, required: false }

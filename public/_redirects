@@ -1,0 +1,3 @@
+/journal /updates/ 301
+/journal/ /updates/ 301
+/journal/* /updates/:splat 301

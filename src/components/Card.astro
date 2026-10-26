@@ -1,18 +1,19 @@
 ---
 import type { Project } from "../lib/content";
-import { paStyle, fullTitle } from "../lib/content";
+import { paStyle, fullTitle, projectHref, linkHost } from "../lib/content";
 import Stage from "./Stage.astro";
 import Cover from "./Cover.astro";
 const { p } = Astro.props as { p: Project };
 const d = p.data;
 ---
-<a class="card pa" href={`/projects/${p.id}/`} style={paStyle(p)}>
+<a class="card pa" href={projectHref(p)} style={paStyle(p)}>
   <div class="art"><Cover p={p} /></div>
   <div class="body">
-    <div class="meta"><span class="kind">{d.kind}</span><Stage stage={d.stage} /></div>
+    <div class="meta"><span class="kind">{d.kind}</span>{(d.status ?? d.stage) && <Stage stage={d.status ?? d.stage!} />}</div>
     <h3>{fullTitle(p)}</h3>
     <p>{d.summary}</p>
     {d.mode === "digital" && <span class="play">▶ Play it here</span>}
     {d.mode === "model" && d.embed && <span class="play">◇ Explore the 3D model</span>}
+    {d.link && <span class="play">{d.link.startsWith("/") ? "→" : "↗"} {d.linkLabel ?? linkHost(d.link)}</span>}
   </div>
 </a>

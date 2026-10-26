@@ -6,8 +6,8 @@ const projects = await getProjects();
 const updates = await getUpdates();
 const byId = Object.fromEntries(projects.map(p => [p.id, p]));
 ---
-<Base title="Journal" nav="journal" description="Short updates as things move: a decision, a test, a photo from the bench.">
-  <section class="phead"><span class="eyebrow">Journal</span><h1>Workshop log</h1>
+<Base title="Updates" nav="updates" description="Short updates as things move: a decision, a test, a photo from the bench.">
+  <section class="phead"><span class="eyebrow">Updates</span><h1>Workshop log</h1>
     <p class="lede">Short updates as things move: a decision, a test, a photo from the bench.</p></section>
   <section style="display:grid;gap:12px">
     <div class="filters" role="group" aria-label="Filter by project">

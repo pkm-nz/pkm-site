@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f2a44"/><stop offset=".55" stop-color="#b5541b"/><stop offset="1" stop-color="#f6b56b"/></linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#sky)"/>
+  <circle cx="400" cy="430" r="120" fill="#ffd89a"/>
+  <rect y="430" width="800" height="170" fill="#2a1d18"/>
+  <g stroke="#ffd89a" stroke-width="2" opacity=".35"><line x1="160" y1="470" x2="640" y2="470"/><line x1="230" y1="505" x2="570" y2="505"/><line x1="300" y1="540" x2="500" y2="540"/></g>
+  <text x="400" y="190" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="96" letter-spacing="-2" fill="#fff8ee">ThatDay</text>
+</svg>

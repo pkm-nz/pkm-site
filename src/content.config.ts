@@ -14,9 +14,13 @@ const projects = defineCollection({
     title: z.string(),
     titleEnd: z.string(),               // the part of the title shown in the project colour
     order: z.number(),
-    mode: z.enum(["digital", "model", "drawing"]),
+    section: z.enum(["art", "not-art"]).default("art"),
+    mode: z.enum(["digital", "model", "drawing", "venture"]),
     kind: z.string(),
-    stage: z.enum(STAGES),
+    stage: z.enum(STAGES).optional(),
+    status: z.string().optional(),        // shown instead of the stage, e.g. "Live" for Not Art pages
+    link: z.string().optional(),          // outside website
+    linkLabel: z.string().optional(),
     summary: z.string(),
     accent: z.string(),
     accentDark: z.string(),

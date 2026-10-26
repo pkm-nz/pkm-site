@@ -1,0 +1,71 @@
+---
+import Base from "../layouts/Base.astro";
+import Entry from "./Entry.astro";
+import Gallery from "./Gallery.astro";
+import { render } from "astro:content";
+import { getUpdates, paStyle, fullTitle, linkHost, type Project } from "../lib/content";
+
+const { p } = Astro.props as { p: Project };
+const d = p.data;
+const { Content } = await render(p);
+const updates = (await getUpdates()).filter(u => u.data.project === p.id);
+const venture = d.mode === "venture";
+const finished = d.stage === "Finished";
+const galleryTitle = d.mode === "drawing" ? "Progress" : finished || venture ? "Photos and video" : "As it gets made";
+const status = d.status ?? d.stage;
+const facts = status ? [...d.facts, { label: venture ? "Status" : "Stage", value: status }] : d.facts;
+---
+<Base title={fullTitle(p)} description={d.summary} image={d.cover} nav={venture ? "not-art" : "home"}>
+  <div class="view pa" style={paStyle(p)}>
+    <section class="phead">
+      <span class="eyebrow">{d.kind}</span>
+      <h1>{d.title ? `${d.title} ` : ""}<em>{d.titleEnd}</em></h1>
+      <p class="lede">{d.summary}</p>
+      {d.link && (d.link.startsWith("/")
+        ? <p><a class="golink" href={d.link}>{d.linkLabel ?? "More"} →</a></p>
+        : <p><a class="golink" href={d.link} target="_blank" rel="noopener">{d.linkLabel ?? `Visit ${linkHost(d.link)}`} ↗</a></p>)}
+    </section>
+
+    {d.embed ? (
+      <section class="frame">
+        <div class="bar"><span>{d.embedNote}</span><a href={d.embed} target="_blank" rel="noopener">Open full screen ↗</a></div>
+        <iframe src={d.embed} title={fullTitle(p)} loading="lazy" allow="fullscreen"></iframe>
+      </section>
+    ) : d.heroImage && (
+      <section class="frame">
+        <div class="hero"><a href={d.heroImage}><img src={d.heroImage} alt={fullTitle(p)} /></a></div>
+        {d.heroNote && <div class="foot">{d.heroNote}</div>}
+      </section>
+    )}
+
+    <section class="two">
+      <div style="display:grid;gap:20px">
+        <div class="sechead"><h2>{venture ? "About" : d.mode === "drawing" ? "The approach" : "The thinking"}</h2>{!venture && <span class="eyebrow">from the planning</span>}</div>
+        <div class="prose"><Content /></div>
+        {d.decisions.length > 0 && <ul class="decisions">{d.decisions.map(x => <li><b>{x.title}</b><span>{x.text}</span></li>)}</ul>}
+      </div>
+      {d.facts.length > 0 && (
+        <aside class="side">
+          <div class="box"><span class="eyebrow">At a glance</span>
+            <dl>{facts.map(f => <><dt>{f.label}</dt><dd>{f.value}</dd></>)}</dl></div>
+        </aside>
+      )}
+    </section>
+
+    {d.mode !== "digital" && d.gallery.length > 0 && (
+      <section style="display:grid;gap:14px">
+        <div class="sechead"><h2>{galleryTitle}</h2><span class="eyebrow">{finished ? "the real piece" : "updated as I work"}</span></div>
+        <Gallery items={d.gallery} />
+      </section>
+    )}
+
+    {(!venture || updates.length > 0) && (
+      <section style="display:grid;gap:8px">
+        <div class="sechead"><h2>Updates</h2><a href={`/updates/?p=${p.id}`}>All updates →</a></div>
+        <div class="feed">
+          {updates.length ? updates.map(u => <Entry u={u} p={p} />) : <p class="lede" style="color:var(--soft);padding-block:16px">No updates yet.</p>}
+        </div>
+      </section>
+    )}
+  </div>
+</Base>
