@@ -30,7 +30,7 @@ const n = d.comments.length;
       <figure><div class="vid"><iframe src={videoEmbed(d.video)} title={d.caption ?? d.title} allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
         {d.caption && <figcaption>{d.caption}</figcaption>}</figure>
     ) : d.image && (
-      <figure><div class="media"><img src={d.image} alt={d.caption ?? ""} style={d.image === p.data.cover && p.data.coverFit === "contain" ? `object-fit:contain;background:${p.data.coverBg}` : undefined} /></div>
+      <figure><div class="media whole"><img src={d.image} alt={d.caption ?? ""} /></div>
         {d.caption && <figcaption>{d.caption}</figcaption>}</figure>
     )}
     <div class="prose"><Content /></div>

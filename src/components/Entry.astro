@@ -13,5 +13,7 @@ const n = u.data.comments.length;
     <p>{u.data.excerpt}</p>
     {n > 0 && <span class="ccount">{n} comment{n > 1 ? "s" : ""}</span>}
   </div>
-  <div class="thumb">{u.data.image && u.data.image !== p.data.cover ? <img class="fill" src={u.data.image} alt="" loading="lazy" decoding="async" /> : <Cover p={p} />}</div>
+  {u.data.image
+    ? <div class="thumb whole"><img src={u.data.image} alt="" loading="lazy" decoding="async" /></div>
+    : <div class="thumb"><Cover p={p} /></div>}
 </a>
