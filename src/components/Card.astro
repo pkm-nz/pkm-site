@@ -1,4 +1,5 @@
 ---
+import { inline } from "../lib/inline";
 import type { Project } from "../lib/content";
 import { paStyle, fullTitle, projectHref, linkHost } from "../lib/content";
 import Stage from "./Stage.astro";
@@ -11,7 +12,7 @@ const d = p.data;
   <div class="body">
     <div class="meta"><span class="kind">{d.kind}</span>{(d.status ?? d.stage) && <Stage stage={d.status ?? d.stage!} />}</div>
     <h3>{fullTitle(p)}</h3>
-    <p>{d.summary}</p>
+    <p set:html={inline(d.summary)} />
     {d.mode === "digital" && <span class="play">▶ Play it here</span>}
     {d.mode === "model" && d.embed && <span class="play">◇ Explore the 3D model</span>}
     {d.link && <span class="play">{d.link.startsWith("/") ? "→" : "↗"} {d.linkLabel ?? linkHost(d.link)}</span>}

@@ -41,7 +41,7 @@ collections:
         display_fields: ["{{title}} {{titleEnd}}"]
       - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
       - { name: stage, label: Stage at this point, widget: select, options: [Idea, Planning, Prototype, Making, Finished], default: Planning }
-      - { name: excerpt, label: One or two line summary (shown in the feed), widget: text }
+      - { name: excerpt, label: One or two line summary (shown in the feed), widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
       - { name: image, label: Main photo, widget: image, required: false }
       - { name: video, label: Main video (YouTube or Vimeo link; shows instead of the photo), widget: string, required: false }
       - { name: caption, label: Caption, widget: string, required: false }
@@ -81,7 +81,7 @@ collections:
       - { name: title, label: Title (first part; leave empty for a one-word name), widget: string, required: false }
       - { name: titleEnd, label: Title (last part, shown in colour), widget: string }
       - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished], required: false }
-      - { name: summary, label: Short intro, widget: text }
+      - { name: summary, label: Short intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
       - { name: kind, label: "Type line (e.g. Physical · layered acrylic)", widget: string }
       - { name: section, label: Section, widget: select, options: [{ label: Projects (art), value: art }, { label: Not art, value: not-art }], default: art }
       - { name: mode, label: Page type, widget: select, options: [{ label: Digital, value: digital }, { label: Physical with 3D model, value: model }, { label: Drawing, value: drawing }, { label: Not art (business or venture), value: venture }] }
@@ -104,7 +104,7 @@ collections:
         summary: "{{title}}"
         fields:
           - { name: title, label: Decision, widget: string }
-          - { name: text, label: Why, widget: text }
+          - { name: text, label: Why, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
       - name: facts
         label: At a glance
         widget: list
@@ -140,8 +140,8 @@ collections:
             widget: object
             fields:
               - { name: heading, label: Big heading, widget: string }
-              - { name: subheading, label: Grey line under the heading, widget: text }
-              - { name: intro, label: Intro paragraph, widget: text }
+              - { name: subheading, label: Grey line under the heading, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
+              - { name: intro, label: Intro paragraph, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
               - { name: projectsHeading, label: Projects section heading, widget: string }
               - { name: updatesHeading, label: Latest updates section heading, widget: string }
           - name: updates
@@ -149,25 +149,25 @@ collections:
             widget: object
             fields:
               - { name: heading, label: Heading, widget: string }
-              - { name: intro, label: Intro, widget: text }
+              - { name: intro, label: Intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
           - name: handsOn
             label: Hands On page
             widget: object
             fields:
               - { name: heading, label: Heading, widget: string }
-              - { name: intro, label: Intro, widget: text }
+              - { name: intro, label: Intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
           - name: notArt
             label: Not Art page
             widget: object
             fields:
               - { name: heading, label: Heading, widget: string }
-              - { name: intro, label: Intro, widget: text }
+              - { name: intro, label: Intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
           - name: contact
             label: Contact page
             widget: object
             fields:
               - { name: heading, label: Heading, widget: string }
-              - { name: intro, label: Intro, widget: text }
+              - { name: intro, label: Intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
 
   - name: site
     label: Site settings

@@ -1,4 +1,5 @@
 ---
+import { inline } from "../lib/inline";
 import PAGES from "../data/pages.json";
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
@@ -10,8 +11,8 @@ const byId = Object.fromEntries((await getProjects()).map(p => [p.id, p]));
 ---
 <Base nav="home">
   <section class="intro">
-    <h1>{PAGES.home.heading}<span>{PAGES.home.subheading}</span></h1>
-    <p class="lede">{PAGES.home.intro}</p>
+    <h1>{PAGES.home.heading}<span set:html={inline(PAGES.home.subheading)} /></h1>
+    <p class="lede" set:html={inline(PAGES.home.intro)} />
   </section>
   <section style="display:grid;gap:18px">
     <div class="sechead"><h2>{PAGES.home.projectsHeading}</h2><span class="eyebrow">{projects.length} projects</span></div>

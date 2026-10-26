@@ -1,4 +1,5 @@
 ---
+import { plain } from "../../lib/inline";
 import Base from "../../layouts/Base.astro";
 import Gallery from "../../components/Gallery.astro";
 import SendForm from "../../components/SendForm.astro";
@@ -19,7 +20,7 @@ const d = u.data;
 const { Content } = await render(u);
 const n = d.comments.length;
 ---
-<Base title={d.title} description={d.excerpt} image={d.image ?? p.data.cover} nav="updates">
+<Base title={d.title} description={plain(d.excerpt)} image={d.image ?? p.data.cover} nav="updates">
   <article class="post pa" style={paStyle(p)}>
     <a class="back" href={projectHref(p)}>← {fullTitle(p)}</a>
     <div style="display:grid;gap:10px">
