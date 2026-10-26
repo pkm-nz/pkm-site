@@ -36,7 +36,8 @@ header.site .in { max-width: 1180px; margin: 0 auto; padding-block: 12px; paddin
 .logo svg path { mix-blend-mode: multiply; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo svg path { mix-blend-mode: screen; } }
 :root[data-theme="dark"] .logo svg path { mix-blend-mode: screen; }
-.logo small { font: 500 12px var(--mono); color: var(--soft); letter-spacing: .06em; text-transform: uppercase; }
+.logo small { font: 500 12px var(--mono); color: var(--soft); letter-spacing: .06em; text-transform: uppercase; display: inline-flex; align-items: center; }
+.logo small .dv { display: inline-block; width: 1px; height: 16px; background: currentColor; opacity: .55; margin: 0 10px; }
 nav.main { display: flex; gap: 4px; flex-wrap: wrap; }
 nav.main a { text-decoration: none; font-weight: 550; font-size: 15px; padding: 6px 12px; border-radius: 999px; }
 nav.main a[aria-current="page"] { background: var(--ink); color: var(--paper); }

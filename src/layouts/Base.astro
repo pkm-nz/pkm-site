@@ -29,7 +29,7 @@ const links = [["home", "/", "Projects"], ["journal", "/journal/", "Journal"], [
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="site"><div class="in">
-    <a class="logo" href="/" aria-label="Home"><Logo /><small>{SITE.tagline}</small></a>
+    <a class="logo" href="/" aria-label="Home"><Logo /><small>{SITE.tagline.split("|").map((w, i) => <>{i > 0 && <span class="dv" aria-hidden="true" />}{w.trim()}</>)}</small></a>
     <nav class="main" aria-label="Main">
       {links.map(([k, href, label]) => <a href={href} aria-current={nav === k ? "page" : undefined}>{label}</a>)}
       <a href="/contact/" class="cta" aria-current={nav === "contact" ? "page" : undefined}>Contact</a>
