@@ -5,7 +5,7 @@
   "owner": "Paul",
   "email": "hello@pkm.nz",
   "location": "Aotearoa New Zealand",
-  "formEndpoint": "",
+  "formEndpoint": "/api/send",
   "menu": {
     "projects": "Projects",
     "updates": "Updates",

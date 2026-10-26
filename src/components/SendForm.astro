@@ -1,7 +1,7 @@
 ---
 // Wires up any <form data-send> on the page. Messages go to SITE.formEndpoint
-// (e.g. Formspree), which forwards them to your inbox. With no endpoint set,
-// the visitor's own email app opens with the message filled in.
+// (/api/send, the site's own sender in worker/index.js), which emails them to you.
+// With no endpoint set, the visitor's own email app opens with the message filled in.
 import { SITE } from "../site.config";
 ---
 <script is:inline define:vars={{ endpoint: SITE.formEndpoint, email: SITE.email }}>

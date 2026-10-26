@@ -192,7 +192,7 @@ collections:
           - { name: owner, label: Your name (footer and your comment replies), widget: string }
           - { name: location, label: Location (footer), widget: string }
           - { name: email, label: Contact email, widget: string }
-          - { name: formEndpoint, label: Form address (Formspree; leave empty to use email), widget: string, required: false }
+          - { name: formEndpoint, label: Form address (leave as /api/send), widget: string, required: false }
 
   - name: design
     label: Design
