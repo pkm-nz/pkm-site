@@ -61,7 +61,7 @@ const facts = status ? [...d.facts, { label: venture ? "Status" : "Stage", value
 
     {(!venture || updates.length > 0) && (
       <section style="display:grid;gap:8px">
-        <div class="sechead"><h2>Updates</h2><a href={`/updates/?p=${p.id}`}>All updates →</a></div>
+        <div class="sechead"><h2>Updates</h2><a href="/updates/">All updates →</a></div>
         <div class="feed">
           {updates.length ? updates.map(u => <Entry u={u} p={p} />) : <p class="lede" style="color:var(--soft);padding-block:16px">No updates yet.</p>}
         </div>

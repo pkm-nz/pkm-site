@@ -3,7 +3,7 @@ import { MENU } from "../../site.config";
 import PAGES from "../../data/pages.json";
 import Base from "../../layouts/Base.astro";
 import Entry from "../../components/Entry.astro";
-import { getProjects, getUpdates, fullTitle } from "../../lib/content";
+import { getProjects, getUpdates } from "../../lib/content";
 const projects = await getProjects();
 const updates = await getUpdates();
 const byId = Object.fromEntries(projects.map(p => [p.id, p]));
@@ -12,27 +12,6 @@ const byId = Object.fromEntries(projects.map(p => [p.id, p]));
   <section class="phead"><span class="eyebrow">{MENU.updates}</span><h1>{PAGES.updates.heading}</h1>
     <p class="lede">{PAGES.updates.intro}</p></section>
   <section style="display:grid;gap:12px">
-    <div class="filters" role="group" aria-label="Filter by project">
-      <button type="button" data-f="" aria-pressed="true">All</button>
-      {projects.map(p => <button type="button" data-f={p.id} aria-pressed="false">{fullTitle(p)}</button>)}
-    </div>
-    <div class="feed" id="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
-    <p class="lede" id="none" style="color:var(--soft);padding-block:16px" hidden>No updates for this project yet.</p>
+    <div class="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
   </section>
 </Base>
-<script>
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".filters button")];
-  const entries = [...document.querySelectorAll<HTMLElement>("#feed .entry")];
-  function show(f: string) {
-    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === f)));
-    let n = 0;
-    entries.forEach(e => { const on = !f || e.dataset.project === f; e.hidden = !on; if (on) n++; });
-    document.getElementById("none")!.hidden = n > 0;
-  }
-  buttons.forEach(b => b.addEventListener("click", () => {
-    const f = b.dataset.f || "";
-    history.replaceState(null, "", f ? `?p=${f}` : location.pathname);
-    show(f);
-  }));
-  show(new URLSearchParams(location.search).get("p") || "");
-</script>

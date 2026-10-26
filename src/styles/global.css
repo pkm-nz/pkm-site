@@ -111,9 +111,6 @@ h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-
 @media (max-width: 760px) { .entry { grid-template-columns: minmax(0, 1fr); gap: 10px; } .entry .thumb { max-width: 320px; } }
 
 /* filter chips */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; }
-.filters button { border: 1px solid var(--rule); background: var(--sheet); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 14px; font-weight: 550; }
-.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 /* project page */
 .phead { display: grid; gap: 18px; }
