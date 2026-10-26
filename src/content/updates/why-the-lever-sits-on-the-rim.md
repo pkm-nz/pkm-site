@@ -1,5 +1,5 @@
 ---
-title: Manufacturing is underway.
+title: Manufacturing is underway
 project: sand-sphere
 date: 2026-10-13
 stage: Planning
