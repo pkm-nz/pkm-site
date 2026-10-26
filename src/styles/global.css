@@ -8,7 +8,7 @@
   --note-ink: #4a3d00;
   --accent: #1a1d1f;
   --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --head: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --head: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
   --read: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
 }
@@ -56,9 +56,9 @@ main { max-width: 1180px; margin: 0 auto; padding-block: 36px 80px; padding-left
 /* type */
 .eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
 h1, h2, h3 { margin: 0; text-wrap: balance; font-family: var(--head); }
-h1 { font-weight: 800; font-size: clamp(34px, 5.2vw, 62px); line-height: 1.08; letter-spacing: -.025em; }
-h2 { font-weight: 750; font-size: clamp(24px, 2.9vw, 31px); line-height: 1.15; letter-spacing: -.015em; }
-h3 { font-weight: 750; font-size: 19px; line-height: 1.25; }
+h1 { font-weight: 750; font-size: clamp(34px, 5.2vw, 62px); line-height: 1.08; letter-spacing: -.02em; }
+h2 { font-weight: 700; font-size: clamp(24px, 2.9vw, 31px); line-height: 1.15; letter-spacing: -.015em; }
+h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 .lede { font-family: var(--read); font-size: clamp(18px, 2vw, 21px); line-height: 1.5; max-width: 60ch; margin: 0; }
 .prose { font-family: var(--read); font-size: 18px; line-height: 1.65; max-width: 64ch; display: grid; gap: 14px; }
 .prose p { margin: 0; }
