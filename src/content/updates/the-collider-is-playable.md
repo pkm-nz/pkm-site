@@ -3,7 +3,7 @@ title: The Collider is playable
 project: cac
 date: 2026-10-06
 stage: Finished
-excerpt: Version 10 is done. Type a word or two, pick a colour and background, and watch the chaos and resolution.
+excerpt: Ten iterations later and it's done. Type a word or two, pick a colour and background, and watch the chaos and resolution.
 image: /uploads/cac.jpg
 video: ''
 caption: ''
