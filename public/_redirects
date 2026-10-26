@@ -1,3 +1,5 @@
 /journal /updates/ 301
 /journal/ /updates/ 301
 /journal/* /updates/:splat 301
+/images/projects/* /uploads/:splat 301
+/images/not-art/* /uploads/:splat 301

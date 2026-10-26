@@ -10,8 +10,8 @@ accent: "#c4262e"
 accentDark: "#ef5a5f"
 bg: "#f6e4e2"
 bgDark: "#331c1d"
-cover: /images/projects/therapy-ball.jpg
-heroImage: /images/projects/therapy-ball.jpg
+cover: /uploads/therapy-ball.jpg
+heroImage: /uploads/therapy-ball.jpg
 heroNote: The reference. Progress photos of the drawing will follow.
 facts:
   - { label: Medium, value: Line drawing }

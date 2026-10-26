@@ -10,10 +10,10 @@ status: ''
 link: ''
 linkLabel: ''
 order: 6
-cover: /images/projects/therapy-scan.jpg
+cover: /uploads/therapy-scan.jpg
 coverFit: contain
 coverBg: '#000000'
-heroImage: /images/projects/therapy-scan.jpg
+heroImage: /uploads/therapy-scan.jpg
 heroNote: The source scan. Progress photos of the drawing will follow.
 embed: ''
 embedNote: ''

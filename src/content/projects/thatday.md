@@ -12,7 +12,7 @@ accent: "#b5541b"
 accentDark: "#ffb27a"
 bg: "#fbeadb"
 bgDark: "#33200f"
-cover: /images/not-art/thatday.svg
+cover: /uploads/thatday.svg
 facts:
   - { label: Structure, value: Registered charitable trust (CC59983) }
   - { label: Cost to use, value: Free }

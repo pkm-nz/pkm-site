@@ -5,7 +5,7 @@ import { SITE, MENU } from "../site.config";
 interface Props { title?: string; description?: string; nav?: "home" | "updates" | "play" | "not-art" | "contact"; image?: string }
 const { title, description = SITE.description, nav, image } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
-const og = new URL(image ?? "/images/projects/cac.jpg", Astro.site);
+const og = new URL(image ?? "/uploads/cac.jpg", Astro.site);
 const links = [["home", "/", MENU.projects], ["updates", "/updates/", MENU.updates], ["play", "/play/", MENU.handsOn], ["not-art", "/not-art/", MENU.notArt]] as const;
 ---
 <!doctype html>

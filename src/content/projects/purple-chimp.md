@@ -10,7 +10,7 @@ accent: "#4a2ad0"
 accentDark: "#9c88ff"
 bg: "#ece8fb"
 bgDark: "#221c3d"
-cover: /images/projects/purple-chimp.jpg
+cover: /uploads/purple-chimp.jpg
 embed: /play/purple-chimp/
 embedNote: Interactive 3D model, built from the real cutting files
 facts:

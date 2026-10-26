@@ -13,7 +13,7 @@ accent: "#2f6f68"
 accentDark: "#8fd3c8"
 bg: "#e2f0ed"
 bgDark: "#12302c"
-cover: /images/not-art/peaceably.svg
+cover: /uploads/peaceably.svg
 facts:
   - { label: Structure, value: Commercial startup }
   - { label: Seeking, value: Investment }

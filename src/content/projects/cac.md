@@ -10,7 +10,7 @@ accent: "#3b3f44"
 accentDark: "#c4c4c4"
 bg: "#e8302a"
 bgDark: "#e8302a"
-cover: /images/projects/cac.jpg
+cover: /uploads/cac.jpg
 embed: /play/cac/
 embedNote: The work itself. There is no physical version; it only exists here.
 facts:
