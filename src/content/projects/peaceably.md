@@ -10,7 +10,7 @@ status: Pre-launch
 link: /contact/
 linkLabel: Talk to me about investing
 order: 102
-cover: /uploads/pEACEABLY.webp
+cover: /uploads/Peacaebly.webp
 coverFit: cover
 coverBg: ''
 heroImage: ''
