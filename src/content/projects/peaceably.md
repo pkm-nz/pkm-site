@@ -1,5 +1,5 @@
 ---
-title: Peaceably
+title: ''
 titleEnd: Peaceably
 stage: ''
 summary: Life and legacy planning, made simple and secure. A startup I'm building now and raising investment for.
@@ -10,7 +10,7 @@ status: Pre-launch
 link: /contact/
 linkLabel: Talk to me about investing
 order: 102
-cover: /uploads/Screenshot 2026-10-26 at 11.22.25 PM.webp
+cover: /uploads/peaceably-site.webp
 coverFit: cover
 coverBg: ''
 heroImage: ''
