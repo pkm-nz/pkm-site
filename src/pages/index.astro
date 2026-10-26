@@ -1,4 +1,5 @@
 ---
+import PAGES from "../data/pages.json";
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
 import Entry from "../components/Entry.astro";
@@ -9,16 +10,16 @@ const byId = Object.fromEntries((await getProjects()).map(p => [p.id, p]));
 ---
 <Base nav="home">
   <section class="intro">
-    <h1>Things I'm making<span>Art, objects and digital pieces, shown from the first sketch to the finished thing.</span></h1>
-    <p class="lede">One piece is purely digital and lives only here. The objects come with 3D models you can turn and explore, and every project fills up with photos and video as it gets made.</p>
+    <h1>{PAGES.home.heading}<span>{PAGES.home.subheading}</span></h1>
+    <p class="lede">{PAGES.home.intro}</p>
   </section>
   <section style="display:grid;gap:18px">
-    <div class="sechead"><h2>Projects</h2><span class="eyebrow">{projects.length} projects</span></div>
+    <div class="sechead"><h2>{PAGES.home.projectsHeading}</h2><span class="eyebrow">{projects.length} projects</span></div>
     <div class="grid">{projects.map(p => <Card p={p} />)}</div>
   </section>
   {updates.length > 0 && (
     <section style="display:grid;gap:8px">
-      <div class="sechead"><h2>Latest from the workshop</h2><a href="/updates/">All updates →</a></div>
+      <div class="sechead"><h2>{PAGES.home.updatesHeading}</h2><a href="/updates/">All updates →</a></div>
       <div class="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
     </section>
   )}

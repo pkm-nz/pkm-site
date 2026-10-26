@@ -1,0 +1,25 @@
+{
+  "home": {
+    "heading": "Things I'm making",
+    "subheading": "Art, objects and digital pieces, shown from the first sketch to the finished thing.",
+    "intro": "One piece is purely digital and lives only here. The objects come with 3D models you can turn and explore, and every project fills up with photos and video as it gets made.",
+    "projectsHeading": "Projects",
+    "updatesHeading": "Latest from the workshop"
+  },
+  "updates": {
+    "heading": "Workshop log",
+    "intro": "Short updates as things move: a decision, a test, a photo from the bench."
+  },
+  "handsOn": {
+    "heading": "Try them here",
+    "intro": "A digital piece you can only experience on this site, and 3D models of the physical work to turn, take apart and look inside."
+  },
+  "notArt": {
+    "heading": "The other things I'm building",
+    "intro": "Not everything I make hangs on a wall. These are the organisations I've started, both about helping people plan for what comes later in life."
+  },
+  "contact": {
+    "heading": "Get in touch",
+    "intro": "Questions about a piece, commissions, or just to say hello. I read every message."
+  }
+}

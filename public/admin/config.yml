@@ -124,3 +124,46 @@ collections:
       - { name: accentDark, label: Colour (dark mode), widget: color }
       - { name: bg, label: Background tint, widget: color }
       - { name: bgDark, label: Background tint (dark mode), widget: color }
+
+  - name: pages
+    label: Page text
+    description: Headings and intros on the home, Updates, Hands On, Not Art and Contact pages.
+    files:
+      - name: all
+        label: All page headings and intros
+        file: src/data/pages.json
+        format: json
+        fields:
+          - name: home
+            label: Home page
+            widget: object
+            fields:
+              - { name: heading, label: Big heading, widget: string }
+              - { name: subheading, label: Grey line under the heading, widget: text }
+              - { name: intro, label: Intro paragraph, widget: text }
+              - { name: projectsHeading, label: Projects section heading, widget: string }
+              - { name: updatesHeading, label: Latest updates section heading, widget: string }
+          - name: updates
+            label: Updates page
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: intro, label: Intro, widget: text }
+          - name: handsOn
+            label: Hands On page
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: intro, label: Intro, widget: text }
+          - name: notArt
+            label: Not Art page
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: intro, label: Intro, widget: text }
+          - name: contact
+            label: Contact page
+            widget: object
+            fields:
+              - { name: heading, label: Heading, widget: string }
+              - { name: intro, label: Intro, widget: text }

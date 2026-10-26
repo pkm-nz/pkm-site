@@ -1,12 +1,13 @@
 ---
+import PAGES from "../../data/pages.json";
 import Base from "../../layouts/Base.astro";
 import Card from "../../components/Card.astro";
 import { getNotArt } from "../../lib/content";
 const items = await getNotArt();
 ---
-<Base title="Not Art" nav="not-art" description="The other things I'm building: a charitable trust and a startup.">
-  <section class="phead"><span class="eyebrow">Not Art</span><h1>The other things I'm building</h1>
-    <p class="lede">Not everything I make hangs on a wall. These are the organisations I've started, both about helping people plan for what comes later in life.</p></section>
+<Base title="Not Art" nav="not-art" description={PAGES.notArt.intro}>
+  <section class="phead"><span class="eyebrow">Not Art</span><h1>{PAGES.notArt.heading}</h1>
+    <p class="lede">{PAGES.notArt.intro}</p></section>
   <section style="display:grid;gap:18px">
     <div class="grid">{items.map(p => <Card p={p} />)}</div>
   </section>
