@@ -1,0 +1,941 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>X-wing Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: drafting sheet. Model viewport with spec column, elevation, then a grid of construction details. */
+:root {
+  --paper: #f3f4f1;
+  --sheet: #fbfbf9;
+  --ink: #1f2a2e;
+  --ink-soft: #5b676b;
+  --rule: #d7dbd6;
+  --birch: #d4b07a;
+  --birch-edge: #e6cfa4;
+  --leather: #6b3418;
+  --rubber: #2b2f31;
+  --alu: #a9afb4;
+  --nylon: #1a1d1f;
+  --accent: #8a4a26;
+  --font-display: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15191b; --sheet: #1c2124; --ink: #e6e9e6; --ink-soft: #9aa5a8; --rule: #30383b;
+    --nylon: #0b0d0e; --rubber: #3a4044; --accent: #d08a5c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15191b; --sheet: #1c2124; --ink: #e6e9e6; --ink-soft: #9aa5a8; --rule: #30383b;
+  --nylon: #0b0d0e; --rubber: #3a4044; --accent: #d08a5c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 48px; display: grid; gap: 24px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; border-bottom: 1px solid var(--rule); padding-bottom: 14px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4vw, 38px); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h1 span { color: var(--accent); font-weight: 500; }
+.meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.04em; text-transform: uppercase; }
+.top { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .top { grid-template-columns: minmax(0, 1fr); } }
+.viewer { position: relative; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; min-width: 0; }
+#stage { display: block; width: 100%; aspect-ratio: 16 / 10; max-width: 100%; touch-action: none; }
+.controls { position: absolute; left: 12px; top: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.controls button { font: 500 13px var(--font-body); color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.controls button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { position: absolute; right: 12px; top: 20px; font: 12px var(--font-mono); color: var(--ink-soft); }
+@media (max-width: 760px) { .hint { display: none; } }
+.caption { position: absolute; left: 12px; bottom: 10px; right: 12px; font-size: 13px; color: var(--ink-soft); }
+aside { display: grid; gap: 18px; align-content: start; min-width: 0; }
+h2 { font: 600 12px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin: 0 0 8px; }
+dl.spec { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; margin: 0; font-size: 14px; }
+dl.spec dt { color: var(--ink-soft); }
+dl.spec dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.parts { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.parts li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; align-items: start; }
+.sw { width: 14px; height: 14px; border-radius: 3px; margin-top: 4px; border: 1px solid var(--rule); }
+.parts b { font-weight: 600; }
+.finish { display: grid; gap: 12px; }
+.swrow { display: grid; gap: 6px; }
+.swrow .lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+.swrow .lbl b { color: var(--ink); font-weight: 600; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatches button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rule); padding: 0; cursor: pointer; box-shadow: inset 0 0 0 2px var(--sheet); }
+.swatches button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+.swatches button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.swatches .sep { width: 1px; background: var(--rule); margin: 2px 2px; }
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 18px 18px 14px; min-width: 0; }
+.scroll { overflow-x: auto; }
+#elev { display: block; width: 100%; min-width: 660px; height: auto; }
+svg .ply { fill: var(--birch); stroke: var(--ink); stroke-width: 1; }
+svg .ply2 { fill: var(--birch-edge); stroke: var(--ink); stroke-width: 1; }
+svg .rub { fill: var(--rubber); }
+svg .lea { fill: var(--leather); }
+svg .alu { fill: var(--alu); stroke: var(--ink); stroke-width: 0.6; }
+svg .nyl { fill: var(--nylon); }
+svg .foam { fill: var(--birch-edge); fill-opacity: 0.5; stroke: var(--ink-soft); stroke-width: 0.6; }
+svg .rib { fill: var(--birch); stroke: var(--ink); stroke-width: 1; }
+svg .dim { stroke: var(--ink-soft); stroke-width: 0.8; fill: none; }
+svg .lead { stroke: var(--ink-soft); stroke-width: 0.8; fill: none; }
+svg .arrow { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+svg .arrowhead { fill: var(--accent); }
+svg .screw { fill: var(--alu); stroke: var(--ink); stroke-width: 0.8; }
+svg .ink { fill: var(--ink); }
+svg .inkline { stroke: var(--ink); stroke-width: 1; fill: none; }
+svg .pscrew { stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
+svg .void { fill: var(--sheet); stroke: var(--ink); stroke-width: 0.8; stroke-dasharray: 3 2; }
+svg text { font: 11px var(--font-mono); fill: var(--ink-soft); }
+svg text.lbl { fill: var(--ink); }
+svg .floor { stroke: var(--ink); stroke-width: 1; }
+svg .band-a { fill: var(--accent); fill-opacity: 0.14; }
+svg .band-c { fill: var(--ink-soft); fill-opacity: 0.16; }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.compare figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+.compare figcaption { font-size: 14px; }
+.compare figcaption b { font-weight: 600; }
+.compare svg { display: block; width: 100%; height: auto; }
+.compare dl { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; margin: 0; font-size: 13px; }
+.compare dt { color: var(--ink-soft); }
+.compare dd { margin: 0; font-family: var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.details { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+@media (max-width: 420px) { .details { grid-template-columns: minmax(0, 1fr); } }
+.detail { display: grid; gap: 10px; align-content: start; }
+.detail h3 { font: 600 16px var(--font-display); margin: 0; }
+.detail svg { display: block; width: 100%; min-width: 420px; height: auto; }
+.detail ol, .detail p { margin: 0; padding-left: 1.2em; font-size: 14px; max-width: 62ch; }
+.detail p { padding-left: 0; }
+.detail li + li { margin-top: 3px; }
+.files { width: 100%; border-collapse: collapse; font-size: 14px; }
+.files th { font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
+.files td { padding: 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.files td.n { font-family: var(--font-mono); white-space: nowrap; }
+.files a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.files a:hover { text-decoration: underline; }
+.files .note { color: var(--ink-soft); font-size: 13px; }
+.printgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .printgrid { grid-template-columns: minmax(0, 1fr); } }
+.pview { position: relative; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+#pstage { display: block; width: 100%; aspect-ratio: 4 / 3; touch-action: none; }
+.pcap { position: absolute; left: 10px; bottom: 8px; right: 10px; font-size: 12px; color: var(--ink-soft); }
+.pbtn { font: 600 14px var(--font-body); color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.pbtn[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.pbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.readme { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 12px; font-size: 14px; max-width: 80ch; }
+.readme h3 { margin: 0 0 6px; font-size: 15px; } .readme h3 a { font: 500 12px var(--font-mono); color: var(--accent); margin-left: 8px; }
+.readme h4 { margin: 12px 0 4px; font-size: 14px; } .readme ul { margin: 0; padding-left: 18px; } .readme li { margin: 3px 0; } .readme p { margin: 0; }
+footer { font-size: 13px; color: var(--ink-soft); max-width: 75ch; }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="viewer">
+      <canvas id="stage" aria-label="3D model of the hybrid bench"></canvas>
+      <div class="controls" role="group" aria-label="View">
+        <button id="v-assembled" aria-pressed="true">Assembled</button>
+        <button id="v-exploded" aria-pressed="false">Exploded</button>
+        <button id="v-plug" aria-pressed="false">Crossing joint</button>
+        <button id="v-nested" aria-pressed="false">Parts nested</button>
+      </div>
+      <div class="hint">drag to orbit · scroll to zoom</div>
+      <div class="caption" id="caption"></div>
+    </div>
+
+    <aside>
+      <div class="finish">
+        <h2 style="margin:0">Finish</h2>
+        <div class="swrow">
+          <div class="lbl"><span>Ply stain</span><b id="stain-name"></b></div>
+          <div class="swatches" id="stains" role="group" aria-label="Ply stain"></div>
+        </div>
+        <div class="swrow">
+          <div class="lbl"><span>Seat and arm pads</span><b id="pad-name"></b></div>
+          <div class="swatches" id="pads" role="group" aria-label="Arm pad colour"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Site copy: the 3D model and finishes only. The drawing scripts below still run into these hidden, empty elements. -->
+<div hidden aria-hidden="true"><svg id="d-foot"></svg><svg id="d-key"></svg><svg id="d-pad"></svg><svg id="d-plug"></svg><svg id="d-pocket"></svg><svg id="d-rib"></svg><svg id="d-seat"></svg><svg id="elev"></svg><svg id="cmp-a"></svg><svg id="cmp-b"></svg><svg id="cmp-c"></svg><dl id="cmp-a-dl"></dl><dl id="cmp-b-dl"></dl><dl id="cmp-c-dl"></dl><dl id="spec"></dl></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  // ================= Geometry (mm) =================
+  const T = 20, DEPTH = 400;
+  const SEAT_CL = 440, FOOT_CL = 27, ARM_CL = 625;
+  const LEG_ANGLE = 70, RAD = LEG_ANGLE * Math.PI / 180, TAN = Math.tan(RAD);
+  const R = 70;
+  const SEAT_FLAT = 1500;
+  const DT = R / Math.tan((Math.PI - RAD) / 2);
+  const X1 = SEAT_FLAT / 2 + DT;
+  const RETURN = 200;
+  const C = (ARM_CL + FOOT_CL) / 2;
+  const SHELF_CL = 2 * C - SEAT_CL;
+  const X2 = X1 + (SEAT_CL - FOOT_CL) / TAN;
+  const XEND = X2 + RETURN;
+  const XCROSS = X1 + (SEAT_CL - C) / TAN;
+  const CROSS_ANGLE = 180 - 2 * LEG_ANGLE;
+  const TH = CROSS_ANGLE * Math.PI / 180;
+  const SLOT_W = T / Math.sin(TH) + T / Math.tan(TH) + 1;
+  const SLOT_D = DEPTH / 2;
+  const SHOE_H = FOOT_CL - T / 2;
+  const PAD_H = 24, PAD_FRONT_FREE = 0;
+  const PAD_X0 = X2 + 20, PAD_X1 = XEND;
+  const RIB_X = 250, RIB_T = 18, HOUSING = 5;
+  const SP_W = 460, SP_D = 360, SP_H = 22, SP_REC = 3, SP_R = 45;
+  const H0 = T / (2 * Math.cos(RAD));
+
+  const verts = [[-XEND, FOOT_CL], [-X2, FOOT_CL], [-X1, SEAT_CL], [X1, SEAT_CL], [X2, FOOT_CL], [XEND, FOOT_CL]];
+
+  function centreline() {
+    const pts = [verts[0]];
+    for (let i = 1; i < verts.length - 1; i++) {
+      const [ax, ay] = verts[i - 1], [bx, by] = verts[i], [cx, cy] = verts[i + 1];
+      let u1 = [ax - bx, ay - by], u2 = [cx - bx, cy - by];
+      const l1 = Math.hypot(...u1), l2 = Math.hypot(...u2);
+      u1 = [u1[0] / l1, u1[1] / l1]; u2 = [u2[0] / l2, u2[1] / l2];
+      const th = Math.acos(u1[0] * u2[0] + u1[1] * u2[1]);
+      const d = R / Math.tan(th / 2);
+      let bis = [u1[0] + u2[0], u1[1] + u2[1]]; const lb = Math.hypot(...bis); bis = [bis[0] / lb, bis[1] / lb];
+      const ctr = [bx + bis[0] * R / Math.sin(th / 2), by + bis[1] * R / Math.sin(th / 2)];
+      const t1 = [bx + u1[0] * d, by + u1[1] * d], t2 = [bx + u2[0] * d, by + u2[1] * d];
+      const a1 = Math.atan2(t1[1] - ctr[1], t1[0] - ctr[0]);
+      let da = Math.atan2(t2[1] - ctr[1], t2[0] - ctr[0]) - a1;
+      while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+      for (let k = 0; k <= 16; k++) { const a = a1 + da * k / 16; pts.push([ctr[0] + R * Math.cos(a), ctr[1] + R * Math.sin(a)]); }
+    }
+    pts.push(verts[verts.length - 1]);
+    return pts;
+  }
+  const CL = centreline();
+  const CS = [0]; for (let i = 1; i < CL.length; i++) CS.push(CS[i - 1] + Math.hypot(CL[i][0] - CL[i - 1][0], CL[i][1] - CL[i - 1][1]));
+  const LEN = CS[CS.length - 1];
+  function at(s) {
+    let i = 1; while (i < CS.length - 1 && CS[i] < s) i++;
+    const f = (s - CS[i - 1]) / (CS[i] - CS[i - 1]);
+    return [CL[i - 1][0] + (CL[i][0] - CL[i - 1][0]) * f, CL[i - 1][1] + (CL[i][1] - CL[i - 1][1]) * f];
+  }
+  let sCross = 0, best = 1e9;
+  for (let s = LEN / 2; s < LEN; s += 0.25) { const p = at(s); const d = Math.hypot(p[0] - XCROSS, p[1] - C); if (d < best) { best = d; sCross = s; } }
+  const sCrossL = LEN - sCross;
+
+  function outlineRange(sa, sb) {
+    const pts = [at(sa)], ss = [sa];
+    for (let i = 0; i < CL.length; i++) if (CS[i] > sa + 0.01 && CS[i] < sb - 0.01) { pts.push(CL[i]); ss.push(CS[i]); }
+    pts.push(at(sb)); ss.push(sb);
+    const n = pts.length, L = [], Rr = [];
+    for (let i = 0; i < n; i++) {
+      const p = pts[Math.max(0, i - 1)], q = pts[Math.min(n - 1, i + 1)];
+      let tx = q[0] - p[0], ty = q[1] - p[1]; const l = Math.hypot(tx, ty); tx /= l; ty /= l;
+      L.push({ x: pts[i][0] - ty * T / 2, y: pts[i][1] + tx * T / 2, s: ss[i], v: 1 });
+      Rr.push({ x: pts[i][0] + ty * T / 2, y: pts[i][1] - tx * T / 2, s: ss[i], v: 0 });
+    }
+    return L.concat(Rr.reverse());
+  }
+  const OUT_FULL = outlineRange(0, LEN);
+  const flipY = p => ({ x: p.x, y: 2 * C - p.y });
+
+  const uSeat = [Math.cos(-RAD), Math.sin(-RAD)], nSeat = [-uSeat[1], uSeat[0]];
+  const uShelf = [Math.cos(RAD), Math.sin(RAD)], nShelf = [-uShelf[1], uShelf[0]];
+  const add2 = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+  function slotRect(c, u, n, grow) {
+    const w = SLOT_W / 2 + (grow || 0), t = T / 2 + (grow || 0);
+    return [add2(add2(c, u, -w), n, -t), add2(add2(c, u, w), n, -t), add2(add2(c, u, w), n, t), add2(add2(c, u, -w), n, t)];
+  }
+  function clip(poly, n, c, k, keepAbove) {
+    const f = p => keepAbove ? dot([p[0] - c[0], p[1] - c[1]], n) - k : -k - dot([p[0] - c[0], p[1] - c[1]], n);
+    const out = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length], fa = f(a), fb = f(b);
+      if (fa >= 0) out.push(a);
+      if ((fa >= 0) !== (fb >= 0)) { const t = fa / (fa - fb); out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]); }
+    }
+    return out;
+  }
+  const CX = [XCROSS, C];
+  // move a point along direction u until it lies on the nearer face of the other leg (strip |dot(p-c,n)| = T/2)
+  function toStrip(P, u, c, n) {
+    const d = dot([P[0] - c[0], P[1] - c[1]], n), tgt = Math.sign(d) * T / 2;
+    const t = (tgt - d) / dot(u, n);
+    return [P[0] + u[0] * t, P[1] + u[1] * t];
+  }
+  // seat outline segment whose cut ends sit flat on the other leg's faces (angled slot walls)
+  const nShelfL = [-nShelf[0], nShelf[1]];
+  const CXL = [-XCROSS, C];
+  function cutRange(sa, sb, startCut, endCut) {
+    const o = outlineRange(sa, sb), n = o.length / 2;
+    const fix = (i, j, cut) => {
+      const P = [o[i].x, o[i].y], Q = [o[j].x, o[j].y];
+      let u = [Q[0] - P[0], Q[1] - P[1]]; const l = Math.hypot(...u); u = [u[0] / l, u[1] / l];
+      const r = toStrip(P, u, cut[0], cut[1]); o[i].x = r[0]; o[i].y = r[1];
+    };
+    if (startCut) { fix(0, 1, startCut); fix(2 * n - 1, 2 * n - 2, startCut); }
+    if (endCut) { fix(n - 1, n - 2, endCut); fix(n, n + 1, endCut); }
+    return o;
+  }
+  const OUT_SLOTTED = [
+    cutRange(0, sCrossL - SLOT_W / 2, null, [CXL, nShelfL]),
+    cutRange(sCrossL + SLOT_W / 2, sCross - SLOT_W / 2, [CXL, nShelfL], [CX, nShelf]),
+    cutRange(sCross + SLOT_W / 2, LEN, [CX, nShelf], null)
+  ];
+  const seatSlot = slotRect(CX, uSeat, nSeat);
+  const voidsFront = [clip(seatSlot, nShelf, CX, T / 2, true), clip(seatSlot, nShelf, CX, T / 2, false)];
+  const shelfSlot = slotRect(CX, uShelf, nShelf);
+  const voidsBack = [clip(shelfSlot, nSeat, CX, T / 2, true), clip(shelfSlot, nSeat, CX, T / 2, false)];
+
+  // solid infill at the bottom of the end pocket (right-hand end), kept below the seat bend so it sits on flat faces
+  function linerPoly() {
+    const yb = C + H0, top = yb + 34, sag = 8;
+    const seatX = y => X1 + (SEAT_CL + H0 - y) / TAN;
+    const shelfX = y => X1 + (y - SHELF_CL - H0) / TAN;
+    const pts = [[XCROSS, yb]];
+    const a = [shelfX(top), top], b = [seatX(top), top];
+    for (let k = 0; k <= 10; k++) { const t = k / 10; pts.push([a[0] + (b[0] - a[0]) * t, top - sag * Math.sin(Math.PI * t)]); }
+    return pts;
+  }
+
+  const fmt = v => Math.round(v).toLocaleString('en-NZ');
+  const overall = 2 * XEND;
+  const armTop = ARM_CL + T / 2 + PAD_H;
+  const shelfGap = (SEAT_CL - T / 2) - (SHELF_CL + T / 2);
+  document.getElementById('spec').innerHTML = [
+    ['Overall length', fmt(overall)],
+    ['Depth', fmt(DEPTH)],
+    ['Seat', '3 × 500'],
+    ['Seat height', fmt(SEAT_CL + T / 2) + ' (' + fmt(SEAT_CL + T / 2 - SP_REC + SP_H) + ' on pad)'],
+    ['Arm pad height', fmt(armTop)],
+    ['Arm pad width', fmt(PAD_X1 - PAD_X0)],
+    ['Shelf clear height', fmt(shelfGap)],
+    ['Shelf bays', '3 × ≈ 500'],
+    ['Leg angle', LEG_ANGLE + '°'],
+    ['Legs cross at', CROSS_ANGLE + '°'],
+    ['Halving slots', 'angled, ' + SLOT_D + ' deep'],
+    ['Ply', T + ' mm, R' + (R - T / 2) + ' inside'],
+  ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+
+  // ================= SVG =================
+  const svgPath = (poly, X, Y) => 'M' + poly.map(p => (p.x !== undefined ? [p.x, p.y] : p)).map(p => X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1)).join('L') + 'Z';
+  const arrowDefs = id => `<defs><marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>`;
+  function labeller(acc) {
+    return (x1, y1, x2, y2, t, anchor) => acc.s += `<line class="lead" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><text class="lbl" x="${x2 + (anchor === 'end' ? -4 : 4)}" y="${y2 + 4}" text-anchor="${anchor || 'start'}">${t}</text>`;
+  }
+
+  // ---------- Elevation ----------
+  (function () {
+    const svg = document.getElementById('elev');
+    const S = 0.375, ox = 530, oy = 370;
+    const X = x => ox + x * S, Y = y => oy - y * S;
+    const rect = (x0, y0, x1, y1, cls) => `<rect class="${cls}" x="${X(Math.min(x0, x1))}" y="${Y(Math.max(y0, y1))}" width="${Math.abs(x1 - x0) * S}" height="${Math.abs(y1 - y0) * S}"/>`;
+    let s = '';
+    s += `<line class="floor" x1="${X(-XEND - 60)}" y1="${Y(0)}" x2="${X(XEND + 60)}" y2="${Y(0)}"/>`;
+    s += `<path class="ply" d="${svgPath(OUT_FULL, X, Y)}"/>`;
+    s += `<path class="ply2" d="${svgPath(OUT_FULL.map(flipY), X, Y)}"/>`;
+    [-RIB_X, RIB_X].forEach(x => s += rect(x - RIB_T / 2, SHELF_CL + T / 2, x + RIB_T / 2, SEAT_CL - T / 2, 'rib'));
+    [-500, 0, 500].forEach(x => s += `<rect class="lea" x="${X(x - SP_W / 2)}" y="${Y(SEAT_CL + T / 2 - SP_REC + SP_H)}" width="${SP_W * S}" height="${SP_H * S}" rx="3"/>`);
+    [-1, 1].forEach(sg => {
+      s += rect(sg * (X2 + 25), 0, sg * (XEND + 5), SHOE_H, 'nyl');
+      s += rect(sg * XEND, 0, sg * (XEND + 5), FOOT_CL + T / 2 + 0.5, 'nyl');
+      s += rect(sg * PAD_X0, ARM_CL + T / 2, sg * PAD_X1, armTop, 'lea');
+      s += `<path class="ply2" d="${svgPath(linerPoly().map(p => [sg * p[0], p[1]]), X, Y)}"/>`;
+    });
+    const hdim = (x0, x1, y, label) => {
+      s += `<line class="dim" x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}"/><line class="dim" x1="${X(x0)}" y1="${Y(y) - 5}" x2="${X(x0)}" y2="${Y(y) + 5}"/><line class="dim" x1="${X(x1)}" y1="${Y(y) - 5}" x2="${X(x1)}" y2="${Y(y) + 5}"/>`;
+      s += `<text x="${(X(x0) + X(x1)) / 2}" y="${Y(y) - 5}" text-anchor="middle">${label}</text>`;
+    };
+    const vdim = (x, y0, y1, label, side) => {
+      s += `<line class="dim" x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}"/><line class="dim" x1="${X(x) - 5}" y1="${Y(y0)}" x2="${X(x) + 5}" y2="${Y(y0)}"/><line class="dim" x1="${X(x) - 5}" y1="${Y(y1)}" x2="${X(x) + 5}" y2="${Y(y1)}"/>`;
+      s += `<text x="${X(x) + (side < 0 ? -7 : 7)}" y="${(Y(y0) + Y(y1)) / 2 + 4}" text-anchor="${side < 0 ? 'end' : 'start'}">${label}</text>`;
+    };
+    hdim(-XEND, XEND, -80, fmt(overall));
+    vdim(XEND + 70, 0, SEAT_CL + T / 2, 'seat ' + fmt(SEAT_CL + T / 2), 1);
+    vdim(XEND + 170, 0, armTop, 'arm ' + fmt(armTop), 1);
+    vdim(-XEND - 60, 0, SHELF_CL + T / 2, fmt(SHELF_CL + T / 2), -1);
+    hdim(-SEAT_FLAT / 2, -RIB_X, SEAT_CL + 70, '500');
+    hdim(-RIB_X, RIB_X, SEAT_CL + 70, '500');
+    hdim(RIB_X, SEAT_FLAT / 2, SEAT_CL + 70, '500');
+    hdim(PAD_X0, PAD_X1, armTop + 40, fmt(PAD_X1 - PAD_X0));
+    const midY = Y((SEAT_CL + SHELF_CL) / 2) + 4;
+    s += `<text x="${X(0)}" y="${midY}" text-anchor="middle">${fmt(shelfGap)} clear</text>`;
+    s += `<text x="${X(-2 * RIB_X)}" y="${midY}" text-anchor="middle">bay</text><text x="${X(2 * RIB_X)}" y="${midY}" text-anchor="middle">bay</text>`;
+    s += `<text x="${X(-XEND + RETURN / 2)}" y="${Y(0) + 16}" text-anchor="middle">foot shoe</text>`;
+    svg.innerHTML = s;
+  })();
+
+  // ---------- Arm height comparison ----------
+  function drawVersion(id, armCL) {
+    const svg = document.getElementById(id);
+    const Cv = (armCL + FOOT_CL) / 2, shelfCL = 2 * Cv - SEAT_CL;
+    const S = 0.3, ox = 40, oy = 270;
+    const X = x => ox + (x + 60) * S, Y = y => oy - y * S;
+    const rect = (x0, y0, x1, y1, cls) => `<rect class="${cls}" x="${X(Math.min(x0, x1))}" y="${Y(Math.max(y0, y1))}" width="${Math.abs(x1 - x0) * S}" height="${Math.abs(y1 - y0) * S}"/>`;
+    const padTop = SEAT_CL + T / 2 - SP_REC + SP_H, armTopV = armCL + T / 2 + PAD_H;
+    let s = `<clipPath id="${id}-c"><rect x="0" y="0" width="480" height="290"/></clipPath>`;
+    s += rect(-60, padTop + 200, XEND + 60, padTop + 250, 'band-a');
+    s += rect(-60, padTop + 150, XEND + 60, padTop + 200, 'band-c');
+    s += `<text x="${X(-55)}" y="${Y(padTop + 225) + 4}">adult elbow</text><text x="${X(-55)}" y="${Y(padTop + 175) + 4}">child elbow</text>`;
+    s += `<line class="floor" x1="${X(-60)}" y1="${Y(0)}" x2="${X(XEND + 60)}" y2="${Y(0)}"/>`;
+    s += `<path class="ply" d="${svgPath(OUT_FULL, X, Y)}"/>`;
+    s += `<path class="ply2" d="${svgPath(OUT_FULL.map(p => ({ x: p.x, y: 2 * Cv - p.y })), X, Y)}"/>`;
+    s += rect(RIB_X - RIB_T / 2, shelfCL + T / 2, RIB_X + RIB_T / 2, SEAT_CL - T / 2, 'rib');
+    [0, 500].forEach(x => s += rect(x - SP_W / 2, SEAT_CL + T / 2 - SP_REC, x + SP_W / 2, padTop, 'lea'));
+    s += rect(PAD_X0, armCL + T / 2, PAD_X1, armTopV, 'lea');
+    s += rect(X2 + 25, 0, XEND + 5, SHOE_H, 'nyl');
+    s += rect(XEND, 0, XEND + 5, FOOT_CL + T / 2 + 0.5, 'nyl');
+    const vx = XEND + 40;
+    s += `<line class="dim" x1="${X(vx)}" y1="${Y(padTop)}" x2="${X(vx)}" y2="${Y(armTopV)}"/><line class="dim" x1="${X(vx) - 4}" y1="${Y(padTop)}" x2="${X(PAD_X0)}" y2="${Y(padTop)}" stroke-dasharray="3 3"/><line class="dim" x1="${X(vx) - 4}" y1="${Y(armTopV)}" x2="${X(vx) + 4}" y2="${Y(armTopV)}"/>`;
+    s += `<text class="lbl" x="${X(vx) - 6}" y="${(Y(padTop) + Y(armTopV)) / 2 + 4}" text-anchor="end">${fmt(armTopV - padTop)}</text>`;
+    s += `<text x="${X(250 + 125)}" y="${Y((SEAT_CL + shelfCL) / 2) + 4}" text-anchor="middle">${fmt((SEAT_CL - T / 2) - (shelfCL + T / 2))} clear</text>`;
+    svg.innerHTML = `<g clip-path="url(#${id}-c)">${s}</g>`;
+    document.getElementById(id + '-dl').innerHTML = [
+      ['Arm pad above seat pad', fmt(armTopV - padTop)],
+      ['Arm pad height from floor', fmt(armTopV)],
+      ['Shelf clear height', fmt((SEAT_CL - T / 2) - (shelfCL + T / 2))],
+      ['Shelf top from floor', fmt(shelfCL + T / 2)],
+      ['Legs cross at height', fmt(Cv)],
+    ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+  }
+  drawVersion('cmp-a', 640);
+  drawVersion('cmp-b', 625);
+  drawVersion('cmp-c', 610);
+
+  // ---------- Detail: crossing joint ----------
+  (function () {
+    const svg = document.getElementById('d-plug');
+    const k = 2.6, cx = 150, cy = 150;
+    const X = x => cx + (x - XCROSS) * k, Y = y => cy - (y - C) * k;
+    const acc = { s: '<clipPath id="pc"><rect x="20" y="30" width="260" height="240"/></clipPath><g clip-path="url(#pc)">' };
+    const strip = (c, u, n, a, b) => [add2(add2(c, u, a), n, -T / 2), add2(add2(c, u, b), n, -T / 2), add2(add2(c, u, b), n, T / 2), add2(add2(c, u, a), n, T / 2)];
+    const piece = (a, b, cutAtB) => {
+      const p = strip(CX, uSeat, nSeat, a, b);
+      const iu = cutAtB ? [1, 2] : [0, 3];
+      iu.forEach(i => { p[i] = toStrip(p[i], uSeat, CX, nShelf); });
+      return p;
+    };
+    acc.s += `<path class="ply2" d="${svgPath(strip(CX, uShelf, nShelf, -80, 80), X, Y)}"/>`;
+    acc.s += `<path class="ply" d="${svgPath(piece(-80, -SLOT_W / 2, true), X, Y)}"/>`;
+    acc.s += `<path class="ply" d="${svgPath(piece(SLOT_W / 2, 80, false), X, Y)}"/>`;
+    acc.s += `<path class="inkline" stroke-dasharray="4 3" d="${svgPath(strip(CX, uSeat, nSeat, -SLOT_W / 2, SLOT_W / 2), X, Y)}"/>`;
+    acc.s += '</g>';
+    const lab = labeller(acc);
+    lab(X(XCROSS + uSeat[0] * 60), Y(C + uSeat[1] * 60), 300, 250, 'seat leg, front half');
+    lab(X(XCROSS + uShelf[0] * 60), Y(C + uShelf[1] * 60), 300, 50, 'shelf leg passes through');
+    const f = toStrip(add2(CX, uSeat, -SLOT_W / 2), uSeat, CX, nShelf);
+    lab(X(f[0]), Y(f[1]), 300, 110, 'angled slot wall sits flat on it');
+    lab(X(XCROSS) + 2, Y(C) + 4, 300, 170, 'seat leg carries on behind (dashed)');
+    acc.s += `<text x="20" y="20">Looking at the front edge, at the crossing</text>`;
+    acc.s += `<text x="300" y="285">legs cross at ${CROSS_ANGLE}° · no gaps, no plug</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ---------- Detail: key ----------
+  (function () {
+    const svg = document.getElementById('d-key');
+    const star = (cx, cy, r, amp) => { let d = ''; for (let i = 0; i <= 120; i++) { const a = i / 120 * 2 * Math.PI; const rr = r * (1 + amp * Math.cos(6 * a)); d += (i ? 'L' : 'M') + (cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1); } return d + 'Z'; };
+    let s = '';
+    s += `<text x="20" y="20">One tool for pads, feet and ribs</text>`;
+    s += `<circle class="screw" cx="100" cy="100" r="46"/>`;
+    s += `<path class="ink" d="${star(100, 100, 18, 0.22)}"/>`;
+    s += `<circle class="screw" cx="100" cy="100" r="5"/>`;
+    s += `<text x="100" y="170" text-anchor="middle" class="lbl">screw head</text><text x="100" y="186" text-anchor="middle">6-lobe recess, centre pin</text>`;
+    s += `<rect class="lea" x="240" y="72" width="120" height="36" rx="12"/>`;
+    s += `<rect class="alu" x="360" y="84" width="110" height="12"/>`;
+    s += `<rect class="alu" x="470" y="82" width="28" height="16"/>`;
+    s += `<line class="inkline" stroke-dasharray="3 2" x1="482" y1="90" x2="498" y2="90"/>`;
+    s += `<text x="360" y="66" class="lbl">T25 pin-in driver</text>`;
+    s += `<path class="screw" d="${star(300, 160, 16, 0.22)}"/><circle class="ink" cx="300" cy="160" r="4.5"/>`;
+    s += `<text x="326" y="156" class="lbl">bit tip, end on</text><text x="326" y="172">hole takes the pin</text>`;
+    svg.innerHTML = s;
+  })();
+
+  // ---------- Detail: arm pad ----------
+  (function () {
+    const svg = document.getElementById('d-pad');
+    const k = 1.15, x0 = 40, yb = 140;
+    const Z = z => x0 + z * k;
+    const acc = { s: arrowDefs('ah1') };
+    const padD = DEPTH - PAD_FRONT_FREE, top = yb - T * k;
+    acc.s += `<rect class="ply" x="${Z(0)}" y="${top}" width="${DEPTH * k}" height="${T * k}"/>`;
+    acc.s += `<path class="alu" d="M${Z(14)},${top} L${Z(padD - 14)},${top} L${Z(padD - 10)},${top - 7} L${Z(10)},${top - 7}Z"/>`;
+    acc.s += `<rect class="ply2" x="${Z(0)}" y="${top - 16}" width="${padD * k}" height="9"/>`;
+    acc.s += `<rect class="foam" x="${Z(3)}" y="${top - 30}" width="${(padD - 6) * k}" height="14" rx="4"/>`;
+    acc.s += `<path class="lea" d="M${Z(0)},${top - 7} L${Z(0)},${top - 24} Q${Z(0)},${top - 33} ${Z(10)},${top - 33} L${Z(padD - 10)},${top - 33} Q${Z(padD)},${top - 33} ${Z(padD)},${top - 24} L${Z(padD)},${top - 7} L${Z(padD) - 3},${top - 7} L${Z(padD) - 3},${top - 24} Q${Z(padD) - 3},${top - 30} ${Z(padD - 10)},${top - 30} L${Z(10)},${top - 30} Q${Z(0) + 3},${top - 30} ${Z(0) + 3},${top - 24} L${Z(0) + 3},${top - 7}Z"/>`;
+    const sz = Z(padD - 40);
+    acc.s += `<rect class="screw" x="${sz - 3}" y="${top - 14}" width="6" height="${T * k + 14}"/><rect class="screw" x="${sz - 9}" y="${yb}" width="18" height="5"/>`;
+    acc.s += `<path class="arrow" marker-end="url(#ah1)" d="M${Z(padD) + 10},${top - 45} L${Z(padD) + 80},${top - 45}"/>`;
+    acc.s += `<text x="${Z(padD) + 12}" y="${top - 52}">slides off forward</text>`;
+    const lab = labeller(acc);
+    lab(Z(60), top - 32, Z(40), 40, 'leather over foam');
+    lab(Z(170), top - 12, Z(170), 40, 'ply backer');
+    lab(Z(40), top - 3, Z(10), 186, 'aluminium dovetail rail');
+    lab(sz, yb + 5, sz - 10, 186, 'security screw from below');
+    acc.s += `<text x="${Z(0)}" y="20">Section through the arm, back on the left</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ---------- Detail: seat pad (section across the depth, front on the right) ----------
+  (function () {
+    const svg = document.getElementById('d-seat');
+    const k = 1.35, x0 = 40, yb = 150;
+    const Z = z => x0 + z * k;
+    const top = yb - T * k, rec = SP_REC * k, m = (DEPTH - SP_D) / 2;
+    const acc = { s: '' };
+    acc.s += `<path class="ply" d="M${Z(0)},${top} L${Z(m)},${top} L${Z(m)},${top + rec} L${Z(DEPTH - m)},${top + rec} L${Z(DEPTH - m)},${top} L${Z(DEPTH)},${top} L${Z(DEPTH)},${yb} L${Z(0)},${yb}Z"/>`;
+    const pb = top + rec, ph = SP_H * k;
+    acc.s += `<rect class="lea" x="${Z(m)}" y="${pb - ph}" width="${SP_D * k}" height="${ph}" rx="12"/>`;
+    acc.s += `<rect class="foam" x="${Z(m) + 3}" y="${pb - ph + 3}" width="${SP_D * k - 6}" height="${ph - 3 - 6 * k}" rx="9"/>`;
+    acc.s += `<rect class="ply2" x="${Z(m) + 3}" y="${pb - 6 * k}" width="${SP_D * k - 6}" height="${6 * k}"/>`;
+    [110, 290].forEach(z => { acc.s += `<rect class="screw" x="${Z(z) - 3}" y="${pb - 6 * k}" width="6" height="${T * k + 6 * k - rec}"/><rect class="screw" x="${Z(z) - 9}" y="${yb}" width="18" height="5"/>`; });
+    const lab = labeller(acc);
+    lab(Z(60), pb - ph + 1, Z(40), 40, 'leather or vinyl, rounded edges');
+    lab(Z(300), pb - ph / 2, Z(310), 40, '18 mm foam on 6 mm ply backer');
+    lab(Z(DEPTH - m) - 2, top + 2, Z(DEPTH - 30), 200, '3 mm recess locates the pad', 'end');
+    lab(Z(110), yb + 5, Z(80), 200, 'screws from below', 'end');
+    acc.s += `<text x="${Z(0)}" y="20">Section through a seat, back on the left</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ---------- Detail: foot ----------
+  (function () {
+    const svg = document.getElementById('d-foot');
+    const k = 1.25, x0 = 60, yf = 175;
+    const Xf = x => x0 + x * k, Yf = y => yf - y * k;
+    const acc = { s: '' };
+    acc.s += `<line class="floor" x1="20" y1="${yf}" x2="660" y2="${yf}"/>`;
+    const yb = SHOE_H, ytp = SHOE_H + T;
+    acc.s += `<path class="ply" d="M${Xf(-40 + T / Math.sin(RAD))},${Yf(ytp)} L${Xf(RETURN + 60)},${Yf(ytp)} L${Xf(RETURN + 60)},${Yf(yb)} L${Xf(-40)},${Yf(yb)} L${Xf(-40 - 100 / TAN)},${Yf(yb + 100)} L${Xf(-40 - 100 / TAN + T / Math.sin(RAD))},${Yf(yb + 100)} Z"/>`;
+    const w = 5;
+    acc.s += `<path class="nyl" d="M${Xf(10)},${Yf(0)} L${Xf(RETURN + 60 + w)},${Yf(0)} L${Xf(RETURN + 60 + w)},${Yf(ytp)} L${Xf(RETURN + 60)},${Yf(ytp)} L${Xf(RETURN + 60)},${Yf(yb)} L${Xf(10)},${Yf(yb)}Z"/>`;
+    acc.s += `<rect class="nyl" x="${Xf(30)}" y="${Yf(3.5)}" width="${RETURN * k}" height="${3.5 * k}" style="stroke:var(--ink-soft);stroke-width:0.6"/>`;
+    [70, 190].forEach(x => { acc.s += `<path class="screw" d="M${Xf(x) - 8},${Yf(ytp)} L${Xf(x) + 8},${Yf(ytp)} L${Xf(x) + 3},${Yf(ytp - 6)} L${Xf(x) + 3},${Yf(5)} L${Xf(x) - 3},${Yf(5)} L${Xf(x) - 3},${Yf(ytp - 6)}Z"/>`; });
+    const lab = labeller(acc);
+    lab(Xf(70), Yf(ytp), Xf(110), 70, 'countersunk security screws');
+    lab(Xf(RETURN + 63), Yf(ytp - 8), Xf(RETURN + 40), 110, 'shoe caps the ply end');
+    lab(Xf(150), Yf(2), Xf(150), 205, 'rubber strip in a dovetail groove');
+    acc.s += `<text x="20" y="20">Foot, outer end on the right</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ---------- Detail: rib ----------
+  (function () {
+    const svg = document.getElementById('d-rib');
+    const acc = { s: arrowDefs('ah2') };
+    const k = 0.75, x0 = 20, ybase = 225;
+    const Yr = y => ybase - (y - (SHELF_CL - T / 2)) * k;
+    const W = 240;
+    acc.s += `<rect class="ply" x="${x0}" y="${Yr(SEAT_CL + T / 2)}" width="${W}" height="${T * k}"/>`;
+    acc.s += `<rect class="ply2" x="${x0}" y="${Yr(SHELF_CL + T / 2)}" width="${W}" height="${T * k}"/>`;
+    const rx = x0 + 70;
+    acc.s += `<rect class="rib" x="${rx}" y="${Yr(SEAT_CL - T / 2 + HOUSING)}" width="${RIB_T * k}" height="${(shelfGap + 2 * HOUSING) * k}"/>`;
+    const sx = rx + RIB_T * k / 2;
+    acc.s += `<rect class="screw" x="${sx - 2.5}" y="${Yr(SHELF_CL + T / 2 + 25)}" width="5" height="${(T + 25) * k}"/><rect class="screw" x="${sx - 7}" y="${Yr(SHELF_CL - T / 2)}" width="14" height="4"/>`;
+    const lab = labeller(acc);
+    lab(rx + RIB_T * k, Yr(SEAT_CL - T / 2 + 2), 130, 70, '5 mm housing');
+    lab(rx + RIB_T * k, Yr(SHELF_CL + T / 2 - 2), 130, 175, '5 mm housing');
+    lab(rx + RIB_T * k, Yr(SEAT_CL - 120), 130, 125, 'rib 18 mm');
+    lab(sx + 7, Yr(SHELF_CL - T / 2) + 4, 130, 244, 'screw from below');
+    // pocket screws: bored into each rib face, angled up through the rib top into the seat
+    const ytop = SEAT_CL - T / 2 + HOUSING;
+    [-1, 1].forEach(sg => {
+      const fx = rx + (sg > 0 ? RIB_T * k : 0);
+      const ex = fx + sg * 1, ey = Yr(ytop - 42);
+      const tx = sx - sg * 1.5, ty = Yr(ytop + 10);
+      acc.s += `<path class="void" d="M${fx},${Yr(ytop - 36)} L${fx + sg * 4},${Yr(ytop - 48)} L${fx},${Yr(ytop - 52)}Z"/>`;
+      acc.s += `<line class="pscrew" x1="${ex}" y1="${ey}" x2="${tx}" y2="${ty}"/>`;
+    });
+    lab(rx + RIB_T * k + 3, Yr(ytop - 44), 130, 98, 'pocket screws, both faces');
+    acc.s += `<text x="${x0}" y="20">Section across the seat at a rib</text>`;
+    acc.s += `<text x="${x0 + 2}" y="${Yr(SEAT_CL + T / 2) - 5}">seat</text><text x="${x0 + 2}" y="${Yr(SHELF_CL + T / 2) - 5}">shelf</text>`;
+    const px = 300, py = 50, pw = 240, pd = 150;
+    acc.s += `<text x="${px}" y="20">Plan of the shelf, back at the top</text>`;
+    acc.s += `<rect class="ply2" x="${px}" y="${py}" width="${pw}" height="${pd}"/>`;
+    acc.s += `<rect class="void" x="${px + pw / 2 - 9}" y="${py}" width="18" height="${pd - 6}"/>`;
+    acc.s += `<path class="arrow" marker-end="url(#ah2)" d="M${px + pw / 2 + 40},${py - 14} L${px + pw / 2 + 40},${py + 50}"/>`;
+    acc.s += `<text x="${px + pw / 2 + 50}" y="${py + 30}">rib slides in</text><text x="${px + pw / 2 + 50}" y="${py + 44}">from the back</text>`;
+    acc.s += `<text x="${px}" y="${py + pd + 20}">housing stopped 15 short of the front</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ---------- Detail: end pocket ----------
+  (function () {
+    const svg = document.getElementById('d-pocket');
+    const k = 0.6, cx = 200, cy = 215;
+    const X = x => cx + (x - (X1 + 40)) * k, Y = y => cy - (y - 400) * k;
+    const acc = { s: arrowDefs('ah3') + '<clipPath id="kc"><rect x="10" y="30" width="390" height="235"/></clipPath><g clip-path="url(#kc)">' };
+    acc.s += `<path class="ply" d="${svgPath(OUT_FULL, X, Y)}"/>`;
+    acc.s += `<path class="ply2" d="${svgPath(OUT_FULL.map(flipY), X, Y)}"/>`;
+    acc.s += `<path class="ply2" d="${svgPath(linerPoly(), X, Y)}"/>`;
+    acc.s += `<rect class="lea" x="${X(PAD_X0)}" y="${Y(armTop)}" width="${(PAD_X1 - PAD_X0) * k}" height="${PAD_H * k}"/>`;
+    acc.s += '</g>';
+    const lp = linerPoly();
+    const lab = labeller(acc);
+    lab(X(lp[0][0]), Y(lp[0][1] + 12), 410, 230, 'fixed infill, coved top');
+    lab(X(XCROSS + 10), Y(C + 140), 410, 120, 'end pocket');
+    lab(X(X1 - 200), Y(SEAT_CL + T / 2), 410, 60, 'seat end', 'start');
+    acc.s += `<path class="arrow" marker-end="url(#ah3)" d="M${X(XCROSS + 10)},${Y(SEAT_CL + 200)} L${X(XCROSS + 10)},${Y(SEAT_CL - 10)}"/>`;
+    acc.s += `<text x="10" y="20">Seat end and arm, side view</text>`;
+    svg.innerHTML = acc.s;
+  })();
+
+  // ================= Finish picker =================
+  const BASE = '#d8b582';
+  const STAINS = [
+    { id: 'natural', name: 'Natural (amber oil)', hex: '#b98a52' },
+    { id: 'candy', name: 'Candy red', hex: '#a10f28' },
+    { id: 'lime', name: 'Lime green', hex: '#4c8a10' },
+    { id: 'canary', name: 'Canary yellow', hex: '#c99708' },
+    { id: 'ocean', name: 'Ocean blue', hex: '#18518f' },
+    { id: 'ebony', name: 'Ebonised', hex: '#262220' }
+  ];
+  const PADS = [
+    { id: 'cognac', name: 'Cognac leather', hex: '#6b3418', kind: 'leather' },
+    { id: 'black', name: 'Black leather', hex: '#1d1b1a', kind: 'leather' },
+    { sep: true },
+    { id: 'v-charcoal', name: 'Charcoal vinyl', hex: '#3a3d40', kind: 'vinyl' },
+    { id: 'v-red', name: 'Candy red vinyl', hex: '#c8102e', kind: 'vinyl' },
+    { id: 'v-lime', name: 'Lime vinyl', hex: '#7cc242', kind: 'vinyl' },
+    { id: 'v-canary', name: 'Canary vinyl', hex: '#f5c400', kind: 'vinyl' },
+    { id: 'v-teal', name: 'Teal vinyl', hex: '#00808a', kind: 'vinyl' },
+    { id: 'v-chalk', name: 'Chalk white vinyl', hex: '#ece8df', kind: 'vinyl' }
+  ];
+  const finish = { stain: 'candy', pad: 'v-teal' };
+  try { const f = JSON.parse(localStorage.getItem('bench-finish-v2') || '{}'); if (f.stain) finish.stain = f.stain; if (f.pad) finish.pad = f.pad; } catch (e) {}
+  let mats = null;
+  const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (h, w, t) => '#' + hexRgb(h).map((c, i) => Math.round(c + (hexRgb(w)[i] - c) * t).toString(16).padStart(2, '0')).join('');
+  function applyFinish() {
+    const st = STAINS.find(x => x.id === finish.stain) || STAINS[0];
+    const pd = PADS.find(x => x.id === finish.pad) || PADS[0];
+    const root = document.documentElement.style;
+    root.setProperty('--birch', st.hex);
+    root.setProperty('--birch-edge', mix(st.hex, '#ffffff', 0.3));
+    root.setProperty('--leather', pd.hex);
+    document.getElementById('stain-name').textContent = st.name;
+    document.getElementById('pad-name').textContent = pd.name;
+    document.querySelectorAll('#stains button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === st.id)));
+    document.querySelectorAll('#pads button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === pd.id)));
+    if (mats) mats(st, pd);
+    try { localStorage.setItem('bench-finish-v2', JSON.stringify(finish)); } catch (e) {}
+  }
+  function swatches(el, list, key) {
+    el.innerHTML = list.map(o => o.sep ? '<span class="sep" aria-hidden="true"></span>' : `<button type="button" data-id="${o.id}" title="${o.name}" aria-label="${o.name}" style="background:${o.hex}"></button>`).join('');
+    el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; finish[key] = b.dataset.id; applyFinish(); });
+  }
+  swatches(document.getElementById('stains'), STAINS, 'stain');
+  swatches(document.getElementById('pads'), PADS, 'pad');
+  applyFinish();
+
+  // ================= Three.js =================
+  if (!window.THREE) return;
+  const canvas = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 16 / 10, 0.02, 50);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.minDistance = 0.3; controls.maxDistance = 9;
+  controls.maxPolarAngle = Math.PI * 0.495;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8478, 0.65));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+  sun.position.set(2.2, 4, 2.8); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -2.2, right: 2.2, top: 2.2, bottom: -2.2, near: 0.5, far: 12 });
+  sun.shadow.bias = -0.0004;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-3, 2, 2); scene.add(fill);
+
+  const floorMat = new THREE.ShadowMaterial({ opacity: 0.18 });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), floorMat);
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+  const grid = new THREE.GridHelper(7, 35, 0x999999, 0x999999);
+  grid.material.transparent = true; grid.material.opacity = 0.12; scene.add(grid);
+
+  function rnd(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  function faceTexture() {
+    const c = document.createElement('canvas'); c.width = 2048; c.height = 512;
+    const g = c.getContext('2d'), r = rnd(7);
+    g.fillStyle = '#d8b582'; g.fillRect(0, 0, c.width, c.height);
+    for (let i = 0; i < 14; i++) {
+      const y = r() * c.height, h = 30 + r() * 90;
+      const grd = g.createLinearGradient(0, y - h, 0, y + h);
+      const a = 0.05 + r() * 0.08;
+      grd.addColorStop(0, 'rgba(160,110,60,0)'); grd.addColorStop(0.5, `rgba(${r() < 0.5 ? '170,115,60' : '235,205,160'},${a})`); grd.addColorStop(1, 'rgba(160,110,60,0)');
+      g.fillStyle = grd; g.fillRect(0, y - h, c.width, 2 * h);
+    }
+    for (let i = 0; i < 420; i++) {
+      const y0 = r() * c.height, amp = 2 + r() * 10, f = 0.002 + r() * 0.004, ph = r() * 6.28;
+      g.strokeStyle = `rgba(${120 + r() * 40},${80 + r() * 30},${40 + r() * 20},${0.05 + r() * 0.13})`;
+      g.lineWidth = 0.4 + r() * 1.6;
+      g.beginPath();
+      for (let x = 0; x <= c.width; x += 16) { const y = y0 + Math.sin(x * f + ph) * amp + Math.sin(x * f * 3.1 + ph) * amp * 0.25; x ? g.lineTo(x, y) : g.moveTo(x, y); }
+      g.stroke();
+    }
+    for (let i = 0; i < 260; i++) { g.fillStyle = `rgba(110,70,35,${0.08 + r() * 0.15})`; g.fillRect(r() * c.width, r() * c.height, 3 + r() * 10, 1 + r() * 1.5); }
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.encoding = THREE.sRGBEncoding; t.anisotropy = 8;
+    return t;
+  }
+  function edgeTexture() {
+    const c = document.createElement('canvas'); c.width = 256; c.height = 512;
+    const g = c.getContext('2d'), r = rnd(11), plies = 13;
+    for (let i = 0; i < plies; i++) {
+      const y0 = i * c.height / plies, h = c.height / plies;
+      g.fillStyle = i % 2 ? '#dcbd88' : '#efdbb3'; g.fillRect(0, y0, c.width, h);
+      for (let j = 0; j < 40; j++) { g.fillStyle = `rgba(150,105,55,${r() * 0.12})`; g.fillRect(r() * c.width, y0 + r() * h, 1 + r() * 6, 1); }
+      g.fillStyle = 'rgba(95,62,30,0.6)'; g.fillRect(0, y0, c.width, 2);
+    }
+    const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping; t.encoding = THREE.sRGBEncoding;
+    return t;
+  }
+  const faceTex = faceTexture(), edgeTex = edgeTexture();
+  const faceMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.58 });
+  const edgeMat = new THREE.MeshStandardMaterial({ map: edgeTex, roughness: 0.8 });
+  const ribTex = faceTex.clone(); ribTex.needsUpdate = true; ribTex.center.set(0.5, 0.5); ribTex.rotation = Math.PI / 2; ribTex.repeat.set(0.3, 0.5);
+  const ribMat = new THREE.MeshStandardMaterial({ map: ribTex, roughness: 0.6 });
+  const leatherMat = new THREE.MeshStandardMaterial({ color: 0x4a1f0c, roughness: 0.5 });
+  const rubberMat = new THREE.MeshStandardMaterial({ color: 0x0c0d0e, roughness: 0.95 });
+  const plugMat = new THREE.MeshStandardMaterial({ color: 0x0a0b0c, roughness: 0.55 });
+  const alumMat = new THREE.MeshStandardMaterial({ color: 0xb8bcc0, roughness: 0.3, metalness: 0.75 });
+  const lin = h => new THREE.Color(h).convertSRGBToLinear();
+  mats = (stn, pd) => {
+    const b = lin(BASE), t = lin(stn.hex);
+    const tint = new THREE.Color(t.r / b.r, t.g / b.g, t.b / b.b);
+    faceMat.color.copy(tint); ribMat.color.copy(tint);
+    edgeMat.color.copy(tint).lerp(new THREE.Color(1, 1, 1), stn.id === 'natural' ? 0 : 0.2);
+    leatherMat.color.copy(lin(pd.hex));
+    leatherMat.roughness = pd.kind === 'vinyl' ? 0.3 : 0.55;
+  };
+  applyFinish();
+
+  const mm = v => v / 1000;
+  function nearest(meta, x, y) {
+    let bi = 0, bd = 1e9;
+    for (let i = 0; i < meta.length; i++) { const d = (meta[i].x - x) ** 2 + (meta[i].y - y) ** 2; if (d < bd) { bd = d; bi = i; } }
+    return meta[bi];
+  }
+  // Builds a pressing segment by hand so the laminate lines on the cut edges follow the bends:
+  // each cap is a strip of quads between matching outer/inner points, mapped across the thickness.
+  function pressPart(out, z0, z1) {
+    const n = out.length / 2, L = out.slice(0, n), Rr = out.slice(n).reverse();
+    const edge = { p: [], n: [], u: [] }, face = { p: [], n: [], u: [] };
+    function tri(buf, A, B, Cc) {
+      const ab = [B.p[0] - A.p[0], B.p[1] - A.p[1], B.p[2] - A.p[2]], ac = [Cc.p[0] - A.p[0], Cc.p[1] - A.p[1], Cc.p[2] - A.p[2]];
+      const cr = [ab[1] * ac[2] - ab[2] * ac[1], ab[2] * ac[0] - ab[0] * ac[2], ab[0] * ac[1] - ab[1] * ac[0]];
+      const nn = [A.n[0] + B.n[0] + Cc.n[0], A.n[1] + B.n[1] + Cc.n[1], A.n[2] + B.n[2] + Cc.n[2]];
+      const vs = (cr[0] * nn[0] + cr[1] * nn[1] + cr[2] * nn[2]) >= 0 ? [A, B, Cc] : [A, Cc, B];
+      vs.forEach(v => { buf.p.push(...v.p); buf.n.push(...v.n); buf.u.push(...v.u); });
+    }
+    const quad = (buf, a, b, c, d) => { tri(buf, a, b, c); tri(buf, a, c, d); };
+    const P = (q, z) => [mm(q.x), mm(q.y), mm(z)];
+    const tan = i => { const a = L[Math.max(0, i - 1)], b = L[Math.min(n - 1, i + 1)]; let tx = b.x - a.x, ty = b.y - a.y; const l = Math.hypot(tx, ty) || 1; return [tx / l, ty / l]; };
+    const nl = [], nr = [];
+    for (let i = 0; i < n; i++) { const t = tan(i); nl.push([-t[1], t[0], 0]); nr.push([t[1], -t[0], 0]); }
+    // caps (ply edges)
+    [[z0, -1], [z1, 1]].forEach(([z, sgn]) => {
+      const N = [0, 0, sgn];
+      for (let i = 0; i < n - 1; i++) {
+        const v = (q, vv) => ({ p: P(q, z), n: N, u: [q.s / 420, vv] });
+        quad(edge, v(L[i], 1), v(Rr[i], 0), v(Rr[i + 1], 0), v(L[i + 1], 1));
+      }
+    });
+    // veneer faces
+    for (let i = 0; i < n - 1; i++) {
+      const fl = (k, z) => ({ p: P(L[k], z), n: nl[k], u: [L[k].s / 1700, z / 1600] });
+      const fr = (k, z) => ({ p: P(Rr[k], z), n: nr[k], u: [Rr[k].s / 1700, (z + 517) / 1600] });
+      quad(face, fl(i, z0), fl(i, z1), fl(i + 1, z1), fl(i + 1, z0));
+      quad(face, fr(i, z0), fr(i + 1, z0), fr(i + 1, z1), fr(i, z1));
+    }
+    // end faces (outer ends and slot walls)
+    [[0, 1], [n - 1, n - 2]].forEach(([i, j]) => {
+      const e = [Rr[i].x - L[i].x, Rr[i].y - L[i].y]; let N = [-e[1], e[0]];
+      if (N[0] * (L[j].x - L[i].x) + N[1] * (L[j].y - L[i].y) > 0) N = [-N[0], -N[1]];
+      const l = Math.hypot(...N); N = [N[0] / l, N[1] / l, 0];
+      const v = (q, z, a) => ({ p: P(q, z), n: N, u: [a, z / 1600] });
+      quad(face, v(L[i], z0, 0), v(Rr[i], z0, 0.012), v(Rr[i], z1, 0.012), v(L[i], z1, 0));
+    });
+    const geo = new THREE.BufferGeometry();
+    const cat = k => new Float32Array(edge[k].concat(face[k]));
+    geo.setAttribute('position', new THREE.BufferAttribute(cat('p'), 3));
+    geo.setAttribute('normal', new THREE.BufferAttribute(cat('n'), 3));
+    geo.setAttribute('uv', new THREE.BufferAttribute(cat('u'), 2));
+    geo.addGroup(0, edge.p.length / 3, 0);
+    geo.addGroup(edge.p.length / 3, face.p.length / 3, 1);
+    const m = new THREE.Mesh(geo, [edgeMat, faceMat]); m.castShadow = m.receiveShadow = true;
+    return m;
+  }
+  function pressing() {
+    const g = new THREE.Group();
+    g.add(pressPart(OUT_FULL, -DEPTH / 2, 0));
+    OUT_SLOTTED.forEach(o => g.add(pressPart(o, 0, DEPTH / 2)));
+    return g;
+  }
+
+  const items = [];
+  const VIEWS = ['assembled', 'exploded', 'plug', 'nested'];
+  function st(p, r, s) { return { p: p || [0, 0, 0], r: r || [0, 0, 0], s: s == null ? 1 : s }; }
+  function add(obj, states) {
+    VIEWS.forEach(v => { if (!states[v]) states[v] = states.assembled; });
+    scene.add(obj); items.push({ obj, states });
+    const S = states.assembled; obj.position.set(...S.p); obj.rotation.set(...S.r); obj.scale.setScalar(Math.max(S.s, 1e-4));
+  }
+  const hide = S => st(S.p, S.r, 0);
+
+  add(pressing(), { assembled: st() });
+  const yFlip = mm(2 * C);
+  const shelfP = pressing();
+  add(shelfP, {
+    assembled: st([0, yFlip, 0], [Math.PI, 0, 0]),
+    exploded: st([0, yFlip + 0.1, mm(620)], [Math.PI, 0, 0]),
+    plug: st([0, yFlip, mm(130)], [Math.PI, 0, 0]),
+    nested: st([0, mm(62), 0], [2 * Math.PI, 0, 0])
+  });
+
+  [-RIB_X, RIB_X].forEach(x => {
+    const h = shelfGap + 2 * HOUSING;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(mm(RIB_T), mm(h), mm(DEPTH - 15)), ribMat); m.castShadow = true;
+    const y = mm(SHELF_CL + T / 2 - HOUSING + h / 2), z = -mm(15) / 2;
+    // pocket-screw holes on both faces, just below the seat
+    const holeMat = new THREE.MeshBasicMaterial({ color: 0x1a1612 });
+    [-1, 1].forEach(sg => [-135, -45, 45, 135].forEach(hz => {
+      const hole = new THREE.Mesh(new THREE.CircleGeometry(mm(5), 16), holeMat);
+      hole.scale.set(1, 2.2, 1);
+      hole.rotation.y = sg * Math.PI / 2;
+      hole.position.set(sg * mm(RIB_T / 2 + 0.3), mm(h / 2 - HOUSING - 42), mm(hz + 7.5));
+      m.add(hole);
+    }));
+    const a = st([mm(x), y, z]);
+    add(m, { assembled: a, exploded: st([mm(x), y + 0.05, z - mm(700)]), plug: st([mm(x), y, z - mm(700)], null, 0), nested: hide(a) });
+  });
+
+  function roundedSlab(w, d, h, r) {
+    const s = new THREE.Shape(), x0 = -w / 2, z0 = -d / 2;
+    s.moveTo(x0 + r, z0); s.lineTo(x0 + w - r, z0); s.quadraticCurveTo(x0 + w, z0, x0 + w, z0 + r);
+    s.lineTo(x0 + w, z0 + d - r); s.quadraticCurveTo(x0 + w, z0 + d, x0 + w - r, z0 + d);
+    s.lineTo(x0 + r, z0 + d); s.quadraticCurveTo(x0, z0 + d, x0, z0 + d - r);
+    s.lineTo(x0, z0 + r); s.quadraticCurveTo(x0, z0, x0 + r, z0);
+    const g = new THREE.ExtrudeGeometry(s, { depth: h - 0.008, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 3, curveSegments: 6 });
+    g.rotateX(-Math.PI / 2); g.translate(0, 0.004, 0);
+    return g;
+  }
+  const screwHead = r => new THREE.Mesh(new THREE.CylinderGeometry(mm(r), mm(r), mm(2), 20), alumMat);
+
+  [-500, 0, 500].forEach(x => {
+    const sp = new THREE.Mesh(roundedSlab(mm(SP_W), mm(SP_D), mm(SP_H), mm(SP_R)), leatherMat); sp.castShadow = sp.receiveShadow = true;
+    const a = st([mm(x), mm(SEAT_CL + T / 2 - SP_REC), 0]);
+    add(sp, { assembled: a, exploded: st([mm(x), mm(SEAT_CL + T / 2) + 0.28, 0]), plug: hide(a), nested: hide(a) });
+  });
+
+  [-1, 1].forEach(sg => {
+    // foot shoe, end cap, rubber strip, screws
+    const fx0 = X2 + 25, fx1 = XEND + 5, fw = fx1 - fx0, fcx = sg * (fx0 + fw / 2);
+    const foot = new THREE.Group();
+    const shoe = new THREE.Mesh(new THREE.BoxGeometry(mm(fw), mm(SHOE_H - 3), mm(DEPTH + 6)), plugMat); shoe.position.set(mm(fcx), mm(3 + (SHOE_H - 3) / 2), 0); shoe.castShadow = true; foot.add(shoe);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(mm(5), mm(T + 1), mm(DEPTH + 6)), plugMat); cap.position.set(mm(sg * (XEND + 2.5)), mm(FOOT_CL), 0); foot.add(cap);
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(mm(fw - 30), mm(3), mm(DEPTH - 30)), rubberMat); strip.position.set(mm(fcx), mm(1.5), 0); foot.add(strip);
+    [-110, 110].forEach(z => { const h = screwHead(5); h.position.set(mm(fcx), mm(FOOT_CL + T / 2 + 0.6), mm(z)); foot.add(h); });
+    add(foot, { assembled: st(), exploded: st([0, 0, mm(-380)]), nested: hide(st()) });
+
+    // arm rail + pad
+    const aw = PAD_X1 - PAD_X0, acx = sg * (PAD_X0 + aw / 2);
+    const padD = DEPTH - PAD_FRONT_FREE, pz = mm(-DEPTH / 2 + padD / 2);
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(mm(aw - 70), mm(6), mm(padD - 20)), alumMat);
+    const ry = mm(ARM_CL + T / 2 + 3);
+    let a = st([mm(acx), ry, pz]);
+    add(rail, { assembled: a, exploded: st([mm(acx), ry + 0.1, pz]), nested: hide(a) });
+    const pad = new THREE.Mesh(roundedSlab(mm(aw), mm(padD), mm(PAD_H), mm(12)), leatherMat); pad.castShadow = true;
+    const py = mm(ARM_CL + T / 2);
+    a = st([mm(acx), py, pz]);
+    add(pad, { assembled: a, exploded: st([mm(acx), py + 0.22, pz + mm(180)]), nested: hide(a) });
+
+    // pocket infill, fixed to the shelf pressing (built in its local frame, which mirrors y about the flip line)
+    const lg = new THREE.ExtrudeGeometry(new THREE.Shape(linerPoly().map(p => new THREE.Vector2(mm(sg * p[0]), mm(2 * C - p[1])))), { depth: mm(DEPTH - 6), bevelEnabled: false });
+    lg.translate(0, 0, -mm(DEPTH - 6) / 2);
+    const infill = new THREE.Mesh(lg, ribMat); infill.castShadow = infill.receiveShadow = true;
+    shelfP.add(infill);
+
+  });
+
+  function syncTheme() {
+    const bg = getComputedStyle(document.documentElement).getPropertyValue('--sheet').trim() || '#fbfbf9';
+    renderer.setClearColor(new THREE.Color(bg), 1);
+    const dark = new THREE.Color(bg).getHSL({}).l < 0.5;
+    floorMat.opacity = dark ? 0.35 : 0.18; grid.material.opacity = dark ? 0.18 : 0.12;
+  }
+  syncTheme();
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncTheme); } catch (e) {}
+  new MutationObserver(syncTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  const CAM = {
+    assembled: { pos: [2.2, 1.25, 2.7], tgt: [0, 0.3, 0] },
+    exploded: { pos: [2.7, 1.7, 3.5], tgt: [0, 0.3, 0.3] },
+    plug: { pos: [mm(XCROSS) + 0.28, mm(C) + 0.2, 1.25], tgt: [mm(XCROSS), mm(C) + 0.02, 0.12] },
+    nested: { pos: [2.2, 1.25, 2.7], tgt: [0, 0.2, 0] }
+  };
+  const captions = {
+    assembled: 'Two identical pressings cross in an X at each end. The lower one is the seat, the same part flipped is the shelf and arms.',
+    exploded: 'Ribs slide out the back, then the shelf pressing slides out to the front through the halving slots. Seat pads lift out of their recesses, arm pads slide off their rails and the shoes come away.',
+    plug: 'Ribs out and the shelf pressing slid 130 mm forward, showing the angled slot in the seat leg. Assembled, the legs sit flat on each other with no gaps.',
+    nested: 'The same two pressings with nothing fitted. Identical parts nest for shipping and storage.'
+  };
+  camera.position.set(...CAM.assembled.pos); controls.target.set(...CAM.assembled.tgt);
+  document.getElementById('caption').textContent = captions.assembled;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let view = 'assembled', anim = null;
+  function setView(v) {
+    view = v;
+    VIEWS.forEach(k => document.getElementById('v-' + k).setAttribute('aria-pressed', String(k === v)));
+    document.getElementById('caption').textContent = captions[v];
+    anim = {
+      t0: performance.now(), dur: reduce ? 1 : 1200,
+      from: items.map(it => ({ p: it.obj.position.toArray(), r: [it.obj.rotation.x, it.obj.rotation.y, it.obj.rotation.z], s: it.obj.scale.x })),
+      cam0: camera.position.toArray(), tgt0: controls.target.toArray()
+    };
+  }
+  VIEWS.forEach(k => document.getElementById('v-' + k).addEventListener('click', () => setView(k)));
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function resize() {
+    const w = canvas.clientWidth, h = canvas.clientHeight, pr = renderer.getPixelRatio();
+    if (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr)) { renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  }
+  function frame(now) {
+    resize();
+    if (anim) {
+      const t = Math.min(1, (now - anim.t0) / anim.dur), e = ease(t);
+      items.forEach((it, i) => {
+        const a = anim.from[i], b = it.states[view];
+        it.obj.position.set(lerp(a.p[0], b.p[0], e), lerp(a.p[1], b.p[1], e), lerp(a.p[2], b.p[2], e));
+        it.obj.rotation.set(lerp(a.r[0], b.r[0], e), lerp(a.r[1], b.r[1], e), lerp(a.r[2], b.r[2], e));
+        it.obj.scale.setScalar(Math.max(lerp(a.s, b.s, e), 1e-4));
+        it.obj.visible = it.obj.scale.x > 0.001;
+      });
+      const cp = CAM[view].pos, ct = CAM[view].tgt;
+      camera.position.set(lerp(anim.cam0[0], cp[0], e), lerp(anim.cam0[1], cp[1], e), lerp(anim.cam0[2], cp[2], e));
+      controls.target.set(lerp(anim.tgt0[0], ct[0], e), lerp(anim.tgt0[1], ct[1], e), lerp(anim.tgt0[2], ct[2], e));
+      if (t >= 1) {
+        items.forEach(it => {
+          it.obj.rotation.x = ((it.obj.rotation.x % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+          VIEWS.forEach(k => { const r = it.states[k].r; if (Math.abs(r[0] - 2 * Math.PI) < 1e-6) r[0] = 0; });
+        });
+        anim = null;
+      }
+    }
+    controls.update();
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+
+</body></html>

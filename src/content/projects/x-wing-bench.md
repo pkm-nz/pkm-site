@@ -13,6 +13,8 @@ bgDark: "#2f241a"
 cover: /images/projects/x-wing-bench.jpg
 coverFit: contain
 coverBg: "#fbfbf9"
+embed: /play/x-wing-bench/
+embedNote: Interactive 3D model. Try the finishes, or pull it apart.
 heroImage: /images/projects/x-wing-bench.jpg
 heroNote: The planned bench, from the 3D model.
 facts:

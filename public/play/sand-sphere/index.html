@@ -1,0 +1,617 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sand Sphere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one drawing-sheet column. Animation leads, then elevations, spec and checks. Paul's magenta linework and green construction lines carry through. */
+:root {
+  --bg: #f5f6f4;
+  --paper: #ffffff;
+  --ink: #1e2328;
+  --muted: #5d656c;
+  --rule: #d9ddd8;
+  --line: #c41f78;       /* Paul's magenta */
+  --guide: #4f9e33;      /* Paul's green construction lines */
+  --sand: #dcc9a2;
+  --sand-cut: #c9ae78;
+  --void: #8f7a54;
+  --sea: #4fb6f0;
+  --sea-2d: #a3d8f6;
+  --display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171a; --paper: #1b1f23; --ink: #e8eae7; --muted: #9aa3a9; --rule: #30363b;
+    --line: #ff5fae; --guide: #86cf64; --sand: #6e5d3f; --sand-cut: #8c7449; --void: #2e2618; --sea: #4fb0e3; --sea-2d: #2f6f96;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171a; --paper: #1b1f23; --ink: #e8eae7; --muted: #9aa3a9; --rule: #30363b;
+  --line: #ff5fae; --guide: #86cf64; --sand: #6e5d3f; --sand-cut: #8c7449; --void: #2e2618; --sea: #4fb0e3; --sea-2d: #2f6f96;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 48px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--line); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(42px, 7vw, 72px); line-height: 1; margin: 0; text-wrap: balance; }
+h1 em { color: var(--line); }
+h2 { font-family: var(--display); font-weight: 400; font-size: 32px; line-height: 1.1; margin: 0; text-wrap: balance; }
+.lede { max-width: 62ch; color: var(--muted); margin: 4px 0 0; }
+section { display: grid; gap: 16px; }
+.sheet { background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; }
+.sheet-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--rule); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.scroll { overflow-x: auto; }
+svg { display: block; }
+svg text { font-family: var(--mono); fill: var(--ink); }
+
+/* animation */
+.stage svg { width: 100%; height: auto; }
+.view3d { width: 100%; aspect-ratio: 16 / 9; max-width: 100%; cursor: grab; touch-action: pan-y; }
+.view3d canvas { display: block; }
+.sheet-head.sub { border-top: 1px solid var(--rule); }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.detail-grid figure { margin: 0; min-width: 0; border-bottom: 1px solid var(--rule); }
+.detail-grid svg { width: 100%; height: auto; }
+.detail-grid figcaption { font-family: var(--mono); font-size: 11px; color: var(--muted); padding: 6px 14px 10px; }
+.camset { display: inline-flex; gap: 4px; }
+.camset button { font: 500 12px var(--mono); background: transparent; color: var(--muted); border: 1px solid var(--rule); border-radius: 3px; padding: 3px 10px; cursor: pointer; }
+.camset button.on { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+.camset button:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+.controls { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--rule); }
+.controls button { font: 500 14px var(--body); background: var(--ink); color: var(--paper); border: 0; border-radius: 3px; padding: 8px 14px; cursor: pointer; min-width: 78px; }
+.controls button:focus-visible, .steps button:focus-visible, input[type=range]:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+.controls input { flex: 1; min-width: 0; accent-color: var(--line); }
+.controls .speed { font-family: var(--mono); font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.controls select { font: 500 13px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; padding: 4px 6px; }
+.controls select:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+.controls output { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+.caption { padding: 14px; min-height: 3.2em; font-size: 17px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 16px; }
+.steps button { all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; gap: 6px; padding: 6px 4px; border-radius: 3px; font-size: 14px; color: var(--muted); width: 100%; box-sizing: border-box; }
+.steps button span:first-child { font-family: var(--mono); font-size: 12px; padding-top: 2px; }
+.steps button.on { color: var(--ink); background: color-mix(in srgb, var(--line) 12%, transparent); }
+.steps button.on span:first-child { color: var(--line); }
+
+/* drawings */
+.drawings { display: grid; gap: 16px; }
+.drawing svg { min-width: 620px; width: 100%; height: auto; }
+.drawing.end svg { min-width: 420px; }
+.notes { margin: 0; padding: 0 14px 14px; color: var(--muted); font-size: 14px; max-width: 70ch; }
+
+/* table */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+tfoot td { font-weight: 600; border-bottom: 0; }
+
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.check { padding: 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.check h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.check .fig { font-family: var(--mono); font-size: 13px; color: var(--line); }
+.check p { margin: 0; font-size: 14px; color: var(--muted); }
+.decide { margin: 0; padding-left: 20px; display: grid; gap: 10px; max-width: 70ch; }
+.decide strong { font-weight: 600; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+/* Site copy: the performance only. */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.wrap { padding-block: 16px 24px; }
+</style>
+
+<div class="wrap">
+  <section aria-labelledby="perf">
+    <h2 id="perf" class="sr">The performance</h2>
+    <div class="sheet stage">
+      <div class="sheet-head"><span>3D view · drag to look around, scroll to zoom</span><span class="camset"><button type="button" id="camSide" class="on">Side</button><button type="button" id="camTop">Top</button><button type="button" id="camFoot">Foot</button><button type="button" id="camLever">Lever</button></span></div>
+      <div id="view3d" class="view3d"></div>
+      <div class="caption" id="caption" aria-live="polite"></div>
+      <div class="controls" style="border-bottom:1px solid var(--rule)">
+        <button id="play" type="button">Pause</button>
+        <input id="scrub" type="range" min="0" max="38" step="0.05" value="0" aria-label="Animation time">
+        <output id="clock">0.0 s</output>
+        <label class="speed" for="speed">Speed <select id="speed"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+      </div>
+      <div class="sheet-head sub"><span>Section, looking along the rod</span><span>scale 1 : 6 approx.</span></div>
+      <svg id="anim" viewBox="0 0 960 460" role="img" aria-label="Animated section of the shell cutting, lifting, flipping and the tide returning the sand">
+        <rect x="0" y="0" width="960" height="460" fill="var(--paper)"/>
+        <rect x="0" y="270" width="960" height="190" fill="var(--sand)"/>
+        <defs><clipPath id="holeClip"><path id="holeClipP"/></clipPath></defs>
+        <path id="void" fill="var(--void)"/>
+        <path id="holeWater" fill="var(--sea-2d)" stroke="var(--sea-2d)" stroke-width="2.5"/>
+        <path id="stream" fill="none" stroke="var(--sea-2d)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0" clip-path="url(#holeClip)"/>
+        <path id="dome" fill="var(--sand-cut)"/>
+        <g id="sandG"><path id="captured" fill="var(--sand-cut)"/></g>
+        <g id="shellG">
+          <g id="shellInner">
+            <path d="M-120,0 A120 120 0 0 1 120,0" fill="none" stroke="var(--ink)" stroke-width="4"/>
+            <g id="skirt" stroke="var(--line)" stroke-width="4">
+            </g>
+            <path d="M-28,0 A28 28 0 0 0 28,0 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5"/>
+            <circle r="10.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/>
+            <line x1="-120" y1="0" x2="120" y2="0" stroke="var(--ink)" stroke-width="2.5"/>
+            <rect x="121" y="-5" width="48" height="10" fill="var(--ink)"/>
+            <g id="lever"><rect id="leverBar" x="130" y="-32" width="320" height="27" rx="3" fill="var(--muted)" stroke="var(--ink)" stroke-width="1.5"/></g>
+            <circle cx="120" cy="0" r="6" fill="var(--line)"/>
+            <g id="sheet"><rect x="-134" y="0" width="268" height="5" fill="var(--guide)"/></g>
+          </g>
+        </g>
+        <path id="rod" d="M-10,0 A10 10 0 0 1 10,0 Z" fill="var(--guide)" stroke="var(--ink)" stroke-width="1.5"/>
+        <path id="water" fill="var(--sea-2d)"/>
+        <g font-size="13">
+          <text x="18" y="292" fill="var(--muted)">beach</text>
+          <text id="lblHole" x="300" y="420" text-anchor="middle" opacity="0">negative</text>
+          <text id="lblDome" x="660" y="420" text-anchor="middle" opacity="0">positive</text>
+        </g>
+      </svg>
+    </div>
+    <ol class="steps" id="steps"></ol>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const host = document.getElementById("view3d");
+  try {
+    if (!window.THREE) throw new Error("no three");
+    const PX = 0.8, BEACH = 270, R = 150, RO = 153;
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.shadowMap.enabled = true;
+    renderer.localClippingEnabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    host.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(30, 16 / 9, 10, 40000);
+    cam.position.set(1150, 820, 1250);
+    let controls = null;
+    if (THREE.OrbitControls) {
+      controls = new THREE.OrbitControls(cam, renderer.domElement);
+      controls.target.set(0, 20, 200);
+      controls.enableDamping = true;
+      controls.maxPolarAngle = Math.PI * 0.47;
+      controls.minDistance = 500; controls.maxDistance = 7000;
+      controls.update();
+    } else cam.lookAt(0, 20, 200);
+
+    const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const mats = {
+      sand: new THREE.MeshStandardMaterial({ roughness: 1 }),
+      cut: new THREE.MeshStandardMaterial({ roughness: 1 }),
+      hole: new THREE.MeshStandardMaterial({ roughness: 1, side: THREE.BackSide }),
+      steel: new THREE.MeshStandardMaterial({ color: 0xe9ecee, metalness: 0.1, roughness: 0.6, side: THREE.DoubleSide, transparent: true }),
+      edge: new THREE.MeshStandardMaterial({ color: 0x2a2f34, metalness: 0.5, roughness: 0.4, transparent: true }),
+      foot: new THREE.MeshStandardMaterial({ metalness: 0.4, roughness: 0.45, side: THREE.DoubleSide, transparent: true }),
+      holeDark: new THREE.MeshBasicMaterial({ color: 0x15181b, side: THREE.DoubleSide, transparent: true }),
+      rod: new THREE.MeshStandardMaterial({ metalness: 0.3, roughness: 0.5, transparent: true }),
+      grip: new THREE.MeshStandardMaterial({ color: 0x23282c, roughness: 0.8, transparent: true }),
+      lever: new THREE.MeshStandardMaterial({ color: 0x7d868d, metalness: 0.25, roughness: 0.45, transparent: true }),
+      sheet: new THREE.MeshStandardMaterial({ roughness: 0.6, transparent: true }),
+      notch: new THREE.MeshBasicMaterial({ color: 0x1b1d1f }),
+      print: new THREE.MeshStandardMaterial({ roughness: 1, transparent: true, opacity: 0.7 }),
+      sea: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8, depthWrite: false }),
+      foam: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.75 }),
+      pool: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.82, depthWrite: false }),
+      cascade: new THREE.MeshBasicMaterial({ color: 0xb9e3fa, transparent: true, opacity: 0.7, side: THREE.DoubleSide, depthWrite: false })
+    };
+    const base = { sand: new THREE.Color(), cut: new THREE.Color(), hole: new THREE.Color() };
+    let blendNow = 0;
+    function theme() {
+      scene.background = new THREE.Color(css("--bg"));
+      mats.sand.color.set(css("--sand"));
+      base.sand.set(css("--sand")); base.cut.set(css("--sand-cut")); base.hole.set(css("--void"));
+      mats.cut.color.copy(base.cut).lerp(base.sand, blendNow);
+      mats.hole.color.copy(base.hole).lerp(base.sand, blendNow);
+      mats.print.color.set(css("--void"));
+      mats.foot.color.set(css("--line"));
+      mats.rod.color.set(css("--guide"));
+      mats.sheet.color.set(css("--guide"));
+      mats.sea.color.set(css("--sea"));
+      mats.pool.color.set(css("--sea"));
+    }
+    theme();
+    try { window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", theme); } catch (e) {}
+    new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x6a5a40, 0.45));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.62);
+    sun.position.set(1400, 2600, 900);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -1600, right: 1600, top: 1600, bottom: -1600, near: 100, far: 7000 });
+    scene.add(sun);
+
+    // beach with a round opening over the future hole
+    const shape = new THREE.Shape();
+    shape.moveTo(-4000, -4000); shape.lineTo(4000, -4000); shape.lineTo(4000, 4000); shape.lineTo(-4000, 4000); shape.lineTo(-4000, -4000);
+    const hp = new THREE.Path(); hp.absarc(0, 0, RO, 0, Math.PI * 2, true); shape.holes.push(hp);
+    const beach = new THREE.Mesh(new THREE.ShapeGeometry(shape, 96), mats.sand);
+    beach.rotation.x = -Math.PI / 2; beach.receiveShadow = true; scene.add(beach);
+    const lid = new THREE.Mesh(new THREE.CircleGeometry(RO, 96), mats.sand);
+    lid.rotation.x = -Math.PI / 2; lid.receiveShadow = true; scene.add(lid);
+    const hole = new THREE.Mesh(new THREE.SphereGeometry(RO, 64, 32, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), mats.hole);
+    hole.receiveShadow = true; scene.add(hole);
+    const marks = new THREE.Group(); scene.add(marks);
+    [-1, 1].forEach(side => {
+      const n = new THREE.Mesh(new THREE.PlaneGeometry(9, 70), mats.notch); n.rotation.x = -Math.PI / 2; n.position.set(side * 157.5, 0.6, 0); marks.add(n);
+      const tm = new THREE.Mesh(new THREE.PlaneGeometry(80, 60), mats.print); tm.rotation.x = -Math.PI / 2; tm.position.set(0, 0.6, side * 183); marks.add(tm);
+    });
+
+    // pivot: rim centre of the shell
+    const pivot = new THREE.Group(); scene.add(pivot);
+    const shellParts = new THREE.Group(); pivot.add(shellParts);
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(151.5, 96, 48, 0, Math.PI * 2, 0, Math.PI / 2), mats.steel);
+    dome.castShadow = true; shellParts.add(dome);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(151.5, 2.6, 10, 128), mats.edge);
+    rim.rotation.x = Math.PI / 2; shellParts.add(rim);
+    // feet: a half circle below the rim at each pivot, with a fully round hole and reinforcing ring
+    [-1, 1].forEach(side => {
+      const g = new THREE.Group(); g.position.x = side * 154; g.rotation.y = Math.PI / 2;
+      const foot = new THREE.Mesh(new THREE.RingGeometry(13, 35, 48, 1, Math.PI, Math.PI), mats.foot);
+      const ring = new THREE.Mesh(new THREE.RingGeometry(13, 30, 48), mats.edge);
+      ring.position.z = side * 1.2;
+      const bore = new THREE.Mesh(new THREE.CircleGeometry(13, 48), mats.holeDark);
+      bore.position.z = side * -0.6;
+      foot.castShadow = true;
+      g.add(foot, ring, bore); shellParts.add(g);
+    });
+    // lever tab at the cutout and the removable lever
+    const tab = new THREE.Mesh(new THREE.BoxGeometry(80, 12, 60), mats.edge);
+    tab.position.z = 151.5 + 28; shellParts.add(tab);
+    const lever = new THREE.Mesh(new THREE.CylinderGeometry(16.85, 16.85, 400, 24), mats.lever);
+    lever.rotation.x = Math.PI / 2; lever.castShadow = true; shellParts.add(lever);
+
+    // captured sand: fills the inside of the shell
+    const sandG = new THREE.Group(); pivot.add(sandG);
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(150, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2), mats.cut);
+    ball.castShadow = true; ball.receiveShadow = true;
+    const cap = new THREE.Mesh(new THREE.CircleGeometry(150, 64), mats.cut);
+    cap.rotation.x = Math.PI / 2;
+    sandG.add(ball, cap);
+
+    const sheet = new THREE.Mesh(new THREE.BoxGeometry(298, 3, 400), mats.sheet);
+    pivot.add(sheet);
+
+    // the half-round pole, slid in along its own axis
+    const rodShape = new THREE.Shape();
+    rodShape.moveTo(12.5, 0); rodShape.absarc(0, 0, 12.5, 0, Math.PI, false); rodShape.lineTo(12.5, 0);
+    const rodGeo = new THREE.ExtrudeGeometry(rodShape, { depth: 1000, bevelEnabled: false, curveSegments: 24 });
+    rodGeo.translate(0, 0, -500); rodGeo.rotateY(Math.PI / 2);
+    const rod = new THREE.Group(); scene.add(rod);
+    const rodMesh = new THREE.Mesh(rodGeo, mats.rod); rodMesh.castShadow = true; rod.add(rodMesh);
+    [-1, 1].forEach(side => {
+      const gg = new THREE.ExtrudeGeometry(rodShape, { depth: 160, bevelEnabled: false, curveSegments: 16 });
+      gg.translate(0, 0, -80); gg.rotateY(Math.PI / 2); gg.scale(1, 1.25, 1.25);
+      const grip = new THREE.Mesh(gg, mats.grip); grip.position.x = side * 420; rod.add(grip);
+    });
+
+    const sea = new THREE.Mesh(new THREE.PlaneGeometry(8000, 4000), mats.sea);
+    sea.rotation.x = -Math.PI / 2; scene.add(sea);
+    const foam = new THREE.Mesh(new THREE.PlaneGeometry(8000, 36), mats.foam);
+    foam.rotation.x = -Math.PI / 2; scene.add(foam);
+    // the sea skips the open hole until it has filled
+    const holeU = { value: 0 };
+    mats.sea.onBeforeCompile = sh => {
+      sh.uniforms.uHole = holeU;
+      sh.vertexShader = "varying vec3 vW;\n" + sh.vertexShader.replace("#include <project_vertex>", "#include <project_vertex>\n  vW = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      sh.fragmentShader = "uniform float uHole;\nvarying vec3 vW;\n" + sh.fragmentShader.replace("void main() {", "void main() {\n  if (length(vW.xz) < uHole) discard;");
+    };
+    const holeWater = new THREE.Mesh(new THREE.CircleGeometry(1, 64), mats.pool);
+    holeWater.rotation.x = -Math.PI / 2; scene.add(holeWater);
+    const poolFoam = new THREE.Mesh(new THREE.RingGeometry(0.93, 1, 64), mats.foam);
+    poolFoam.rotation.x = -Math.PI / 2; scene.add(poolFoam);
+    // a sheet of water spilling over the near rim and running down the wall, cut off at the pool surface
+    const cascPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    mats.cascade.clippingPlanes = [cascPlane];
+    const cascade = new THREE.Mesh(new THREE.SphereGeometry(150, 24, 20, Math.PI * 1.5 - 0.55, 1.1, Math.PI / 2, Math.PI / 2), mats.cascade);
+    scene.add(cascade);
+
+    function size() {
+      const w = host.clientWidth || 600, h = Math.round(w * 9 / 16);
+      renderer.setSize(w, h, false);
+      renderer.domElement.style.width = "100%"; renderer.domElement.style.height = "auto";
+      cam.aspect = w / h; cam.updateProjectionMatrix();
+    }
+    size();
+    try { new ResizeObserver(size).observe(host); } catch (e) { window.addEventListener("resize", size); }
+
+    const clamp = v => Math.max(0, Math.min(1, v));
+    const ease = u => u < .5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u);
+    const seg = (t, a, b) => ease(clamp((t - a) / (b - a)));
+    const lerp = (a, b, u) => a + (b - a) * u;
+    const op = (m, v) => { m.opacity = v; m.visible = v > 0.01; };
+
+    window.sphere3d = function (t, s) {
+      const y = (BEACH - s.cy) / PX, z = (s.cx - 300) / PX;
+      pivot.position.set(0, y, z);
+      pivot.rotation.x = -s.ang * Math.PI / 180;
+
+      lid.visible = t < 8; hole.visible = t >= 8;
+      sandG.visible = t >= 8;
+      marks.visible = false;
+
+      // pole slides in from one side, then out the other way
+      const inX = lerp(1500, 0, seg(t, 1.6, 3)), outX = lerp(0, -1500, seg(t, 12.8, 13.8));
+      rod.position.set(t < 12.8 ? inX : outX, y, z);
+      rod.visible = t >= 1.6 && t < 13.8;
+
+      const faceB = t >= 5.5;
+      lever.position.set(0, faceB ? -(6 + 16.85) : 6 + 16.85, 151.5 + 8 + 200);
+      const swap = Math.min(1, Math.abs(t - 5.5) / 0.3);
+      op(mats.lever, (1 - seg(t, 8, 8.8)) * swap);
+
+      let sy = -250, so = 0, sz = 0;
+      if (t >= 13.8) { sy = lerp(-250, -1.5, seg(t, 13.8, 14.8)); so = seg(t, 13.8, 14.2); }
+      if (t >= 17.3) sz = lerp(0, 520, seg(t, 17.3, 18.5));
+      if (t >= 18.5) so = 0;
+      sheet.position.set(0, sy, sz); op(mats.sheet, so);
+
+      shellParts.position.y = 450 * s.lift;
+      const so2 = 1 - s.lift;
+      [mats.steel, mats.edge, mats.foot, mats.holeDark].forEach(m => op(m, so2));
+      [mats.rod, mats.grip].forEach(m => op(m, 1));
+
+      sandG.scale.set(1 + 0.6 * s.eDome, Math.max(0.01, 1 - s.eDome), 1 + 0.6 * s.eDome);
+      hole.scale.set(1, Math.max(0.01, 1 - s.eHole), 1);
+      blendNow = s.blend;
+      mats.cut.color.copy(base.cut).lerp(base.sand, blendNow);
+      mats.hole.color.copy(base.hole).lerp(base.sand, blendNow);
+      const seaOn = s.wet && s.front > -880;
+      sea.visible = foam.visible = seaOn;
+      sea.position.set(0, 8, s.front - 2000);
+      foam.position.set(0, 9, s.front - 10);
+      const hd = 153 * Math.max(0.01, 1 - s.eHole);
+      const wy = -hd * (1 - s.fillA);
+      const wr = 153 * Math.sqrt(Math.max(0, 1 - (wy / hd) * (wy / hd)));
+      const filling = s.holeWet && s.fillW > 0.001 && s.fillW < 0.99;
+      holeU.value = s.wet && s.fillW < 0.99 && t >= 8 ? 153 : 0;
+      holeWater.visible = s.holeWet && s.fillW > 0.001 && s.blend < 0.98;
+      const bob = filling ? 0.8 * Math.sin(t * 9) : 0;
+      holeWater.position.set(0, Math.min(wy, 6) + bob, 0);
+      holeWater.scale.set(Math.max(1, wr), Math.max(1, wr), 1);
+      poolFoam.visible = filling && wr > 10;
+      poolFoam.position.set(0, Math.min(wy, 6) + bob + 0.3, 0);
+      poolFoam.scale.set(Math.max(1, wr), Math.max(1, wr), 1);
+      cascade.visible = filling;
+      cascade.scale.set(1, Math.max(0.01, 1 - s.eHole), 1);
+      cascPlane.constant = -(wy + bob);
+      mats.cascade.opacity = 0.6 + 0.12 * Math.sin(t * 17);
+    };
+    const views = { side: [[1150, 820, 1250], [0, 20, 200]], top: [[0, 1500, 226], [0, 0, 225]], foot: [[470, 300, 300], [150, 185, 0]], lever: [[260, 230, 480], [0, 10, 200]] };
+    function setView(k) {
+      cam.position.set(...views[k][0]);
+      if (controls) { controls.target.set(...views[k][1]); controls.update(); } else cam.lookAt(...views[k][1]);
+      ["Side", "Top", "Foot", "Lever"].forEach(n => document.getElementById("cam" + n).classList.toggle("on", k === n.toLowerCase()));
+    }
+    document.getElementById("camSide").addEventListener("click", () => setView("side"));
+    document.getElementById("camTop").addEventListener("click", () => setView("top"));
+    document.getElementById("camFoot").addEventListener("click", () => { setView("foot"); if (window.sphereSeek) window.sphereSeek(9.95); });
+    document.getElementById("camLever").addEventListener("click", () => { setView("lever"); if (window.sphereSeek) window.sphereSeek(3.3); });
+    function draw() {
+      if (controls) controls.update();
+      renderer.render(scene, cam);
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  } catch (err) {
+    host.innerHTML = '<p class="notes" style="padding:16px">The 3D view needs WebGL, which this browser has turned off. The section below shows the same sequence.</p>';
+  }
+})();
+</script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const BEACH = 270, R = 120, HX = 300, DX = 660, T_END = 38;
+  const steps = [
+    [0,    "Set the shell on hard-packed sand at low tide. The two half-circle feet press in to fix its position."],
+    [2,    "Slide the half-round pole through the round holes in both feet. Its flat face lies on the sand and stays flat throughout."],
+    [3,    "Push the lever over to roll the shell around the rod. At the top of the arc, re-pin the lever to the other face of the tab so it stays above the sand."],
+    [8,    "A half turn later the shell is cup-up and full. Unpin the lever, then two people lift the shell by the rod ends."],
+    [10,   "Carry it beside the hole and rest it in a shallow sand seat."],
+    [12.8, "Slide the rod out."],
+    [13.8, "Slide the sheet across the flat sand face, between the two feet."],
+    [14.8, "Hold the sheet against the rim and flip the shell over. Set it down on the beach, tapping the feet into the sand."],
+    [17.3, "Slide the sheet out from underneath, between the feet."],
+    [18.5, "Lift the shell straight off. It is widest at the rim, so it comes away cleanly."],
+    [20.5, "Positive and negative: the same sand, moved once."],
+    [23,   "The tide washes in. It fills the hole first, then reaches the mound, and both melt back into the beach."]
+  ];
+  const list = $("steps");
+  steps.forEach((s, i) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = `<span>${String(i + 1).padStart(2, "0")}</span><span></span>`;
+    b.lastChild.textContent = s[1].split(". ")[0].replace(/\.$/, "");
+    b.addEventListener("click", () => { t = s[0] + 0.01; render(); });
+    li.appendChild(b); list.appendChild(li);
+  });
+  const btns = list.querySelectorAll("button");
+
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const ease = u => u < .5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u);
+  const seg = (t, a, b) => ease(clamp((t - a) / (b - a)));
+  const lerp = (a, b, u) => a + (b - a) * u;
+
+  function sector(theta) {
+    if (theta <= 0.001) return "";
+    const a = Math.PI - theta;
+    const x = R * Math.cos(a), y = -R * Math.sin(a);
+    return `M0,0 L${x.toFixed(2)},${y.toFixed(2)} A${R} ${R} 0 0 0 ${-R},0 Z`;
+  }
+
+  let t = 0, playing = true, last = null, speed = 1;
+  // height of water (as a fraction of depth) that holds a given fraction of a hemispherical bowl's volume
+  function capHeight(f) {
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 24; i++) { const a = (lo + hi) / 2; if (a * a * (3 - a) / 2 < f) lo = a; else hi = a; }
+    return (lo + hi) / 2;
+  }
+
+  function render() {
+    // position and angle of the shell
+    let cx = HX, cy = BEACH - 140, ang = 0;
+    cy = lerp(BEACH - 140, BEACH, seg(t, 0, 2));
+    ang = 180 * seg(t, 3, 8);
+    if (t >= 8) cy = lerp(BEACH, BEACH - 150, seg(t, 8, 10));
+    if (t >= 10) cx = lerp(HX, DX, seg(t, 10, 12));
+    const seatCy = BEACH - R + 6;
+    if (t >= 12) cy = lerp(BEACH - 150, seatCy, seg(t, 12, 12.8));
+    if (t >= 14.8) {
+      const u = seg(t, 14.8, 17.3);
+      ang = 180 + 180 * u;
+      cy = lerp(seatCy, BEACH - 5, u) - 70 * Math.sin(Math.PI * u);
+    }
+    if (t >= 17.3) cy = lerp(BEACH - 5, BEACH, seg(t, 17.3, 18.5));
+
+    const tf = `translate(${cx.toFixed(2)},${cy.toFixed(2)}) rotate(${(-ang).toFixed(2)})`;
+    const released = t >= 18.5;
+    $("sandG").setAttribute("transform", tf);
+    $("captured").setAttribute("d", released ? "" : sector(Math.PI * Math.min(ang, 180) / 180));
+    const lift = seg(t, 18.5, 20.5);
+    $("shellG").setAttribute("transform", `translate(0,${(-360 * lift).toFixed(2)})`);
+    $("shellG").setAttribute("opacity", (1 - lift).toFixed(3));
+    $("shellInner").setAttribute("transform", tf);
+
+    const rodIn = seg(t, 2, 3) * (1 - seg(t, 12.8, 13.6));
+    $("rod").setAttribute("transform", `translate(${cx.toFixed(2)},${cy.toFixed(2)}) scale(${(0.4 + 0.6 * seg(t, 2, 3)).toFixed(3)})`);
+    $("rod").setAttribute("opacity", rodIn.toFixed(3));
+
+    // lever pins to the upper face of the tab, swapping faces at the top of the arc
+    $("leverBar").setAttribute("y", t >= 5.5 ? 5 : -32);
+    const swap = Math.min(1, Math.abs(t - 5.5) / 0.3);
+    $("lever").setAttribute("opacity", ((1 - seg(t, 8, 8.8)) * swap).toFixed(3));
+    const band = 1 - seg(t, 13, 13.8);
+    $("skirt").setAttribute("opacity", band.toFixed(3));
+    $("skirt").setAttribute("transform", `translate(0,${(40 * (1 - band)).toFixed(2)})`);
+
+    let sx = -(2 * R + 80);
+    let so = 0;
+    if (t >= 13.8) { sx = lerp(-(2 * R + 80), 0, seg(t, 13.8, 14.8)); so = 1; }
+    if (t >= 17.3) sx = lerp(0, 2 * R + 120, seg(t, 17.3, 18.5));
+    if (t >= 18.5) so = 0;
+    $("sheet").setAttribute("transform", `translate(${sx.toFixed(2)},0)`);
+    $("sheet").setAttribute("opacity", so);
+
+    // tide: the water front washes along the beach from the sea side, reaches the hole, then the mound
+    const TU = clamp((t - 23) / 12);
+    let front;
+    if (TU < 0.5) front = lerp(-900, 1500, TU / 0.5);
+    else if (TU < 0.72) front = 1500;
+    else front = lerp(1500, -900, ease((TU - 0.72) / 0.28));
+    const wet = t >= 23 && t < 35;
+    const tHole = 0.5 * (-153 + 900) / 2400, tDome = 0.5 * (300 + 900) / 2400;
+    // water pours in at a steady rate, so the level rises quickly in the narrow bottom and slowly near the top
+    const fillW = clamp((TU - tHole) / 0.2);
+    const fillA = capHeight(fillW);
+    const eHole = ease(clamp((TU - tHole - 0.2) / 0.35));
+    const eDome = ease(clamp((TU - tDome) / 0.45));
+    const blend = ease(clamp((TU - 0.45) / 0.45));
+    const holeWet = wet && front > -153;
+
+    const hole = t >= 8;
+    const hrx = R * (1 + 0.3 * eHole), hry = R * (1 - eHole);
+    const vd = hole && hry > 0.5 ? `M${HX - hrx},${BEACH} A${hrx} ${hry} 0 0 0 ${HX + hrx},${BEACH} Z` : "";
+    $("void").setAttribute("d", vd);
+    $("void").setAttribute("opacity", (1 - blend).toFixed(3));
+    $("holeClipP").setAttribute("d", vd);
+    // the last few percent snap to the brim so the pool joins the tide with no dry strip
+    const fa = Math.min(1, fillA / 0.93);
+    // the pool reaches the brim, then its surface rises the last few millimetres to meet the tide either side
+    const fb = Math.min(1, fa / 0.75), bridge = clamp((fa - 0.75) / 0.25);
+    const wl = BEACH + hry * (1 - fb);
+    const hw = hrx * Math.sqrt(Math.max(0, 1 - Math.pow((wl - BEACH) / Math.max(hry, 0.01), 2)));
+    $("holeWater").setAttribute("d", hole && hry > 0.5 && fa > 0 ? `M${(HX - hw).toFixed(2)},${wl.toFixed(2)} A${hrx} ${hry} 0 0 0 ${(HX + hw).toFixed(2)},${wl.toFixed(2)} Z` : "");
+    // stream spilling over the near rim and running down the wall to the pool
+    let sd = "";
+    if (holeWet && fillW > 0 && fb < 1 && hry > 1) {
+      const end = Math.asin(Math.min(1, 1 - fb));
+      sd = `M${HX - hrx - 4},${BEACH - 2}`;
+      for (let i = 0; i <= 16; i++) {
+        const ph = end * i / 16;
+        const wob = 0.8 * Math.sin(t * 14 + i);
+        sd += ` L${(HX - hrx * Math.cos(ph) + wob).toFixed(1)},${(BEACH + hry * Math.sin(ph) + (i === 16 ? 4 : 0)).toFixed(1)}`;
+      }
+    }
+    $("stream").setAttribute("d", sd);
+    $("stream").setAttribute("opacity", (1 - blend).toFixed(3));
+    $("holeWater").setAttribute("opacity", holeWet ? (1 - blend).toFixed(3) : 0);
+    const drx = R * (1 + 0.6 * eDome), dry = R * (1 - eDome);
+    $("dome").setAttribute("d", released && dry > 0.5 ? `M${DX - drx},${BEACH} A${drx} ${dry} 0 0 1 ${DX + drx},${BEACH} Z` : "");
+    $("dome").setAttribute("opacity", (1 - blend).toFixed(3));
+
+    const fx = HX + front * 0.8;
+    let d = "";
+    const layer = (x0, x1, tip) => {
+      const top = BEACH - 9;
+      let p = `M${x0},${BEACH + 2} L${x0},${top}`;
+      for (let x = x0; x < x1; x += 20) p += ` L${x},${(top + 2.5 * Math.sin(x / 30 + t * 3)).toFixed(1)}`;
+      return p + (tip ? ` Q${x1 + 10},${top} ${x1 + 14},${BEACH + 2} Z` : ` L${x1},${BEACH + 2} Z`);
+    };
+    if (wet && fx > 0) {
+      const full = fa >= 1 || !hole;
+      const near = HX - hrx, far = HX + hrx;
+      if (full || fx <= near) d = layer(0, fx, true);
+      else {
+        // until the hole is full the water runs past on either side, so the section shows no water over the hole
+        d = layer(0, near, false);
+        if (fx > far) d += " " + layer(far, fx, true);
+        if (bridge > 0) d += ` M${near - 2},${BEACH + 2} L${near - 2},${(BEACH - 9 * bridge).toFixed(1)} L${far + 2},${(BEACH - 9 * bridge).toFixed(1)} L${far + 2},${BEACH + 2} Z`;
+      }
+    }
+    $("water").setAttribute("d", d);
+    const e = Math.max(eHole, eDome, blend);
+    const level = 0;
+
+    if (window.sphere3d) window.sphere3d(t, { cx, cy, ang, lift, front, wet, fillW, fillA, eHole, eDome, blend, holeWet });
+    const pairOn = (t >= 20.5 ? 1 : 0) * (1 - e);
+    $("lblHole").setAttribute("opacity", pairOn.toFixed(2));
+    $("lblDome").setAttribute("opacity", pairOn.toFixed(2));
+
+    let idx = 0;
+    steps.forEach((s, i) => { if (t >= s[0]) idx = i; });
+    const cap = t >= 35 ? "The beach is level again. The work survives in the performance and its documentation." : steps[idx][1];
+    if ($("caption").textContent !== cap) $("caption").textContent = cap;
+    btns.forEach((b, i) => b.classList.toggle("on", i === idx));
+    $("scrub").value = t;
+    $("clock").textContent = t.toFixed(1) + " s";
+  }
+
+  function frame(ts) {
+    if (playing) {
+      if (last != null) { t += (ts - last) / 1000 * speed; if (t > T_END) t = 0; }
+      last = ts;
+      render();
+    } else last = null;
+    requestAnimationFrame(frame);
+  }
+
+  $("speed").addEventListener("change", e => { speed = parseFloat(e.target.value) || 1; });
+  window.sphereSeek = v => { t = v; playing = false; $("play").textContent = "Play"; render(); };
+  $("play").addEventListener("click", () => {
+    playing = !playing;
+    $("play").textContent = playing ? "Pause" : "Play";
+  });
+  $("scrub").addEventListener("input", e => {
+    t = parseFloat(e.target.value);
+    playing = false; $("play").textContent = "Play";
+    render();
+  });
+
+  let reduce = false;
+  try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  if (reduce) { playing = false; t = 21; $("play").textContent = "Play"; }
+  render();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>

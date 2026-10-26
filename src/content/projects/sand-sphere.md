@@ -11,6 +11,8 @@ accentDark: "#ff5fae"
 bg: "#efe6d2"
 bgDark: "#3a3122"
 cover: /images/projects/sand-sphere.jpg
+embed: /play/sand-sphere/
+embedNote: Interactive 3D model of the planned performance. Press play, drag to look around.
 heroImage: /images/projects/sand-sphere.jpg
 heroNote: The planned performance, from the 3D model.
 facts:
