@@ -1,5 +1,5 @@
 ---
-title: Peaceably
+title: ''
 titleEnd: Peaceably
 stage: ''
 summary: Life and legacy planning, made simple and secure. A startup I'm building now and raising investment for.
