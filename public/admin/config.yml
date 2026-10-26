@@ -193,3 +193,16 @@ collections:
           - { name: location, label: Location (footer), widget: string }
           - { name: email, label: Contact email, widget: string }
           - { name: formEndpoint, label: Form address (Formspree; leave empty to use email), widget: string, required: false }
+
+  - name: design
+    label: Design
+    description: Heading font and text sizes for the whole site.
+    files:
+      - name: design
+        label: Fonts and sizes
+        file: src/data/design.json
+        format: json
+        fields:
+          - { name: headingFont, label: Heading font, widget: select, options: [Libre Franklin, Manrope, Inter Tight, Familjen Grotesk, Fraunces, Archivo] }
+          - { name: headingSize, label: Heading size, widget: select, options: [Small, Medium, Large] }
+          - { name: textSize, label: Text size (intros, posts and card text), widget: select, options: [Small, Medium, Large] }

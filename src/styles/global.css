@@ -8,7 +8,10 @@
   --note-ink: #4a3d00;
   --accent: #1a1d1f;
   --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --head: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;
+  --head: "Libre Franklin", "Helvetica Neue", Arial, sans-serif;   /* the next four are set from /admin → Design */
+  --hw: 750;
+  --hs: 1;
+  --ts: 1;
   --read: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
 }
@@ -56,11 +59,11 @@ main { max-width: 1180px; margin: 0 auto; padding-block: 36px 80px; padding-left
 /* type */
 .eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
 h1, h2, h3 { margin: 0; text-wrap: balance; font-family: var(--head); }
-h1 { font-weight: 750; font-size: clamp(34px, 5.2vw, 62px); line-height: 1.08; letter-spacing: -.02em; }
-h2 { font-weight: 700; font-size: clamp(24px, 2.9vw, 31px); line-height: 1.15; letter-spacing: -.015em; }
-h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
-.lede { font-family: var(--read); font-size: clamp(18px, 2vw, 21px); line-height: 1.5; max-width: 60ch; margin: 0; }
-.prose { font-family: var(--read); font-size: 18px; line-height: 1.65; max-width: 64ch; display: grid; gap: 14px; }
+h1 { font-weight: var(--hw); font-size: calc(var(--hs) * clamp(34px, 5.2vw, 62px)); line-height: 1.08; letter-spacing: -.02em; }
+h2 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * clamp(24px, 2.9vw, 31px)); line-height: 1.15; letter-spacing: -.015em; }
+h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-height: 1.25; }
+.lede { font-family: var(--read); font-size: calc(var(--ts) * clamp(18px, 2vw, 21px)); line-height: 1.5; max-width: 60ch; margin: 0; }
+.prose { font-family: var(--read); font-size: calc(var(--ts) * 18px); line-height: 1.65; max-width: 64ch; display: grid; gap: 14px; }
 .prose p { margin: 0; }
 .sechead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding-bottom: 10px; }
 .sechead a { font: 500 13px var(--mono); color: var(--soft); }
@@ -68,7 +71,7 @@ h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 /* home intro */
 .intro { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: end; }
 @media (max-width: 820px) { .intro { grid-template-columns: minmax(0, 1fr); } }
-.intro h1 span { display: block; color: var(--soft); font-family: var(--display); font-weight: 400; font-stretch: 100%; font-size: max(18px, .45em); letter-spacing: 0; margin-top: 14px; line-height: 1.2; }
+.intro h1 span { display: block; color: var(--soft); font-family: var(--display); font-weight: 400; font-stretch: 100%; font-size: max(calc(var(--ts) * 18px), .45em); letter-spacing: 0; margin-top: 14px; line-height: 1.2; }
 
 /* stage chips */
 .stage { display: inline-flex; align-items: center; gap: 7px; font: 500 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px 4px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
@@ -90,7 +93,7 @@ h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 .card .body { padding: 16px 16px 18px; display: grid; gap: 8px; align-content: start; }
 .card .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: var(--pa); }
 .card .kind { font: 500 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
-.card p { margin: 0; color: var(--soft); font-size: 15px; }
+.card p { margin: 0; color: var(--soft); font-size: calc(var(--ts) * 15px); }
 .card .play { font: 500 12px var(--mono); color: var(--pa); }
 .card.empty { border-style: dashed; background: transparent; place-content: center; text-align: center; padding: 28px; min-height: 260px; grid-template-rows: auto; color: var(--soft); }
 .card.empty:hover { transform: none; border-color: var(--rule); }
@@ -102,7 +105,7 @@ h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 .entry time { font: 500 13px var(--mono); color: var(--soft); padding-top: 3px; }
 .entry .txt { display: grid; gap: 6px; min-width: 0; }
 .entry .tag { font: 500 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--pa); }
-.entry p { margin: 0; font-family: var(--read); font-size: 16.5px; color: var(--soft); max-width: 60ch; }
+.entry p { margin: 0; font-family: var(--read); font-size: calc(var(--ts) * 16.5px); color: var(--soft); max-width: 60ch; }
 .entry .thumb { aspect-ratio: 3 / 2; max-width: 100%; border-radius: 4px; overflow: hidden; position: relative; background: var(--pa-bg); }
 .entry .thumb svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 @media (max-width: 760px) { .entry { grid-template-columns: minmax(0, 1fr); gap: 10px; } .entry .thumb { max-width: 320px; } }
@@ -129,7 +132,7 @@ h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 .decisions { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
 .decisions li { display: grid; gap: 4px; padding-left: 16px; border-left: 2px solid var(--pa); }
 .decisions b { font-weight: 650; }
-.decisions span { font-family: var(--read); color: var(--soft); font-size: 16.5px; }
+.decisions span { font-family: var(--read); color: var(--soft); font-size: calc(var(--ts) * 16.5px); }
 .side { display: grid; gap: 14px; }
 .side .box { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; display: grid; gap: 8px; }
 .side dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 14px; }
@@ -159,7 +162,7 @@ h3 { font-weight: 700; font-size: 19px; line-height: 1.25; }
 .cm .who time { font: 500 12px var(--mono); color: var(--soft); }
 .cm .you { font: 500 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--pa); border: 1px solid currentColor; border-radius: 999px; padding: 1px 7px; }
 .cm.me { padding-left: 16px; border-left: 2px solid var(--pa); }
-.cm p { margin: 0; font-family: var(--read); font-size: 17px; line-height: 1.55; max-width: 62ch; }
+.cm p { margin: 0; font-family: var(--read); font-size: calc(var(--ts) * 17px); line-height: 1.55; max-width: 62ch; }
 .cform { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; }
 .crow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .mail { margin: 0; font-size: 14px; color: var(--soft); }
