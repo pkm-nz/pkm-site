@@ -1,0 +1,5 @@
+---
+const { stage } = Astro.props as { stage: string };
+const cls = stage === "Finished" ? "done" : stage === "Planning" ? "plan" : "";
+---
+<span class={`stage ${cls}`}><i></i>{stage}</span>

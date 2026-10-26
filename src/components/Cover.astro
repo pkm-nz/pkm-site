@@ -1,0 +1,7 @@
+---
+import type { Project } from "../lib/content";
+const { p } = Astro.props as { p: Project };
+const d = p.data;
+---
+<img class={`fill${d.coverFit === "contain" ? " contain" : ""}`} src={d.cover} alt="" loading="lazy" decoding="async"
+  style={d.coverBg ? `background:${d.coverBg}` : undefined} />

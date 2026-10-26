@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Coalition Alphabet Collider</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff;
+  --text:#1c1c1c;
+  --muted:#7a7a7a;
+  --rule:#ececec;
+  --line:#d2d2d2;
+  --line-strong:#a8a8a8;
+  --ink:#c4c4c4;
+  --ink-text:#1c1c1c;
+  --r:5px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{
+  background:var(--stage,#ffffff);color:var(--text);transition:background-color .4s ease;
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.4;
+  display:grid;grid-template-rows:1fr auto;grid-template-columns:minmax(0,1fr);overflow:hidden;
+}
+#stage{position:relative;overflow:hidden;isolation:isolate;background:var(--stage,#ffffff);min-height:260px;transition:background-color .4s ease}
+.glyph{
+  position:absolute;left:0;top:0;fill:var(--ink);
+  mix-blend-mode:var(--blend,multiply);transform-origin:50% 50%;
+  will-change:transform,opacity;pointer-events:none;
+  transition:fill .25s ease;
+}
+.bar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;
+  padding:16px 24px 20px;border-top:1px solid var(--rule);
+}
+.bar{transition:transform .55s cubic-bezier(.2,.9,.25,1.15),opacity .3s ease;background:var(--paper);position:relative;z-index:2}
+.bar.hidden{transform:translateY(105%);opacity:0;transition:transform .45s cubic-bezier(.5,0,.75,0),opacity .3s ease .15s}
+.group{display:flex;align-items:center;gap:8px}
+.label{font-size:13px;color:var(--muted);font-stretch:90%;margin-right:4px}
+.swatch{
+  width:28px;height:28px;border-radius:var(--r);border:0;padding:0;cursor:pointer;
+  background:var(--c);position:relative;
+}
+#bgswatches .swatch{box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+#bgswatches .swatch[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 0 0 2px var(--paper),0 0 0 3px var(--line-strong)}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--line-strong)}
+.custom{position:relative;width:28px;height:28px;border-radius:var(--r);overflow:hidden;
+  background:conic-gradient(#e8302a,#ff9f00,#f2d200,#0a9a5b,#1f4fe0,#6b3fd4,#e0218a,#e8302a)}
+.custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.custom.on{box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--line-strong)}
+.custom:focus-within{outline:1.5px solid var(--line-strong);outline-offset:5px}
+.word{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;flex:1 1 420px;min-width:0}
+@media (max-width:640px){.word{flex-wrap:wrap}}
+#word{
+  flex:1 1 110px;min-width:0;height:40px;padding:0 12px;
+  font:inherit;font-size:17px;font-stretch:110%;letter-spacing:.04em;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--text);
+}
+#word:focus{outline:none;border-color:var(--line-strong)}
+#word::placeholder{color:#a8a8a8;letter-spacing:0;font-stretch:100%}
+button.act{
+  height:40px;padding:0 18px;border-radius:var(--r);cursor:pointer;
+  font:inherit;font-weight:650;font-stretch:115%;font-size:15px;
+  border:1px solid var(--line);background:var(--paper);color:var(--text);
+}
+#gen{background:var(--ink);border-color:var(--ink);color:var(--ink-text);transition:background .25s,border-color .25s}
+#replay{margin-left:auto;background:none;border:0;padding:6px 2px;cursor:pointer;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+#replay:hover{color:var(--text)}
+button.act:disabled{opacity:.35;cursor:default}
+:focus-visible{outline:1.5px solid var(--line-strong);outline-offset:3px}
+#status{flex-basis:100%;margin:-6px 0 0;font-size:13px;color:var(--muted);min-height:18px}
+@media (max-width:640px){
+  .bar{padding:12px 14px 16px;gap:12px}
+  .label{display:none}
+  .swatch,.custom{width:26px;height:26px}
+}
+</style>
+</head>
+<body>
+<main id="stage" aria-label="Coalition Alphabet Collider"></main>
+<div class="bar hidden" id="panel" inert>
+  <div class="group" role="group" aria-label="Letter colour" id="swatches">
+    <span class="label">Colour</span>
+  </div>
+  <div class="group" role="group" aria-label="Background colour" id="bgswatches">
+    <span class="label">Background</span>
+  </div>
+  <form class="word" id="form" onsubmit="return false">
+    <label for="word" class="label">Word</label>
+    <input id="word" type="text" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type a word or two">
+    <button class="act" id="gen" type="submit">Generate</button>
+    <button class="act" id="reset" type="button" disabled>Reset</button>
+  </form>
+  <button id="replay" type="button">Replay intro</button>
+  <p id="status" aria-live="polite"></p>
+</div>
+<script>
+const GLYPHS = {"a":{"w":83.188,"h":110,"g":"<path d=\"M60.5 880C31.17 880 0 848.83 0 819.5V605C0 581.17 7.33 559.17 31.17 551.83L542.67 245.67V122.83H122.83V337.33H0V60.5C0 23.83 31.17 0 60.5 0H605C634.33 0 665.5 23.83 665.5 60.5V819.5C665.5 848.83 634.33 880 605 880ZM122.83 634.33V757.17H542.67V390.5Z\"/>"},"b":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C29.33 880 0 854.33 0 817.67V56.83C0 25.67 29.33 0 62.33 0H386.83C421.67 0 449.17 25.67 449.17 56.83V188.83L572 117.33C590.33 100.83 608.67 100.83 634.33 117.33C650.83 122.83 663.67 144.83 663.67 166.83V817.67C663.67 854.33 638 880 605 880ZM328.17 121H124.67V386.83L328.17 264ZM124.67 528V757.17H540.83V275Z\"/>"},"c":{"w":82.958,"h":110,"g":"<path d=\"M58.67 880C22 880 0 847 0 815.83V62.33C0 23.83 22 0 58.67 0H603.17C634.33 0 663.67 23.83 663.67 62.33V337.33H542.67V122.83H121V755.33H542.67V535.33H663.67V815.83C663.67 847 634.33 880 603.17 880Z\"/>"},"d":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 848.83 0 817.67V168.67C0 144.83 7.33 130.17 22 113.67C36.67 108.17 55 100.83 77 108.17L540.83 245.67V0H663.67V817.67C663.67 848.83 641.67 880 603.17 880ZM122.83 245.67V759H540.83V375.83Z\"/>"},"e":{"w":82.958,"h":110,"g":"<path d=\"M58.67 880C29.33 880 0 856.17 0 815.83V62.33C0 31.17 29.33 0 58.67 0H603.17C634.33 0 663.67 31.17 663.67 62.33V282.33C663.67 297 658.17 320.83 634.33 328.17L121 634.33V757.17H540.83V540.83H663.67V815.83C663.67 856.17 634.33 880 603.17 880ZM540.83 122.83H121V496.83L540.83 243.83Z\"/>"},"f":{"w":83.417,"h":110,"g":"<path d=\"M62.33 0C31.17 0 0 23.83 0 62.33V880H122.83V496.83H397.83V374H122.83V122.83H542.67V337.33H667.33V62.33C667.33 23.83 641.67 0 605 0Z\"/>"},"g":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 847 0 815.83V62.33C0 23.83 22 0 62.33 0H603.17C641.67 0 663.67 23.83 663.67 62.33V337.33H540.83V122.83H122.83V757.17H540.83V496.83H216.33V374H603.17C641.67 374 663.67 405.17 663.67 436.33V815.83C663.67 847 641.67 880 603.17 880Z\"/>"},"h":{"w":82.958,"h":110,"g":"<path d=\"M663.67 0H540.83V238.33L122.83 487.67V0H0V880H122.83V634.33L540.83 383.17V880H663.67Z\"/>"},"i":{"w":15.354,"h":110,"g":"<path d=\"M122.83 0V880H0V0Z\"/>"},"j":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 847 0 815.83V535.33H122.83V757.17H540.83V0H663.67V815.83C663.67 847 641.67 880 603.17 880Z\"/>"},"k":{"w":82.958,"h":110,"g":"<path d=\"M319 487.67 539 880H663.67L418 429L586.67 320.83C601.33 308 616 293.33 616 271.33V0H502.33V232.83L111.83 480.33V0H0V865.33H111.83V625.17Z\"/>"},"l":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 856.17 0 815.83V0H122.83V757.17H540.83V540.83H663.67V815.83C663.67 856.17 641.67 880 603.17 880Z\"/>"},"m":{"w":135.438,"h":110,"g":"<path d=\"M1083.5 880H960.67V619.67L678.33 122.83H663.67V880H564.67L137.5 122.83H122.83V880H0V62.33C0 29.33 29.33 0 60.5 0H166.83C188.83 0 212.67 7.33 221.83 29.33L540.83 588.5V62.33C540.83 29.33 570.17 0 603.17 0H709.5C733.33 0 755.33 7.33 764.5 29.33L1078 573.83C1083.5 581.17 1083.5 588.5 1083.5 603.17Z\"/>"},"n":{"w":82.958,"h":110,"g":"<path d=\"M634.33 14.67C617.83 0 594 0 572 14.67L122.83 282.33V9.17H0V880H122.83V425.33L540.83 174.17V880H663.67V67.83C663.67 45.83 658.17 23.83 634.33 14.67Z\"/>"},"o":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 856.17 0 815.83V62.33C0 31.17 22 0 62.33 0H603.17C641.67 0 663.67 31.17 663.67 62.33V815.83C663.67 856.17 641.67 880 603.17 880ZM122.83 122.83V757.17H540.83V122.83Z\"/>"},"p":{"w":82.958,"h":110,"g":"<path d=\"M122.83 634.33V880H0V62.33C0 31.17 22 0 62.33 0H603.17C641.67 0 663.67 31.17 663.67 62.33V282.33C663.67 297 658.17 320.83 641.67 328.17ZM540.83 122.83H122.83V496.83L540.83 243.83Z\"/>"},"q":{"w":82.958,"h":110,"g":"<path d=\"M62.33 0C22 0 0 31.17 0 62.33V817.67C0 848.83 22 880 62.33 880H603.17C641.67 880 663.67 848.83 663.67 817.67V62.33C663.67 31.17 641.67 0 603.17 0ZM540.83 759H122.83V121H540.83V597.67L308 463.83L245.67 570.17L540.83 744.33Z\"/>"},"r":{"w":82.958,"h":110,"g":"<path d=\"M539 880H663.67L418 429L586.67 320.83C601.33 317.17 616 293.33 616 271.33V58.67C616 22 586.67 0 559.17 0H56.83C29.33 0 0 22 0 58.67V865.33H111.83V625.17L326.33 487.67ZM111.83 480.33V119.17H502.33V240.17Z\"/>"},"s":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 856.17 0 815.83V540.83H122.83V757.17H540.83V641.67L22 328.17C7.33 320.83 0 297 0 282.33V62.33C0 31.17 22 0 62.33 0H603.17C641.67 0 663.67 31.17 663.67 62.33V342.83H540.83V122.83H122.83V243.83L641.67 550C658.17 564.67 663.67 581.17 663.67 605V815.83C663.67 856.17 641.67 880 603.17 880Z\"/>"},"t":{"w":82.958,"h":110,"g":"<path d=\"M62.33 0C22 0 0 31.17 0 62.33V342.83H122.83V122.83H276.83V880H403.33V122.83H540.83V342.83H663.67V62.33C663.67 31.17 641.67 0 603.17 0Z\"/>"},"u":{"w":82.958,"h":110,"g":"<path d=\"M663.67 0H540.83V564.67L154 757.17H122.83V0H0V815.83C0 856.17 22 880 62.33 880H168.67H190.67L540.83 702.17V880H663.67Z\"/>"},"v":{"w":82.958,"h":110,"g":"<path d=\"M62.33 880C22 880 0 856.17 0 815.83V0H122.83V757.17H139.33L540.83 260.33V0H663.67V282.33C663.67 289.67 663.67 306.17 658.17 320.83L216.33 856.17C209 870.83 185.17 880 168.67 880Z\"/>"},"w":{"w":134.75,"h":110,"g":"<path d=\"M1078 0H955.17V256.67L669.17 759H660V0H562.83L130.17 759H122.83V0H0V817.67C0 848.83 31.17 880 62.33 880H166.83C188.83 880 212.67 865.33 220 843.33L539 287.83V817.67C539 848.83 562.83 880 601.33 880H705.83C727.83 880 744.33 865.33 759 848.83L1068.83 309.83C1078 297 1078 287.83 1078 282.33Z\"/>"},"x":{"w":82.958,"h":110,"g":"<path d=\"M663.67 0H540.83V245.67L331.83 375.83L122.83 245.67V0H0V284.17C0 298.83 7.33 320.83 22 330L209 443.67L22 551.83C7.33 568.33 0 583 0 605V880H122.83V641.67L331.83 515.17L540.83 641.67V880H663.67V605C663.67 583 658.17 568.33 641.67 551.83L454.67 443.67L641.67 330C658.17 320.83 663.67 298.83 663.67 284.17Z\"/>"},"y":{"w":82.958,"h":110,"g":"<path d=\"M663.67 0H540.83V496.83L122.83 243.83V0H0V282.33C0 297 7.33 320.83 22 328.17L540.83 634.33V757.17H0V880H603.17C641.67 880 663.67 856.17 663.67 815.83Z\"/>"},"z":{"w":82.958,"h":110,"g":"<path d=\"M663.67 759V880H58.67C29.33 880 0 848.83 0 817.67V713.17C0 696.67 7.33 682 22 667.33L540.83 144.83V122.83H0V0H603.17C641.67 0 663.67 23.83 663.67 62.33V168.67C663.67 185.17 663.67 199.83 649 216.33L121 735.17V759Z\"/>"}};
+const S = 8;            // vector upscale used when tracing
+const H = 110;
+const SPACE_W = 200*110/480; // the font's own space width, in the same units          // glyph height in font units
+const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+// Original layout of the alphabet sheet, in font units
+const ROWX = {
+  a:0,b:93,c:185,d:278,e:370,f:463,g:556,h:648,i:740,j:765,k:858,l:950,m:1042,
+  n:0,o:93,p:185,q:277,r:370,s:462,t:555,u:647,v:740,w:832,x:977,y:1069,z:1162
+};
+const ALPHA_W = 1245, ALPHA_H = 386, ROW2Y = 276, GAP = 11;
+
+const PALETTE = [
+  ["Sheet grey","#c4c4c4"],["Ink","#1c1c1c"],["Cobalt","#1f4fe0"],["Signal red","#e8302a"],
+  ["Orange","#ff7a00"],["Magenta","#e0218a"],["Green","#0a9a5b"],["Violet","#6b3fd4"]
+];
+
+const stage = document.getElementById("stage");
+const input = document.getElementById("word");
+const genBtn = document.getElementById("gen");
+const resetBtn = document.getElementById("reset");
+const statusEl = document.getElementById("status");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- colour ---------- */
+const swatchWrap = document.getElementById("swatches");
+let customWrap;
+function setInk(hex){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const lum=(0.2126*r+0.7152*g+0.0722*b)/255;
+  document.documentElement.style.setProperty("--ink",hex);
+  document.documentElement.style.setProperty("--ink-text",lum>0.6?"#1c1c1c":"#ffffff");
+  swatchWrap.querySelectorAll(".swatch").forEach(s=>s.setAttribute("aria-pressed",String(s.dataset.c===hex)));
+  customWrap.classList.toggle("on",!PALETTE.some(p=>p[1]===hex));
+}
+PALETTE.forEach(([name,hex])=>{
+  const b=document.createElement("button");
+  b.className="swatch";b.type="button";b.dataset.c=hex;b.style.setProperty("--c",hex);
+  b.setAttribute("aria-label",name);b.title=name;
+  b.onclick=()=>setInk(hex);
+  swatchWrap.appendChild(b);
+});
+customWrap=document.createElement("label");
+customWrap.className="custom";customWrap.title="Custom colour";
+customWrap.innerHTML='<input type="color" value="#2bb3c0" aria-label="Custom colour">';
+customWrap.querySelector("input").addEventListener("input",e=>setInk(e.target.value));
+swatchWrap.appendChild(customWrap);
+setInk("#c4c4c4");
+
+/* ---------- background (experiment) ---------- */
+// Light backgrounds: letters multiply, so overlaps get darker.
+// Dark backgrounds: letters screen, so overlaps get lighter.
+const BG_PALETTE=[["White","#ffffff"],["Pale grey","#e6e6e6"],["Yellow","#ffd400"],["Red","#e8302a"],["Cobalt","#1f4fe0"],["Black","#000000"]];
+const bgWrap=document.getElementById("bgswatches");
+let bgCustom;
+function setBg(hex){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const lum=(0.2126*r+0.7152*g+0.0722*b)/255;
+  document.documentElement.style.setProperty("--stage",hex);
+  document.documentElement.style.setProperty("--blend",lum>0.45?"multiply":"screen");
+  bgWrap.querySelectorAll(".swatch").forEach(s=>s.setAttribute("aria-pressed",String(s.dataset.c===hex)));
+  bgCustom.classList.toggle("on",!BG_PALETTE.some(p=>p[1]===hex));
+}
+BG_PALETTE.forEach(([name,hex])=>{
+  const b=document.createElement("button");
+  b.className="swatch";b.type="button";b.dataset.c=hex;b.style.setProperty("--c",hex);
+  b.setAttribute("aria-label",name+" background");b.title=name+" background";
+  b.onclick=()=>setBg(hex);
+  bgWrap.appendChild(b);
+});
+bgCustom=document.createElement("label");
+bgCustom.className="custom";bgCustom.title="Custom background";
+bgCustom.innerHTML='<input type="color" value="#2b2b48" aria-label="Custom background colour">';
+bgCustom.querySelector("input").addEventListener("input",e=>setBg(e.target.value));
+bgWrap.appendChild(bgCustom);
+setBg("#ffffff");
+
+/* ---------- sprites ---------- */
+const sprites = [];   // all live sprites
+const originals = {}; // letter -> sprite
+function makeSprite(ch){
+  const g=GLYPHS[ch];
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox",`0 0 ${g.w*S} ${g.h*S}`);
+  svg.setAttribute("width",g.w);svg.setAttribute("height",g.h);
+  svg.setAttribute("aria-hidden","true");
+  svg.classList.add("glyph");
+  svg.innerHTML=g.g;
+  stage.appendChild(svg);
+  const sp={ch,w:g.w,el:svg,cur:{x:-999,y:-999,r:0,s:1,o:0},mode:null,clone:false};
+  // swirl personality
+  sp.th0=Math.random()*Math.PI*2;
+  sp.om=(0.55+Math.random()*0.75);
+  sp.rf=0.4+Math.random()*0.9; sp.rp=Math.random()*6.28;
+  sp.wf=1.1+Math.random()*1.4; sp.wp=Math.random()*6.28;
+  sp.spin=(Math.random()<.5?-1:1)*(10+Math.random()*28);
+  sp.sf=0.3+Math.random()*0.6; sp.sp=Math.random()*6.28;
+  sprites.push(sp);
+  return sp;
+}
+LETTERS.split("").forEach(ch=>{originals[ch]=makeSprite(ch)});
+
+/* ---------- layout ---------- */
+let L={};
+function layout(){
+  const W=stage.clientWidth, Ht=stage.clientHeight;
+  const m=W<640?14:32;
+  const rest=Math.min((W-2*m)/ALPHA_W,(Ht-2*m)/ALPHA_H,1.6);
+  L={W,H:Ht,m,rest,ox:(W-ALPHA_W*rest)/2,oy:(Ht-ALPHA_H*rest)/2};
+}
+function restPos(ch){
+  const g=GLYPHS[ch], row=LETTERS.indexOf(ch)>12?1:0;
+  return {x:L.ox+(ROWX[ch]+g.w/2)*L.rest, y:L.oy+(row*ROW2Y+H/2)*L.rest, s:L.rest, o:1};
+}
+function wordScale(list){
+  const units=list.reduce((a,sp)=>a+sp.w,0)+GAP*(list.length-1);
+  return Math.min(L.rest*1.9,(L.W-2*L.m)/units,(L.H*0.26)/H);
+}
+// The word sits in a reserved band at the bottom; the swarm stays above it.
+function wordY(s){return L.H-L.m-H*s/2-L.H*0.04;}
+function slotsFor(order){
+  const s=wordScale(finalOrder.length?finalOrder:order);
+  const units=order.reduce((a,sp)=>a+sp.w,0)+GAP*(order.length-1);
+  let x=L.W/2-units*s/2; const y=wordY(s); const map=new Map();
+  order.forEach(sp=>{map.set(sp,{x:x+sp.w*s/2,y,s,o:1}); x+=(sp.w+GAP)*s;});
+  return map;
+}
+function swarmBox(){
+  const s=swarmScale();
+  const wordTop=wordY(L.wordS||L.rest)-H*(L.wordS||L.rest)/2;
+  const halfH=H*s/2;
+  const cx=L.W/2, hw=Math.min(L.W*0.36,L.W/2-L.m-60*s);
+  const top=L.m+halfH, bottom=Math.max(top+20,wordTop-L.H*0.05-halfH);
+  return {x0:cx-hw,x1:cx+hw,y0:top,y1:bottom,cx,cy:(top+bottom)/2};
+}
+function swarmScale(){return Math.min(L.rest*1.1,1.7);}
+
+/* ---------- motion engine ---------- */
+const ease={
+  io:k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2,
+  in:k=>k*k*k
+};
+const lerp=(a,b,k)=>a+(b-a)*k;
+const R2=Math.SQRT1_2;
+const DIRS=[[1,0],[R2,R2],[0,1],[-R2,R2],[-1,0],[-R2,-R2],[0,-1],[R2,-R2]]; // 0°,45°,90°… only
+
+// Path made of straight runs at 0°, 45° or 90°: one diagonal run plus one straight run.
+function anglePath(a,b){
+  const dx=b.x-a.x, dy=b.y-a.y, ax=Math.abs(dx), ay=Math.abs(dy);
+  let mid;
+  if(ax<=ay) mid={x:b.x,y:a.y+Math.sign(dy)*ax};      // diagonal, then vertical
+  else       mid={x:b.x-Math.sign(dx)*ay,y:a.y};      // horizontal, then diagonal
+  return [{x:a.x,y:a.y},mid,{x:b.x,y:b.y}];
+}
+function pointOn(pts,k){
+  const lens=[];let tot=0;
+  for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);lens.push(l);tot+=l;}
+  let d=k*tot;
+  for(let i=0;i<lens.length;i++){
+    if(d<=lens[i]||i===lens.length-1){const f=lens[i]?Math.min(1,d/lens[i]):1;
+      return {x:lerp(pts[i].x,pts[i+1].x,f),y:lerp(pts[i].y,pts[i+1].y,f)};}
+    d-=lens[i];
+  }
+  return pts[pts.length-1];
+}
+// Move along explicit points (or an angle path to `hold()`), then stay pinned to hold() so resizes reflow.
+function travel(sp,hold,dur,{e="io",delay=0,pts=null,toS=null,toO=null,die=false}={}){
+  const tgt=hold();
+  sp.mode={kind:"path",start:performance.now()+delay,dur,ease:ease[e],hold,die,
+    pts:pts||null,fromS:sp.cur.s,fromO:sp.cur.o,
+    toS:toS??tgt.s??sp.cur.s,toO:toO??tgt.o??sp.cur.o,from:{x:sp.cur.x,y:sp.cur.y}};
+}
+function startSwarm(sp,delay=0){
+  sp.mode={kind:"swarm",start:performance.now()+delay};
+  sp.dir=-1; sp.left=0;
+  sp.speed=(110+Math.random()*190)*Math.max(.55,L.rest);
+}
+function pickDir(sp,box){
+  const c=sp.cur;
+  const out={x:c.x<box.x0?1:c.x>box.x1?-1:0,y:c.y<box.y0?1:c.y>box.y1?-1:0};
+  let cands=[];
+  for(let i=0;i<8;i++){
+    const d=DIRS[i];
+    if(out.x&&d[0]*out.x<0) continue; if(out.y&&d[1]*out.y<0) continue;
+    if((out.x||out.y)&&d[0]*out.x+d[1]*out.y<=0) continue;
+    if(sp.dir>=0&&!out.x&&!out.y&&(i===(sp.dir+4)%8||i===sp.dir)) continue; // turn, don't reverse
+    cands.push(i);
+  }
+  if(!cands.length) cands=[0,1,2,3,4,5,6,7];
+  sp.dir=cands[Math.floor(Math.random()*cands.length)];
+  sp.left=(0.12+Math.random()*0.45)*Math.max(box.x1-box.x0,box.y1-box.y0);
+}
+function stepSwarm(sp,dt,box){
+  const c=sp.cur, step=sp.speed*dt;
+  const out={x:c.x<box.x0?1:c.x>box.x1?-1:0,y:c.y<box.y0?1:c.y>box.y1?-1:0};
+  if(sp.dir<0||sp.left<=0) pickDir(sp,box);
+  let d=DIRS[sp.dir];
+  if(out.x||out.y){
+    // outside the swirl area: always be heading back in on every axis that is out of bounds
+    if((out.x&&d[0]*out.x<=0)||(out.y&&d[1]*out.y<=0)){pickDir(sp,box);d=DIRS[sp.dir];}
+  }else{
+    const leaves=q=>{const x=c.x+q[0]*step,y=c.y+q[1]*step;return x<box.x0||x>box.x1||y<box.y0||y>box.y1;};
+    if(leaves(d)){ // about to cross the edge: turn onto another 45° heading that stays inside
+      const ok=[0,1,2,3,4,5,6,7].filter(i=>i!==sp.dir&&!leaves(DIRS[i]));
+      const fwd=ok.filter(i=>i!==(sp.dir+4)%8);
+      const pool=fwd.length?fwd:ok;
+      if(pool.length){
+        sp.dir=pool[Math.floor(Math.random()*pool.length)];
+        sp.left=(0.12+Math.random()*0.45)*Math.max(box.x1-box.x0,box.y1-box.y0);
+        d=DIRS[sp.dir];
+      }
+    }
+  }
+  const wasInside=!out.x&&!out.y;
+  c.x+=d[0]*step; c.y+=d[1]*step; sp.left-=step;
+  if(wasInside){ // never let a letter that was inside slip out
+    c.x=Math.min(box.x1,Math.max(box.x0,c.x));
+    c.y=Math.min(box.y1,Math.max(box.y0,c.y));
+  }
+  const k=Math.min(1,dt*3);
+  c.s=lerp(c.s,swarmScale(),k); c.o=lerp(c.o,0.62,k);
+}
+
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  const box=swarmBox();
+  for(let i=sprites.length-1;i>=0;i--){
+    const sp=sprites[i], m=sp.mode, c=sp.cur;
+    if(m&&m.kind==="swarm"){ if(now>=m.start) stepSwarm(sp,dt,box); }
+    else if(m&&m.kind==="fly"){
+      if(now<m.start) stepSwarm(sp,dt,box);
+      else{
+        if(m.dir!==sp.dir&&DIRS[sp.dir]&&DIRS[sp.dir][1]<=0) m.dir=sp.dir; // already heading out: don't turn
+        const d=DIRS[m.dir]; m.v+=m.acc*dt; c.x+=d[0]*m.v*dt; c.y+=d[1]*m.v*dt;
+        if(c.x<-300||c.x>L.W+300||c.y<-300){sp.mode=null;c.o=0;}
+      }
+    }
+    else if(m&&m.kind==="path"){
+      const k=Math.max(0,Math.min(1,(now-m.start)/m.dur)), p=m.ease(k);
+      if(k>=1){
+        if(m.die){sp.el.remove();sprites.splice(i,1);continue;}
+        const t=m.hold(); c.x=t.x;c.y=t.y;c.s=t.s!=null?t.s:m.toS;c.o=m.toO;
+      }else if(k>0){
+        const pts=m.pts||anglePath(m.from,m.hold());
+        const q=pointOn(pts,p); c.x=q.x;c.y=q.y;
+        c.s=lerp(m.fromS,m.toS,p); c.o=lerp(m.fromO,m.toO,p);
+      }
+    }
+    sp.el.style.transform=`translate(${c.x-sp.w/2}px,${c.y-H/2}px) scale(${c.s})`;
+    sp.el.style.opacity=c.o;
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- state ---------- */
+let state="rest", timers=[], finalOrder=[];
+function later(fn,ms){timers.push(setTimeout(fn,ms));}
+const SWARM_MS=10000, DROP_MS=1500, DROP_STAGGER=160, SLIDE_TOTAL_MS=5000, SLIDE_STAGGER=90, AFTER_FLY_PAUSE_MS=700;
+
+function toRest(animated){
+  L.wordS=null;
+  sprites.forEach(sp=>{
+    if(sp.clone){
+      travel(sp,()=>restPos(sp.ch),animated?1400:1,{toO:0,die:true});
+    }else if(animated){
+      travel(sp,()=>restPos(sp.ch),1600,{delay:Math.random()*250});
+    }else{
+      sp.cur={...restPos(sp.ch)};
+      sp.mode={kind:"path",start:0,dur:1,ease:ease.io,hold:()=>restPos(sp.ch),toS:L.rest,toO:1,fromS:L.rest,fromO:1,from:sp.cur};
+    }
+  });
+}
+
+
+const panel=document.getElementById("panel");
+function showPanel(on){panel.classList.toggle("hidden",!on); if(on) panel.removeAttribute("inert"); else panel.setAttribute("inert","");}
+function generate(){
+  const word=input.value.toLowerCase().replace(/[^a-z ]/g,"").replace(/ +/g," ").trim();
+  if(!word){statusEl.textContent="Type a word using the letters a to z, then press Generate.";input.focus();return;}
+  if(state!=="rest") return;
+  state="run"; statusEl.textContent="";
+  genBtn.disabled=true; input.disabled=true; resetBtn.disabled=false;
+  showPanel(false);
+
+  const used=new Set(); const ws=[];
+  for(const ch of word){
+    if(ch===" "){ ws.push({ch:" ",w:SPACE_W,space:true}); continue; } // a gap, not a letter
+    let sp=originals[ch];
+    if(used.has(sp)){ sp=makeSprite(ch); sp.clone=true; sp.cur={...restPos(ch),o:0}; }
+    used.add(sp); ws.push(sp);
+  }
+  finalOrder=ws; L.wordS=wordScale(finalOrder);
+
+  // 1. swarm for 10 seconds, moving only at 0°, 45° and 90°
+  sprites.forEach(sp=>startSwarm(sp,Math.random()*400));
+
+  // 2. word letters drop out of the swarm into a wrong order on the baseline
+  later(()=>{
+    // shuffle only the letters; spaces keep their places so the gaps stay put
+    const letterIdx=finalOrder.map((t,i)=>t.space?-1:i).filter(i=>i>=0);
+    let shuffled, tries=0;
+    const seq=a=>a.map(s=>s.ch).join("");
+    do{
+      const ls=letterIdx.map(i=>finalOrder[i]);
+      for(let i=ls.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ls[i],ls[j]]=[ls[j],ls[i]];}
+      shuffled=finalOrder.slice(); letterIdx.forEach((pos,k)=>{shuffled[pos]=ls[k];});
+      tries++;
+    }while(letterIdx.length>1&&seq(shuffled)===word&&tries<60);
+    shuffled.forEach((sp,i)=>{ if(!sp.space) travel(sp,()=>slotsFor(shuffled).get(sp),DROP_MS,{delay:i*DROP_STAGGER}); });
+    const landed=DROP_MS+shuffled.length*DROP_STAGGER+500;
+
+    // 3. slide into the right order; unused letters fly away
+    later(()=>{
+      const inWord=new Set(finalOrder);
+      sprites.forEach(sp=>{
+        if(inWord.has(sp)) return;
+        // keep swarming until its own start time, then carry straight on and accelerate away
+        let best=sp.dir<0?6:sp.dir;
+        if(DIRS[best][1]>0){ // heading down towards the word: turn to the nearest upward/sideways 45° heading
+          let bd=9; DIRS.forEach((d,i)=>{ if(d[1]>0) return; const diff=Math.min((i-sp.dir+8)%8,(sp.dir-i+8)%8); if(diff<bd||(diff===bd&&Math.random()<.5)){bd=diff;best=i;} });
+        }
+        sp.mode={kind:"fly",start:performance.now()+Math.random()*500,dir:best,v:sp.speed,acc:(900+Math.random()*700)*Math.max(.6,L.rest)};
+      });
+      // 4. once the last unused letter has left, pause, then slide into order over 5 seconds
+      const leaving=sprites.filter(sp=>!inWord.has(sp));
+      const flyStart=performance.now();
+      const waitForExit=()=>{
+        const gone=leaving.every(sp=>sp.mode===null);
+        if(!gone&&performance.now()-flyStart<6000){later(waitForExit,60);return;}
+        later(()=>{
+          const n=finalOrder.length, dur=SLIDE_TOTAL_MS-SLIDE_STAGGER*(n-1);
+          finalOrder.forEach((sp,i)=>{ if(!sp.space) travel(sp,()=>slotsFor(finalOrder).get(sp),dur,{delay:i*SLIDE_STAGGER}); });
+          later(()=>{state="done";statusEl.textContent="Press Reset to make another word.";showPanel(true);later(()=>resetBtn.focus(),500);},SLIDE_TOTAL_MS+400);
+        },AFTER_FLY_PAUSE_MS);
+      };
+      waitForExit();
+    },landed);
+  },SWARM_MS);
+}
+
+function reset(){
+  timers.forEach(clearTimeout); timers=[];
+  state="rest"; statusEl.textContent=""; finalOrder=[];
+  toRest(true);
+  genBtn.disabled=false; input.disabled=false; resetBtn.disabled=true;
+  input.value=""; input.focus();
+}
+
+input.addEventListener("input",()=>{
+  const v=input.value.replace(/[^a-zA-Z ]/g,"").replace(/ {2,}/g," ").replace(/^ /,"");
+  if(v!==input.value){
+    const bad=/[^a-zA-Z ]/.test(input.value);
+    input.value=v;
+    if(bad) statusEl.textContent="Only the letters a to z (and spaces) are in this alphabet.";
+  }
+  else if(state==="rest") statusEl.textContent="";
+});
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();generate();});
+resetBtn.addEventListener("click",reset);
+addEventListener("resize",layout);
+new ResizeObserver(layout).observe(stage);
+
+
+/* ---------- opening: type the name, then rearrange into the alphabet ---------- */
+const TITLE=["coalition","alphabet","collider"], LINE_GAP=34;
+let titleSprites=[];
+function titleMetrics(){
+  const lineU=TITLE.map(w=>w.split("").reduce((a,ch)=>a+GLYPHS[ch].w,0)+GAP*(w.length-1));
+  const maxU=Math.max(...lineU), blockH=3*H+2*LINE_GAP;
+  const ts=Math.min((L.W-2*L.m)/maxU,(L.H-2*L.m)/blockH,2.2);
+  return {ts,x0:(L.W-maxU*ts)/2,y0:(L.H-blockH*ts)/2};
+}
+function titlePos(line,xu,w){
+  const t=titleMetrics();
+  return {x:t.x0+(xu+w/2)*t.ts,y:t.y0+(line*(H+LINE_GAP)+H/2)*t.ts,s:t.ts,o:1};
+}
+function intro(){
+  state="intro";
+  const seen=new Set(); let delay=450; const TYPE_MS=65;
+  TITLE.forEach((word,line)=>{
+    let xu=0;
+    word.split("").forEach(ch=>{
+      let sp;
+      if(!seen.has(ch)){sp=originals[ch];seen.add(ch);}
+      else{sp=makeSprite(ch);sp.clone=true;}
+      const myXu=xu, w=GLYPHS[ch].w;
+      titleSprites.push(sp);
+      later(()=>{
+        const p=titlePos(line,myXu,w);
+        sp.cur={x:p.x,y:p.y,r:0,s:p.s,o:1};
+        sp.mode={kind:"path",start:0,dur:1,ease:ease.io,hold:()=>titlePos(line,myXu,w),toS:p.s,toO:1,fromS:p.s,fromO:1,from:sp.cur};
+       
+      },delay);
+      xu+=w+GAP; delay+=TYPE_MS;
+    });
+    delay+=140;
+  });
+  delay+=2000; // 2-second pause on the finished name
+  later(()=>{
+    LETTERS.split("").forEach(ch=>{
+      const sp=originals[ch];
+      if(seen.has(ch)){
+        travel(sp,()=>restPos(ch),1700,{delay:Math.random()*350});
+      }else{ // letters not in the name grow in at their places
+        const r=restPos(ch); sp.cur={x:r.x,y:r.y,r:0,s:r.s*0.3,o:0};
+        travel(sp,()=>restPos(ch),900,{delay:700+Math.random()*700});
+      }
+    });
+    titleSprites.filter(sp=>sp.clone).forEach(sp=>
+      travel(sp,()=>restPos(sp.ch),1700,{delay:Math.random()*350,toO:0,die:true}));
+    later(()=>{state="rest";titleSprites=[];showPanel(true);},2500);
+  },delay);
+}
+
+function replayIntro(){
+  if(state==="intro") return;
+  timers.forEach(clearTimeout); timers=[];
+  state="intro"; statusEl.textContent=""; finalOrder=[];
+  showPanel(false);
+  input.value=""; genBtn.disabled=false; input.disabled=false; resetBtn.disabled=true;
+  // fade out whatever is on screen, then start again from a blank page
+  sprites.slice().forEach(sp=>{
+    const at={x:sp.cur.x,y:sp.cur.y,s:sp.cur.s};
+    travel(sp,()=>at,500,{toO:0,die:sp.clone});
+  });
+  setTimeout(()=>{
+    for(let i=sprites.length-1;i>=0;i--){
+      const sp=sprites[i];
+      if(sp.clone){sp.el.remove();sprites.splice(i,1);}
+      else{sp.mode=null;sp.cur.o=0;}
+    }
+    titleSprites=[];
+    intro();
+  },650);
+}
+document.getElementById("replay").addEventListener("click",replayIntro);
+layout(); intro();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

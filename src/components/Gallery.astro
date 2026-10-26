@@ -1,0 +1,14 @@
+---
+import { videoEmbed } from "../lib/content";
+const { items } = Astro.props as { items: { image?: string; video?: string; caption?: string }[] };
+---
+<div class="gallery">
+  {items.map((m, i) => (
+    <figure class={i === 0 ? "big" : undefined}>
+      {m.video
+        ? <div class="vid"><iframe src={videoEmbed(m.video)} title={m.caption ?? "Video"} loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        : m.image && <a href={m.image}><img src={m.image} alt={m.caption ?? ""} loading="lazy" decoding="async" /></a>}
+      {m.caption && <figcaption>{m.caption}</figcaption>}
+    </figure>
+  ))}
+</div>

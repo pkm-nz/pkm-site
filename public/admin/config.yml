@@ -1,0 +1,122 @@
+# The posting editor at /admin. It saves straight into the GitHub repository,
+# and Cloudflare Pages rebuilds the site within a minute or two.
+backend:
+  name: github
+  repo: pkm-nz/pkm-site
+  branch: main
+
+site_url: https://pkm.nz
+display_url: https://pkm.nz
+media_folder: public/uploads
+public_folder: /uploads
+slug: { encoding: ascii, clean_accents: true }
+
+# Photos straight off a phone (including iPhone HEIC) are shrunk and converted on upload.
+media_libraries:
+  default:
+    config:
+      max_file_size: 25000000
+      transformations:
+        raster_image: { format: webp, quality: 85, width: 2400, height: 2400 }
+
+collections:
+  - name: updates
+    label: Updates
+    label_singular: Update
+    description: Journal posts. Each one belongs to a project and shows on that project's page too.
+    folder: src/content/updates
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: { fields: [date, title], default: { field: date, direction: descending } }
+    summary: "{{date | date('YYYY-MM-DD')}} · {{title}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: project
+        label: Project
+        widget: relation
+        collection: projects
+        value_field: "{{slug}}"
+        search_fields: [title, titleEnd]
+        display_fields: ["{{title}} {{titleEnd}}"]
+      - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
+      - { name: stage, label: Stage at this point, widget: select, options: [Idea, Planning, Prototype, Making, Finished], default: Planning }
+      - { name: excerpt, label: One or two line summary (shown in the feed), widget: text }
+      - { name: image, label: Main photo, widget: image, required: false }
+      - { name: video, label: Main video (YouTube or Vimeo link; shows instead of the photo), widget: string, required: false }
+      - { name: caption, label: Caption, widget: string, required: false }
+      - { name: body, label: Words, widget: markdown }
+      - name: gallery
+        label: More photos and videos
+        widget: list
+        required: false
+        fields:
+          - { name: image, label: Photo, widget: image, required: false }
+          - { name: video, label: Video link, widget: string, required: false }
+          - { name: caption, label: Caption, widget: string, required: false }
+      - name: comments
+        label: Approved comments
+        hint: Paste in comments you've approved from your inbox. Tick "My reply" for your own answers.
+        widget: list
+        required: false
+        summary: "{{name}}: {{text}}"
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
+          - { name: text, label: Comment, widget: text }
+          - { name: artist, label: My reply, widget: boolean, default: false }
+      - { name: draft, label: Draft (hidden from the site), widget: boolean, default: false, required: false }
+
+  - name: projects
+    label: Projects
+    label_singular: Project
+    description: The six project pages. Change the stage here when a project moves on.
+    folder: src/content/projects
+    create: true
+    delete: false
+    slug: "{{slug}}"
+    summary: "{{title}} {{titleEnd}} · {{stage}}"
+    sortable_fields: { fields: [order], default: { field: order } }
+    fields:
+      - { name: title, label: Title (first part), widget: string }
+      - { name: titleEnd, label: Title (last part, shown in colour), widget: string }
+      - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished] }
+      - { name: summary, label: Short intro, widget: text }
+      - { name: kind, label: "Type line (e.g. Physical · layered acrylic)", widget: string }
+      - { name: mode, label: Page type, widget: select, options: [{ label: Digital, value: digital }, { label: Physical with 3D model, value: model }, { label: Drawing, value: drawing }] }
+      - { name: order, label: Position on the home page, widget: number, value_type: int }
+      - { name: cover, label: Home page card image, widget: image }
+      - { name: coverFit, label: Card image fit, widget: select, options: [cover, contain], default: cover, required: false }
+      - { name: coverBg, label: Card image background colour, widget: color, required: false }
+      - { name: heroImage, label: Main image (when there's no 3D model), widget: image, required: false }
+      - { name: heroNote, label: Main image note, widget: string, required: false }
+      - { name: embed, label: Interactive piece or 3D model address, widget: string, required: false }
+      - { name: embedNote, label: Interactive piece note, widget: string, required: false }
+      - { name: body, label: The thinking, widget: markdown }
+      - name: decisions
+        label: Key decisions
+        widget: list
+        required: false
+        summary: "{{title}}"
+        fields:
+          - { name: title, label: Decision, widget: string }
+          - { name: text, label: Why, widget: text }
+      - name: facts
+        label: At a glance
+        widget: list
+        required: false
+        summary: "{{label}}: {{value}}"
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: value, label: Value, widget: string }
+      - name: gallery
+        label: Photos and video
+        widget: list
+        required: false
+        fields:
+          - { name: image, label: Photo, widget: image, required: false }
+          - { name: video, label: Video link, widget: string, required: false }
+          - { name: caption, label: Caption, widget: string, required: false }
+      - { name: accent, label: Colour, widget: color }
+      - { name: accentDark, label: Colour (dark mode), widget: color }
+      - { name: bg, label: Background tint, widget: color }
+      - { name: bgDark, label: Background tint (dark mode), widget: color }

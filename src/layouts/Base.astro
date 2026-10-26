@@ -1,0 +1,44 @@
+---
+import "../styles/global.css";
+import Logo from "../components/Logo.astro";
+import { SITE } from "../site.config";
+interface Props { title?: string; description?: string; nav?: "home" | "journal" | "play" | "contact"; image?: string }
+const { title, description = SITE.description, nav, image } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const og = new URL(image ?? "/images/projects/cac.jpg", Astro.site);
+const links = [["home", "/", "Projects"], ["journal", "/journal/", "Journal"], ["play", "/play/", "Play & explore"]] as const;
+---
+<!doctype html>
+<html lang="en-NZ">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+  <meta property="og:title" content={title ?? SITE.title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={og} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=DM+Mono:wght@400;500&display=swap" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site"><div class="in">
+    <a class="logo" href="/" aria-label="Home"><Logo /><small>{SITE.tagline}</small></a>
+    <nav class="main" aria-label="Main">
+      {links.map(([k, href, label]) => <a href={href} aria-current={nav === k ? "page" : undefined}>{label}</a>)}
+      <a href="/contact/" class="cta" aria-current={nav === "contact" ? "page" : undefined}>Contact</a>
+    </nav>
+  </div></header>
+  <main id="main"><div class="view"><slot /></div></main>
+  <footer class="site"><div class="in">
+    <span>© {new Date().getFullYear()} {SITE.owner} · {SITE.location}</span>
+    <span class="fl"><a href="/contact/">Contact</a></span>
+  </div></footer>
+</body>
+</html>

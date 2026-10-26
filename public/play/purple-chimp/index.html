@@ -1,0 +1,392 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Purple Chimp</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: full-bleed gallery canvas; title card top-left, build steps + view controls docked at the bottom. Single light look: the acrylic only reads against a lit wall. */
+:root {
+  --wall: #f3f2f6;
+  --ink: #1d1838;
+  --muted: #625c80;
+  --acrylic: #4a2ad0;
+  --acrylic-soft: #e4dffa;
+  --panel: rgba(255, 255, 255, 0.82);
+  --line: rgba(29, 24, 56, 0.12);
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+body { background: var(--wall); color: var(--ink); font-family: var(--body); overflow: hidden; }
+#stage { position: fixed; inset: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+
+.hud {
+  position: fixed; inset: 0; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding-block: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.hud > * { pointer-events: auto; }
+
+.title { max-width: 22rem; display: flex; flex-direction: column; gap: 6px; align-self: flex-start; }
+.title h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.4rem); letter-spacing: -0.02em; line-height: 1; text-wrap: balance; }
+.title h1 span { color: var(--acrylic); }
+.title p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.45; max-width: 26rem; }
+.spec { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+
+.bottom { display: flex; flex-direction: column; align-items: center; gap: 12px; pointer-events: none; }
+.bottom > .dock { pointer-events: auto; }
+.caption {
+  margin-top: 14px; min-height: 7.5rem; display: flex; flex-direction: column; gap: 4px;
+  max-width: 34rem; pointer-events: none; transition: opacity 0.4s;
+}
+.caption .k { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--acrylic); }
+.caption .t { font-family: var(--display); font-size: clamp(1.1rem, 2.4vw, 1.5rem); font-weight: 500; text-wrap: balance; }
+.caption .d { color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+
+.dock {
+  align-self: center; width: auto; max-width: 100%;
+  background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line); border-radius: 14px;
+  padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+}
+.group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+button {
+  font: 500 0.82rem/1 var(--body); color: var(--ink); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+button:hover { border-color: var(--acrylic); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--acrylic); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--acrylic); border-color: var(--acrylic); color: #fff; }
+button.step { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font-family: var(--mono); position: relative; }
+button.step .sw { position: absolute; inset: 3px; border-radius: 999px; z-index: -1; }
+button.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+.loading { position: fixed; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); pointer-events: none; }
+
+@media (max-width: 640px) {
+  .title p { display: none; }
+  .dock { gap: 8px 12px; padding: 8px 10px; }
+  .caption { margin-top: 8px; min-height: 3.6rem; }
+  .caption .d { display: none; }
+}
+</style>
+
+<div id="stage"></div>
+<div class="loading" id="loading">Cutting acrylic&hellip;</div>
+
+<div class="hud">
+  <div class="title">
+    <h1>Purple <span>Chimp</span></h1>
+    <p>Four sheets of the same translucent purple acrylic. Where the sheets overlap, the colour deepens. From the front it reads as a flat print; step to the side and it comes apart. Drag to walk around it, scroll or pinch to move closer and get inside.</p>
+    <div class="spec">1235 &times; 1116 mm &middot; 4 sheets &middot; 40 mm apart</div>
+    <div class="caption" id="caption" aria-live="polite">
+      <div class="k" id="capK"></div>
+      <div class="t" id="capT"></div>
+      <div class="d" id="capD"></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+
+  <div class="dock">
+    <div class="group" role="group" aria-label="Build up">
+      <span class="label">Build</span>
+      <button class="step" id="s1" aria-pressed="false" title="Show layer 1">1</button>
+      <button class="step" id="s2" aria-pressed="false" title="Show layers 1 to 2">2</button>
+      <button class="step" id="s3" aria-pressed="false" title="Show layers 1 to 3">3</button>
+      <button class="step" id="s4" aria-pressed="false" title="Show all four layers">4</button>
+      <button class="primary" id="replay">Replay build</button>
+    </div>
+    <div class="group" role="group" aria-label="Viewpoint">
+      <span class="label">View</span>
+      <button id="vFront">Front</button>
+      <button id="vAngle">Angle</button>
+      <button id="vSide">Side</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+// Real-world size in metres, from the 2000 mm cutting artboard.
+const W = 1.235, H = 1.116, SHEET = 0.005;
+const PX_W = 3014, PX_H = 2725;
+// Colour one sheet adds over a white wall (sRGB, matched to the gallery photo & video, then lightened).
+const TINT = new THREE.Vector3(190 / 255, 170 / 255, 245 / 255);
+const EDGE = 0x7457ea;
+// The eye highlights are cut through all four sheets; the front view lines the viewer up with them.
+const EYE_Y = 0.86, EYE_X = -0.04;
+const LAYERS = [
+  { n: 1, name: "Layer 1", title: "The silhouette", desc: "One solid outline sets the lightest tone. Anything only this sheet covers stays pale lavender." },
+  { n: 2, name: "Layer 2", title: "The face appears", desc: "Cut away at the muzzle and chest highlights, so the second tone starts modelling the head." },
+  { n: 3, name: "Layer 3", title: "Brow, eyes and mouth", desc: "Three sheets deep, the shadows under the brow and around the jaw take shape." },
+  { n: 4, name: "Layer 4", title: "Hair and deep shadow", desc: "The most detailed cut. Its loose strands of hair float free, held on clear rods in the real piece." },
+];
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0xf6f5f9, 1);
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 50);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 0.05;   // close enough to slip between the sheets
+controls.zoomSpeed = 3;
+controls.zoomToCursor = true;
+controls.maxDistance = 7;
+controls.maxPolarAngle = Math.PI * 0.62;
+// Keep the viewer in front of the piece, as in the gallery.
+controls.minAzimuthAngle = -1.53;
+controls.maxAzimuthAngle = 1.53;
+controls.target.set(0, H / 2, 0);
+
+scene.add(new THREE.AmbientLight(0xffffff, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.8);
+sun.position.set(-1.5, 2.5, 2); scene.add(sun);
+const rim = new THREE.DirectionalLight(0xffffff, 0.8);
+rim.position.set(2, 0.5, -1); scene.add(rim);
+
+// Floor with a soft contact shadow so the piece sits in a room.
+function radialTexture(stops) {
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d"), grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  stops.forEach(([o, col]) => grd.addColorStop(o, col));
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14),
+  new THREE.MeshBasicMaterial({ map: radialTexture([[0, "#eceaf2"], [0.45, "#f1f0f5"], [1, "#f6f5f9"]]) }));
+floor.rotation.x = -Math.PI / 2; floor.renderOrder = -2; scene.add(floor);
+const shadow = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.5, 0.5),
+  new THREE.MeshBasicMaterial({ map: radialTexture([[0, "rgba(40,30,90,0.2)"], [1, "rgba(40,30,90,0)"]]), transparent: true, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.001; shadow.renderOrder = -1; scene.add(shadow);
+
+// Each sheet = one face that multiplies whatever is behind it by the tint (so overlaps darken
+// like stacked coloured acrylic), plus solid cut edges extruded to the sheet's 5 mm thickness.
+const vert = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+const frag = `uniform sampler2D map; uniform vec3 tint; uniform float fade; varying vec2 vUv;
+void main(){
+  float v = texture2D(map, vUv).r;
+  float w = max(fwidth(v), 1e-4);
+  float a = smoothstep(0.5 - w, 0.5 + w, v) * fade;   // crisp cut line at any zoom
+  gl_FragColor = vec4(mix(vec3(1.0), tint, a), 1.0);
+}`;
+const faceGeo = new THREE.PlaneGeometry(W, H);
+
+function edgeGeometry(buf) {
+  const u32 = new Uint32Array(buf, 0, 1), nc = u32[0];
+  const counts = new Uint32Array(buf, 4, nc);
+  const pts = new Uint16Array(buf, 4 + 4 * nc);
+  let total = 0; for (const c of counts) total += c;
+  const pos = new Float32Array(total * 18);
+  const sx = W / PX_W, sy = H / PX_H, z = SHEET / 2;
+  let k = 0, o = 0;
+  for (const c of counts) {
+    for (let i = 0; i < c; i++) {
+      const a = (o + i) * 2, b = (o + (i + 1) % c) * 2;
+      const x1 = pts[a] * sx - W / 2, y1 = H / 2 - pts[a + 1] * sy;
+      const x2 = pts[b] * sx - W / 2, y2 = H / 2 - pts[b + 1] * sy;
+      pos.set([x1, y1, -z, x2, y2, -z, x2, y2, z, x1, y1, -z, x2, y2, z, x1, y1, z], k); k += 18;
+    }
+    o += c;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
+}
+
+const groups = [];
+const texLoader = new THREE.TextureLoader();
+let pending = LAYERS.length * 2;
+const done = () => { if (--pending === 0) start(); };
+
+LAYERS.forEach(L => {
+  const g = new THREE.Group();
+  const faceMat = new THREE.ShaderMaterial({
+    uniforms: { map: { value: null }, tint: { value: TINT }, fade: { value: 0 } },
+    vertexShader: vert, fragmentShader: frag, side: THREE.DoubleSide,
+    transparent: true, depthWrite: false,
+    blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
+    blendSrc: THREE.DstColorFactor, blendDst: THREE.ZeroFactor,
+  });
+  const face = new THREE.Mesh(faceGeo, faceMat);
+  face.renderOrder = 1;   // after every edge, so faces in front tint the edges behind them
+  g.add(face);
+  const edgeMat = new THREE.MeshLambertMaterial({ color: EDGE, side: THREE.DoubleSide, transparent: true, opacity: 0 });
+  g.position.y = H / 2;
+  g.userData = { faceMat, edgeMat, shown: 0, target: 0 };
+  scene.add(g); groups.push(g);
+  texLoader.load(`layer${L.n}.png`, tex => {
+    tex.colorSpace = THREE.NoColorSpace;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    // No mipmaps: keeps small cut-outs such as the eye highlights open instead of blurring shut.
+    tex.generateMipmaps = false; tex.minFilter = THREE.LinearFilter;
+    faceMat.uniforms.map.value = tex;
+    done();
+  });
+  fetch(`edges${L.n}.txt`).then(r => r.text()).then(b64 => {
+    const buf = Uint8Array.from(atob(b64.trim()), c => c.charCodeAt(0)).buffer;
+    const e = new THREE.Mesh(edgeGeometry(buf), edgeMat);
+    e.renderOrder = 0;
+    g.add(e);
+    done();
+  });
+});
+
+// Layer 1 (full silhouette) at the back, layer 4 (finest detail) nearest the viewer.
+const gap = 0.04;
+function layerZ(i) { return (i - (LAYERS.length - 1) / 2) * (gap + SHEET); }
+
+// ---- Camera presets & tweening ----
+// Front: standing square-on at eye-highlight height, where the four sheets read as one print.
+const VIEWS = {
+  front: { pos: [EYE_X, EYE_Y, 3.4], target: [0, 0.62, 0] },
+  angle: { pos: [1.7, 1.2, 2.4], target: [0, H / 2, 0] },
+  side:  { pos: [3.05, 0.9, 0.12], target: [0, H / 2, 0] },
+};
+let camTween = null, fit = 1;
+function viewPos(name) {
+  const v = VIEWS[name], t = new THREE.Vector3(...v.target);
+  return { pos: new THREE.Vector3(...v.pos).sub(t).multiplyScalar(fit).add(t), target: t };
+}
+function goView(name, dur = 1.6) {
+  const to = viewPos(name);
+  if (reduceMotion || dur === 0) { camera.position.copy(to.pos); controls.target.copy(to.target); camTween = null; return; }
+  camTween = { from: camera.position.clone(), fromT: controls.target.clone(), to: to.pos, toT: to.target, t: 0, dur };
+}
+// Walk the viewer left, then right, around the front view and back, to show the depth.
+function swing(dur = 7, amp = 0.75) {
+  const f = viewPos("front");
+  if (reduceMotion) { camera.position.copy(f.pos); controls.target.copy(f.target); return; }
+  camTween = { swing: true, rel: f.pos.clone().sub(f.target), toT: f.target, amp, t: 0, dur };
+}
+controls.addEventListener("start", () => { camTween = null; stopAuto(); });
+
+// ---- Build sequence ----
+let step = 0, auto = null;
+const cap = { k: document.getElementById("capK"), t: document.getElementById("capT"), d: document.getElementById("capD"), box: document.getElementById("caption") };
+function setCaption(k, t, d) { cap.k.textContent = k; cap.t.textContent = t; cap.d.textContent = d; cap.box.style.opacity = k ? 1 : 0; }
+function setStep(n, instant = false) {
+  step = n;
+  groups.forEach((g, i) => { g.userData.target = i < n ? 1 : 0; if (instant) g.userData.shown = g.userData.target; });
+  for (let i = 1; i <= 4; i++) document.getElementById("s" + i).setAttribute("aria-pressed", String(i === n));
+  if (n > 0 && n <= 4) { const L = LAYERS[n - 1]; setCaption(L.name + " of 4", L.title, L.desc); }
+}
+function stopAuto() { if (auto) { auto.forEach(clearTimeout); auto = null; } }
+const POSTER = ["Front on", "A flat purple print", "Head-on, the four sheets line up into one image, with the eye highlights cut clean through."];
+function playBuild(fromStart = false) {
+  stopAuto();
+  auto = [];
+  const at = (ms, fn) => auto.push(setTimeout(fn, ms));
+  const T = reduceMotion ? 900 : 2600;
+  // Watch from the front while each sheet flies in at an angle and pivots flat onto the stack,
+  // so the first full composite is the poster.
+  setStep(0, fromStart); setCaption("", "", "");
+  goView("front", fromStart ? 0 : 1.2);
+  const t0 = fromStart ? 600 : 1400;
+  at(t0, () => setStep(1));
+  for (let n = 2; n <= 4; n++) at(t0 + (n - 1) * T, () => setStep(n));
+  at(t0 + 3 * T + 2000, () => { swing(); setCaption("In the round", "Four sheets, 40 mm apart", "Step to either side and the layers separate."); });
+  at(t0 + 3 * T + 9200, () => setCaption(...POSTER));
+  at(t0 + 3 * T + 15000, () => { setCaption("", "", ""); auto = null; });
+}
+
+for (let i = 1; i <= 4; i++) document.getElementById("s" + i).addEventListener("click", () => { stopAuto(); setStep(i); });
+document.getElementById("replay").addEventListener("click", () => playBuild());
+document.getElementById("vFront").addEventListener("click", () => { stopAuto(); goView("front"); });
+document.getElementById("vAngle").addEventListener("click", () => { stopAuto(); goView("angle"); });
+document.getElementById("vSide").addEventListener("click", () => { stopAuto(); goView("side"); });
+
+// ---- Render loop ----
+const clock = new THREE.Clock();
+const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  // Frame the sculpture in the space the title, captions and controls leave free:
+  // to the right of the text column on wide screens, below it on narrow ones.
+  const tb = document.querySelector(".title").getBoundingClientRect();
+  const dockTop = document.querySelector(".dock").getBoundingClientRect().top;
+  const L = tb.right + 24;
+  let cx, cy;
+  if (w - L >= 0.55 * w) {
+    cx = (L + w) / 2; cy = dockTop * 0.48;
+    fit = Math.max(0.7, 0.7 * h / dockTop, 0.745 * h / (w - L));
+  } else {
+    const avail = Math.max(120, dockTop - tb.bottom);
+    cx = w / 2; cy = tb.bottom + avail / 2;
+    fit = Math.max(0.7, 0.85 / camera.aspect, 0.65 * h / avail);
+  }
+  camera.setViewOffset(w, h, w / 2 - cx, h / 2 - cy, w, h);
+  camera.updateProjectionMatrix();
+}
+addEventListener("resize", resize);
+
+function tick() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  groups.forEach((g, i) => {
+    const u = g.userData;
+    const speed = reduceMotion ? 10 : 0.55;
+    u.shown += Math.sign(u.target - u.shown) * Math.min(Math.abs(u.target - u.shown), dt * speed);
+    // Each sheet flies in turned on its side, then pivots flat into its slot in the stack.
+    const fly = ease(Math.min(1, u.shown / 0.55));
+    const pivot = ease(Math.max(0, (u.shown - 0.35) / 0.65));
+    const fade = Math.min(1, u.shown * 3);
+    u.faceMat.uniforms.fade.value = fade;
+    u.edgeMat.opacity = fade;
+    g.position.x = (1 - fly) * 1.4;
+    g.position.z = layerZ(i) + (1 - fly) * 0.5;
+    g.rotation.y = (1 - pivot) * 1.05;
+    g.visible = u.shown > 0.001;
+  });
+  if (camTween) {
+    camTween.t = Math.min(1, camTween.t + dt / camTween.dur);
+    const k = ease(camTween.t);
+    if (camTween.swing) {
+      const az = -camTween.amp * Math.sin(2 * Math.PI * k);
+      camera.position.copy(camTween.rel).applyAxisAngle(THREE.Object3D.DEFAULT_UP, az).add(camTween.toT);
+      controls.target.copy(camTween.toT);
+    } else {
+      camera.position.lerpVectors(camTween.from, camTween.to, k);
+      controls.target.lerpVectors(camTween.fromT, camTween.toT, k);
+    }
+    if (camTween.t >= 1) camTween = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(tick);
+}
+
+function start() {
+  document.getElementById("loading").remove();
+  resize();
+  tick();
+  playBuild(true);
+}
+resize();
+</script>
+
+</body></html>

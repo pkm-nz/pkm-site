@@ -1,0 +1,19 @@
+---
+// The logo word, set in the Coalition Alphabet Collider's own letters,
+// overlapping like the piece, each letter in one project's colour.
+import glyphs from "../data/glyphs.json";
+import { SITE } from "../site.config";
+import { getProjects } from "../lib/content";
+const G = glyphs as Record<string, { w: number; d: string[] }>;
+const projects = await getProjects();
+let x = 0;
+const letters = SITE.logoWord.toLowerCase().split("").filter(ch => G[ch]).map((ch, i) => {
+  const p = projects[i % projects.length].data;
+  const l = { x, d: G[ch].d, style: `--pa-l:${p.accent};--pa-d:${p.accentDark}` };
+  x += G[ch].w * 8 - 120;
+  return l;
+});
+---
+<svg viewBox={`0 0 ${x + 120} 880`} role="img" aria-label={SITE.logoWord}>
+  {letters.map(l => l.d.map(d => <path class="pa" transform={`translate(${l.x} 0)`} d={d} style={l.style} />))}
+</svg>

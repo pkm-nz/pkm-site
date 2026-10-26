@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import Gallery from "../../components/Gallery.astro";
+import SendForm from "../../components/SendForm.astro";
+import { render } from "astro:content";
+import { getProjects, getUpdates, paStyle, fullTitle, fmtDate, isoDate, videoEmbed } from "../../lib/content";
+import { SITE } from "../../site.config";
+
+export async function getStaticPaths() {
+  const updates = await getUpdates();
+  const projects = await getProjects();
+  return updates.map((u, i) => ({
+    params: { id: u.id },
+    props: { u, p: projects.find(p => p.id === u.data.project)!, newer: updates[i - 1], older: updates[i + 1] },
+  }));
+}
+const { u, p, newer, older } = Astro.props;
+const d = u.data;
+const { Content } = await render(u);
+const n = d.comments.length;
+---
+<Base title={d.title} description={d.excerpt} image={d.image ?? p.data.cover} nav="journal">
+  <article class="post pa" style={paStyle(p)}>
+    <a class="back" href={`/projects/${p.id}/`}>← {fullTitle(p)}</a>
+    <div style="display:grid;gap:10px">
+      <span class="eyebrow" style="color:var(--pa)"><time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time> · {d.stage}</span>
+      <h1 style="font-size:clamp(32px,5vw,54px)">{d.title}</h1>
+    </div>
+    {d.video ? (
+      <figure><div class="vid"><iframe src={videoEmbed(d.video)} title={d.caption ?? d.title} allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        {d.caption && <figcaption>{d.caption}</figcaption>}</figure>
+    ) : d.image && (
+      <figure><div class="media"><img src={d.image} alt={d.caption ?? ""} style={d.image === p.data.cover && p.data.coverFit === "contain" ? `object-fit:contain;background:${p.data.coverBg}` : undefined} /></div>
+        {d.caption && <figcaption>{d.caption}</figcaption>}</figure>
+    )}
+    <div class="prose"><Content /></div>
+    {d.gallery.length > 0 && <Gallery items={d.gallery} />}
+
+    <section class="comments" aria-labelledby="cH">
+      <div class="sechead"><h2 id="cH">{n ? `${n} comment${n > 1 ? "s" : ""}` : "Ask a question or leave a note"}</h2></div>
+      {d.comments.map(c => (
+        <div class={`cm${c.artist ? " me" : ""}`}>
+          <div class="who"><b>{c.artist ? SITE.owner : c.name}</b>{c.artist && <span class="you">Artist</span>}<time datetime={isoDate(c.date)}>{fmtDate(c.date)}</time></div>
+          <p>{c.text}</p>
+        </div>
+      ))}
+      <form class="form cform" data-send data-subject={`Comment on "${d.title}"`} data-missing="Write a comment first, then press Send."
+        data-done="Thanks. Your comment will appear once I've approved it." novalidate>
+        <input type="hidden" name="post" value={`${Astro.site}journal/${u.id}/`} />
+        <input class="hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="row">
+          <label>Name<input name="name" autocomplete="name" placeholder="Your name" /></label>
+          <label>Email (not shown)<input name="email" type="email" autocomplete="email" placeholder="So I can reply" /></label>
+        </div>
+        <label>{n ? "Add a comment" : "Your note"}<textarea name="comment" required placeholder={`What would you like to know about ${fullTitle(p)}?`}></textarea></label>
+        <div class="crow"><button class="btn" type="submit">Send</button><span class="toast" aria-live="polite"></span></div>
+      </form>
+      <p class="mail">Rather write privately? Email <a class="addr" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+    </section>
+
+    <nav class="pager" aria-label="More updates">
+      {older ? <a href={`/journal/${older.id}/`}>← {older.data.title}</a> : <span></span>}
+      {newer ? <a href={`/journal/${newer.id}/`}>{newer.data.title} →</a> : <span></span>}
+    </nav>
+  </article>
+  <SendForm />
+</Base>

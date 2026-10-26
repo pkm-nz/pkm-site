@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import SendForm from "../components/SendForm.astro";
+import { getProjects, fullTitle } from "../lib/content";
+import { SITE } from "../site.config";
+const projects = await getProjects();
+---
+<Base title="Contact" nav="contact" description="Questions about a piece, commissions, or just to say hello.">
+  <section class="phead"><span class="eyebrow">Contact</span><h1>Get in touch</h1>
+    <p class="lede">Questions about a piece, commissions, or just to say hello. I read every message.</p></section>
+  <section class="contact">
+    <form class="form panel" data-send data-subject="Message from the website" data-missing="Add your email and a message, then press Send."
+      data-done="Sent. I'll reply by email." novalidate>
+      <input class="hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div class="row">
+        <label>Name<input name="name" autocomplete="name" /></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+      </div>
+      <label>About<select name="about"><option>General</option><option>Commission or collaboration</option>{projects.map(p => <option>{fullTitle(p)}</option>)}</select></label>
+      <label>Message<textarea name="message" required></textarea></label>
+      <div class="crow"><button class="btn" type="submit">Send message</button><span class="toast" aria-live="polite"></span></div>
+    </form>
+    <div class="side">
+      <div class="box"><span class="eyebrow">Email</span><a class="addr" style="font-family:var(--mono)" href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+      <div class="box"><span class="eyebrow">Based in</span><span>{SITE.location}</span></div>
+    </div>
+  </section>
+  <SendForm />
+</Base>
