@@ -1,15 +1,13 @@
-// Site-wide settings. Change these and the whole site follows.
+// Site-wide settings. The editable ones live in src/data/site.json ("Site settings" in /admin).
+import S from "./data/site.json";
+
 export const SITE = {
-  title: "PKM - Ideas | Projects | Art",
-  tagline: "Ideas | Projects | Art",
-  description: "Art, objects and digital pieces, shown from the first sketch to the finished thing.",
+  ...S,
   logoWord: "pkm",                        // spelled in the Coalition Alphabet Collider letters
-  owner: "Paul",                          // copyright line, and the name on your own comment replies
-  email: "hello@pkm.nz",
-  location: "Aotearoa New Zealand",
-  // Where the contact and comment forms send messages (a Formspree form URL, for example).
-  // Leave empty and the forms open the visitor's email app instead.
-  formEndpoint: "",
+  // formEndpoint: where the contact and comment forms send messages (a Formspree form URL, for example).
+  // Leave it empty and the forms open the visitor's email app instead.
 };
+
+export const MENU = S.menu;
 
 export const STAGES = ["Idea", "Planning", "Prototype", "Making", "Finished"] as const;

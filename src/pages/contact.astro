@@ -3,11 +3,11 @@ import PAGES from "../data/pages.json";
 import Base from "../layouts/Base.astro";
 import SendForm from "../components/SendForm.astro";
 import { getProjects, fullTitle } from "../lib/content";
-import { SITE } from "../site.config";
+import { SITE, MENU } from "../site.config";
 const projects = await getProjects();
 ---
-<Base title="Contact" nav="contact" description={PAGES.contact.intro}>
-  <section class="phead"><span class="eyebrow">Contact</span><h1>{PAGES.contact.heading}</h1>
+<Base title={MENU.contact} nav="contact" description={PAGES.contact.intro}>
+  <section class="phead"><span class="eyebrow">{MENU.contact}</span><h1>{PAGES.contact.heading}</h1>
     <p class="lede">{PAGES.contact.intro}</p></section>
   <section class="contact">
     <form class="form panel" data-send data-subject="Message from the website" data-missing="Add your email and a message, then press Send."

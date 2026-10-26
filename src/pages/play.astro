@@ -1,4 +1,5 @@
 ---
+import { MENU } from "../site.config";
 import PAGES from "../data/pages.json";
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
@@ -7,8 +8,8 @@ const projects = await getArt();
 const digital = projects.filter(p => p.data.mode === "digital");
 const models = projects.filter(p => p.data.mode === "model" && p.data.embed);
 ---
-<Base title="Hands On" nav="play" description={PAGES.handsOn.intro}>
-  <section class="phead"><span class="eyebrow">Hands On</span><h1>{PAGES.handsOn.heading}</h1>
+<Base title={MENU.handsOn} nav="play" description={PAGES.handsOn.intro}>
+  <section class="phead"><span class="eyebrow">{MENU.handsOn}</span><h1>{PAGES.handsOn.heading}</h1>
     <p class="lede">{PAGES.handsOn.intro}</p></section>
   <section style="display:grid;gap:18px"><div class="sechead"><h2>Play</h2><span class="eyebrow">digital work</span></div>
     <div class="grid">{digital.map(p => <Card p={p} />)}</div></section>

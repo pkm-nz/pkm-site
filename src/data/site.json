@@ -1,0 +1,16 @@
+{
+  "title": "PKM - Ideas | Projects | Art",
+  "tagline": "Ideas | Projects | Art",
+  "description": "Art, objects and digital pieces, shown from the first sketch to the finished thing.",
+  "owner": "Paul",
+  "email": "hello@pkm.nz",
+  "location": "Aotearoa New Zealand",
+  "formEndpoint": "",
+  "menu": {
+    "projects": "Projects",
+    "updates": "Updates",
+    "handsOn": "Hands On",
+    "notArt": "Not Art",
+    "contact": "Contact"
+  }
+}

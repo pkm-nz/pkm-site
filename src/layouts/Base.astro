@@ -1,12 +1,12 @@
 ---
 import "../styles/global.css";
 import Logo from "../components/Logo.astro";
-import { SITE } from "../site.config";
+import { SITE, MENU } from "../site.config";
 interface Props { title?: string; description?: string; nav?: "home" | "updates" | "play" | "not-art" | "contact"; image?: string }
 const { title, description = SITE.description, nav, image } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const og = new URL(image ?? "/images/projects/cac.jpg", Astro.site);
-const links = [["home", "/", "Projects"], ["updates", "/updates/", "Updates"], ["play", "/play/", "Hands On"], ["not-art", "/not-art/", "Not Art"]] as const;
+const links = [["home", "/", MENU.projects], ["updates", "/updates/", MENU.updates], ["play", "/play/", MENU.handsOn], ["not-art", "/not-art/", MENU.notArt]] as const;
 ---
 <!doctype html>
 <html lang="en-NZ">
@@ -37,7 +37,7 @@ const links = [["home", "/", "Projects"], ["updates", "/updates/", "Updates"], [
   <main id="main"><div class="view"><slot /></div></main>
   <footer class="site"><div class="in">
     <span>© {new Date().getFullYear()} {SITE.owner} · {SITE.location}</span>
-    <span class="fl"><a href="/contact/" aria-current={nav === "contact" ? "page" : undefined}>Contact</a><a href={`mailto:${SITE.email}`}>{SITE.email}</a></span>
+    <span class="fl"><a href="/contact/" aria-current={nav === "contact" ? "page" : undefined}>{MENU.contact}</a><a href={`mailto:${SITE.email}`}>{SITE.email}</a></span>
   </div></footer>
 </body>
 </html>

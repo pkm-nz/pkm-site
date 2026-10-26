@@ -1,4 +1,5 @@
 ---
+import { MENU } from "../../site.config";
 import PAGES from "../../data/pages.json";
 import Base from "../../layouts/Base.astro";
 import Entry from "../../components/Entry.astro";
@@ -7,8 +8,8 @@ const projects = await getProjects();
 const updates = await getUpdates();
 const byId = Object.fromEntries(projects.map(p => [p.id, p]));
 ---
-<Base title="Updates" nav="updates" description={PAGES.updates.intro}>
-  <section class="phead"><span class="eyebrow">Updates</span><h1>{PAGES.updates.heading}</h1>
+<Base title={MENU.updates} nav="updates" description={PAGES.updates.intro}>
+  <section class="phead"><span class="eyebrow">{MENU.updates}</span><h1>{PAGES.updates.heading}</h1>
     <p class="lede">{PAGES.updates.intro}</p></section>
   <section style="display:grid;gap:12px">
     <div class="filters" role="group" aria-label="Filter by project">

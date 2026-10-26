@@ -167,3 +167,29 @@ collections:
             fields:
               - { name: heading, label: Heading, widget: string }
               - { name: intro, label: Intro, widget: text }
+
+  - name: site
+    label: Site settings
+    description: Site name, tagline, menu labels, footer and email.
+    files:
+      - name: settings
+        label: Site settings
+        file: src/data/site.json
+        format: json
+        fields:
+          - { name: title, label: Site name (browser tabs and link previews), widget: string }
+          - { name: tagline, label: "Tagline beside the logo (use | between words for a divider)", widget: string }
+          - { name: description, label: Description for search engines and link previews, widget: text }
+          - name: menu
+            label: Menu labels
+            widget: object
+            fields:
+              - { name: projects, label: Projects, widget: string }
+              - { name: updates, label: Updates, widget: string }
+              - { name: handsOn, label: Hands On, widget: string }
+              - { name: notArt, label: Not Art, widget: string }
+              - { name: contact, label: Contact (in the footer), widget: string }
+          - { name: owner, label: Your name (footer and your comment replies), widget: string }
+          - { name: location, label: Location (footer), widget: string }
+          - { name: email, label: Contact email, widget: string }
+          - { name: formEndpoint, label: Form address (Formspree; leave empty to use email), widget: string, required: false }
