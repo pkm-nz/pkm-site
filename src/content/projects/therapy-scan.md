@@ -3,7 +3,7 @@ title: Therapy
 titleEnd: (scan)
 stage: Planning
 summary: 'A charcoal study of an axial brain scan: a pale shape floating in a dark field, worked by lifting light out of a toned sheet.'
-kind: Drawing · charcoal
+kind: Drawing · Therapy
 section: art
 mode: drawing
 status: ''
