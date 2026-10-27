@@ -17,19 +17,19 @@ coverBg: ''
 heroImage: ''
 heroNote: ''
 embed: /play/cac/
-embedNote: The work itself. There is no physical version; it only exists here.
+embedNote: This is the work. There is no physical version; it only exists here.
 decisions:
   - title: Motion follows the letterforms
-    text: Letters only ever travel at 0, 45 and 90 degrees, matching the angles in the glyphs.
+    text: Letters only ever travel at 0, 45 and 90 degrees, giving us briefs glimpses of the relationship between the letterforms.
   - title: Overlaps darken
     text: Letters multiply where they cross on light backgrounds and screen on dark ones, so collisions read like overprinted ink.
   - title: Spare letters leave
-    text: Letters not in your word fly off the page before the word slides into order.
+    text: Letters not used in the words fly off the page before the letters slide into the correct word order.
 facts:
   - label: Medium
     value: Interactive web piece
   - label: Letters
-    value: 26, one of each
+    value: '26'
   - label: Finished
     value: Oct 2026
 gallery: []
@@ -39,4 +39,4 @@ bg: '#e8302a'
 bgDark: '#e8302a'
 ---
 
-A custom alphabet built from straight runs and 45 degree diagonals. The piece moves the letters the same way they are drawn: every path is one diagonal and one straight run, so the motion and the type belong to one system.
+Show the relationship between the letterforms with movement and transparency. Prove that the Coalition font is actually readable by first showing how unreadable it can be. Challenge people to select colours and words.
