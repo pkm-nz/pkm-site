@@ -16,6 +16,10 @@ export function inline(s = ""): string {
   return t.replace(/\u0000(\d+)\u0000/g, (_, i) => slots[+i]);
 }
 
+// Several paragraphs (separated by a blank line), each with inline formatting.
+export const paragraphs = (s = "") =>
+  s.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map(p => `<p>${inline(p)}</p>`).join("");
+
 // The same text with the formatting marks taken out, for page descriptions and link previews.
 export const plain = (s = "") =>
   s.replace(/\s*\n+\s*/g, " ").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")

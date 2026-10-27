@@ -25,7 +25,8 @@ const projects = defineCollection({
     status: opt(z.string()),        // shown instead of the stage, e.g. "Live" for Not Art pages
     link: opt(z.string()),          // outside website
     linkLabel: opt(z.string()),
-    summary: z.string(),
+    summary: z.string(),                // short text on the project cards
+    intro: opt(z.string()),             // longer intro on the project's own page (falls back to summary)
     accent: z.string(),
     accentDark: z.string(),
     bg: z.string(),

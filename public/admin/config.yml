@@ -81,7 +81,8 @@ collections:
       - { name: title, label: Title (first part; leave empty for a one-word name), widget: string, required: false }
       - { name: titleEnd, label: Title (last part, shown in colour), widget: string }
       - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished], required: false }
-      - { name: summary, label: Short intro, widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
+      - { name: summary, label: Short text (on the project cards), widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
+      - { name: intro, label: "Longer intro (on the project's own page; leave empty to use the short text)", widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], required: false }
       - { name: kind, label: "Type line (e.g. Physical · layered acrylic)", widget: string }
       - { name: section, label: Section, widget: select, options: [{ label: Projects (art), value: art }, { label: Not art, value: not-art }], default: art }
       - { name: mode, label: Page type, widget: select, options: [{ label: Digital, value: digital }, { label: Physical with 3D model, value: model }, { label: Drawing, value: drawing }, { label: Not art (business or venture), value: venture }] }
