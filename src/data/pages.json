@@ -8,18 +8,18 @@
   },
   "updates": {
     "heading": "Project updates",
-    "intro": "Short updates as things move: a decision, a test, a photo from the bench."
+    "intro": "Short updates on my progress: decisions, prototypes, photos, failures, successes."
   },
   "handsOn": {
     "heading": "Try them here",
-    "intro": "A digital piece you can only experience on this site, and 3D models of the physical work to turn, take apart and look inside."
+    "intro": "Digital things you can only experience on this site, and 3D models of some the physical work to examine in more detail."
   },
   "notArt": {
     "heading": "Other things I'm building",
-    "intro": "Not everything I make hangs on a wall. These are the organisations I've started, both about helping people plan for what comes later in life."
+    "intro": "\"What do you do for a job?\" My answer is usually to describe one or both of these things."
   },
   "contact": {
     "heading": "Get in touch",
-    "intro": "Questions about a piece, commissions, or just to say hello. I read every message."
+    "intro": "Let me know if you have any questions about a piece or just want to say hello."
   }
 }
