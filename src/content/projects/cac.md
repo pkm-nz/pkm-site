@@ -28,8 +28,6 @@ decisions:
 facts:
   - label: Medium
     value: Interactive web piece
-  - label: Letters
-    value: '26'
   - label: Finished
     value: Oct 2026
 gallery: []
