@@ -1,5 +1,5 @@
 ---
-title: The Collider is playable
+title: The Collider is live
 project: cac
 date: 2026-10-06
 stage: Finished
