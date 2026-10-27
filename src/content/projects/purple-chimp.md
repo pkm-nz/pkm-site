@@ -2,7 +2,8 @@
 title: Purple
 titleEnd: Chimp
 stage: Finished
-summary: Four sheets of the same translucent purple acrylic. Head-on it reads as a flat print; step to the side and it comes apart.
+summary: Four sheets of the same translucent purple acrylic. Head-on the Chimp looks like a flat print; step to the side and it comes apart.
+intro: ''
 kind: Physical · Sculpture
 section: art
 mode: model
@@ -16,14 +17,14 @@ coverBg: ''
 heroImage: ''
 heroNote: ''
 embed: /play/purple-chimp/
-embedNote: Interactive 3D model, built from the real cutting files
+embedNote: Interactive 3D model, built from the actual cutting files
 decisions:
   - title: One colour, four tones
-    text: Depth of colour comes only from how many sheets overlap.
-  - title: Eye highlights cut through all four
-    text: Stand square-on at eye height and the highlights line up, so the piece snaps into a single image.
-  - title: Loose strands float
-    text: The finest hair on layer 4 is held on clear rods.
+    text: As each piece is cut from the same original sheet, depth of colour comes only from how many layers light passes through.
+  - title: Eye highlights cut through all four layers
+    text: There's fifth tone - the small bright white highlights in the Chimp's eyes. This is light passing uninterrupted through all four layers.
+  - title: Some details need to float
+    text: The 'floating' details on layers 3 and 4 are glued to the layers behind them with clear acrylic rods.
 facts:
   - label: Size
     value: 1235 × 1116 mm
@@ -38,4 +39,4 @@ bg: '#ece8fb'
 bgDark: '#221c3d'
 ---
 
-Where the sheets overlap the colour deepens, so four identical sheets give four tones. Each layer is cut away a little more than the one behind it, building the face from silhouette to deep shadow.
+Where the translucent layers overlap the colour darkens, so four layers give four tones. Each layer is cut away a little more than the one behind it, building the face from silhouette to deep shadow.
