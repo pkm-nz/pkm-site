@@ -3,7 +3,7 @@ title: Coalition Alphabet
 titleEnd: Collider
 stage: Finished
 summary: I created the Coalition font for a logo I designed for John Ingham, an architect friend of mine. He had the strangest handwriting I'd ever seen, so I thought he'd be open to a logo using letters than were nearly unreadable. Coalition has its own weird logic. Some letters mirror each other (J,L)(M,W) or are just rotated 180 degrees (A,E) I like the combination of order and anarchy. John's logo consisted of his name constructed from transparent letters. It was interesting seeing the relationships between the letters when I was designing the logo and I always thought it would be nice to animate them. One bonus with the collider was seeing how the scambled words shown prior to them forming correctly are more unreadable than ever. The final words almost look normal.
-kind: Digital · exists only here
+kind: Digital · Exists only here
 section: art
 mode: digital
 status: ''
