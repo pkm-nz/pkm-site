@@ -30,6 +30,6 @@ bg: '#e2f0ed'
 bgDark: '#12302c'
 ---
 
-Peaceably helps people get their life and legacy in order, so the people they leave behind aren't left guessing. It brings the important plans, wishes and information together in one secure place, and keeps it simple enough that people actually finish it.
+Peaceably helps people get their life and legacy planning in order, so the people they leave behind aren't left guessing. It brings the important plans, wishes and information together in one secure place and encourages discussion amongst family members.
 
 It hasn't launched yet. I'm raising investment now, so if that's of interest, get in touch.
