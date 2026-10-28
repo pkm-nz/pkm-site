@@ -24,7 +24,7 @@ decisions:
   - title: Overlaps darken
     text: Letters multiply where they cross on light backgrounds and screen on dark ones, so collisions read like overprinted ink.
   - title: Spare letters leave
-    text: Letters not used in the words fly off the page before the letters slide into the correct word order.
+    text: Letters not used in the words fly off the page before the randomly placed letters slide into the correct word order.
 facts:
   - label: Medium
     value: Interactive web piece
