@@ -75,7 +75,7 @@ collections:
     create: true
     delete: false
     slug: "{{slug}}"
-    summary: "{{title}}{{titleEnd}} · {{section}}"
+    summary: "{{title}} {{titleEnd}}"
     sortable_fields: { fields: [order], default: { field: order } }
     fields:
       - { name: title, label: Title (first part; leave empty for a one-word name), widget: string, required: false }
