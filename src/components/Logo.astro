@@ -1,19 +1,5 @@
 ---
-// The logo word, set in the Coalition Alphabet Collider's own letters,
-// overlapping like the piece, each letter in one project's colour.
-import glyphs from "../data/glyphs.json";
+// The PKM symbol: a 5×5 pixel mark, mirrored left to right.
 import { SITE } from "../site.config";
-import { getProjects } from "../lib/content";
-const G = glyphs as Record<string, { w: number; d: string[] }>;
-const projects = await getProjects();
-let x = 0;
-const letters = SITE.logoWord.toLowerCase().split("").filter(ch => G[ch]).map((ch, i) => {
-  const p = projects[i % projects.length].data;
-  const l = { x, d: G[ch].d, style: `--pa-l:${p.accent};--pa-d:${p.accentDark}` };
-  x += G[ch].w * 8 - 120;
-  return l;
-});
 ---
-<svg viewBox={`0 0 ${x + 120} 880`} role="img" aria-label={SITE.logoWord}>
-  {letters.map(l => l.d.map(d => <path class="pa" transform={`translate(${l.x} 0)`} d={d} style={l.style} />))}
-</svg>
+<svg viewBox="0 0 5 5" role="img" aria-label={SITE.title}><path d="M0 1 1 0H2V1H1V2H0Z M5 1 4 0H3V1H4V2H5Z M1 2H4V3H1Z M0 4H1V5Z M5 4H4V5Z" /></svg>

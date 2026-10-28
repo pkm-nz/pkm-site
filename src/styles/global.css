@@ -13,16 +13,17 @@
   --hs: 1;
   --ts: 1;
   --read: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --logo: #662c91;
   --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
+    --logo: #b48be0; --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
     --note: #3d3510; --note-ink: #f3e3a0; --accent: #e9ebe9; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
+  --logo: #b48be0; --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
   --note: #3d3510; --note-ink: #f3e3a0; --accent: #e9ebe9; color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -36,10 +37,8 @@ header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; 
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
 header.site .in { max-width: 1180px; margin: 0 auto; padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
-.logo svg { height: 30px; width: auto; display: block; }
-.logo svg path { mix-blend-mode: multiply; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo svg path { mix-blend-mode: screen; } }
-:root[data-theme="dark"] .logo svg path { mix-blend-mode: screen; }
+.logo svg { height: 32px; width: auto; display: block; }
+.logo svg path { fill: var(--logo); }
 .logo small { font: 500 12px var(--mono); color: var(--soft); letter-spacing: .06em; text-transform: uppercase; display: inline-flex; align-items: center; }
 .logo small .dv { display: inline-block; width: 1px; height: 16px; background: currentColor; opacity: .55; margin: 0 10px; }
 nav.main { display: flex; gap: 4px; flex-wrap: wrap; }
@@ -211,7 +210,6 @@ body { margin: 0; }
 @media (max-width: 480px) { .form .row { grid-template-columns: minmax(0, 1fr); } }
 .btn { justify-self: start; background: var(--ink); color: var(--paper); border: 0; border-radius: 4px; padding: 10px 16px; font-weight: 650; cursor: pointer; }
 .toast { font: 500 13px var(--mono); color: var(--soft); min-height: 1.4em; }
-.logo svg path { fill: var(--pa); opacity: .85; }
 
 /* outside link on Not Art pages */
 .golink { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; padding: 9px 16px; border-radius: 999px; background: var(--pa); color: var(--paper); }
