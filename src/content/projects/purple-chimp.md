@@ -44,7 +44,7 @@ gallery:
     caption: Finally getting to see if the concept actually works - lining up the layers at the Acryform workshop.
   - image: /uploads/p1030586.webp
     video: ''
-    caption: Positioning the floating nostril detail pieces using clear acrylic rod
+    caption: Positioning the floating nostril detail pieces using clear acrylic rod.
   - image: /uploads/p1030595.webp
     video: ''
     caption: The top layer, giving the darkest tone. Scarily thin in places.
