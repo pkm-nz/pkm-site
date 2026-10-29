@@ -3,7 +3,8 @@ title: Therapy
 titleEnd: (ball)
 stage: Planning
 summary: The red spiked therapy ball, traced spike by spike from a reference photo into a clean outline drawing, ready to colour and shade.
-kind: Drawing · Therapy
+intro: ''
+kind: Physical · Drawing · Therapy
 section: art
 mode: drawing
 status: ''
