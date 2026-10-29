@@ -108,6 +108,7 @@ h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-
 .entry time { font: 500 13px var(--mono); color: var(--soft); padding-top: 3px; }
 .entry .txt { display: grid; gap: 6px; min-width: 0; }
 .entry .tag { font: 500 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--pa); }
+.entry .words { display: grid; gap: 8px; }
 .entry p { margin: 0; font-family: var(--read); font-size: calc(var(--ts) * 16.5px); color: var(--soft); max-width: 60ch; }
 .entry .thumb { aspect-ratio: 3 / 2; max-width: 100%; border-radius: 4px; overflow: hidden; position: relative; background: var(--pa-bg); }
 /* an update's own photo shows whole, in its own proportions, in the list and on the post */

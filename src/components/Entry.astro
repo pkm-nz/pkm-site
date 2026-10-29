@@ -1,5 +1,5 @@
 ---
-import { inline } from "../lib/inline";
+import { paragraphs } from "../lib/inline";
 import type { Project, Update } from "../lib/content";
 import { paStyle, fullTitle, fmtDate, isoDate } from "../lib/content";
 import Cover from "./Cover.astro";
@@ -11,7 +11,7 @@ const n = u.data.comments.length;
   <div class="txt">
     <span class="tag">{fullTitle(p)} · {u.data.stage}</span>
     <h3>{u.data.title}</h3>
-    <p set:html={inline(u.data.excerpt)} />
+    <div class="words" set:html={paragraphs(u.data.excerpt)} />
     {n > 0 && <span class="ccount">{n} comment{n > 1 ? "s" : ""}</span>}
   </div>
   {u.data.image

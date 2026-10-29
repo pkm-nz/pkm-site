@@ -41,11 +41,10 @@ collections:
         display_fields: ["{{title}} {{titleEnd}}"]
       - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
       - { name: stage, label: Stage at this point, widget: select, options: [Idea, Planning, Prototype, Making, Finished], default: Planning }
-      - { name: excerpt, label: One or two line summary (shown in the feed), widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
+      - { name: excerpt, label: Text, hint: Shows in the updates list and on the update itself. Leave a blank line between paragraphs., widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text] }
       - { name: image, label: Main photo, widget: image, required: false }
       - { name: video, label: Main video (YouTube or Vimeo link; shows instead of the photo), widget: string, required: false }
       - { name: caption, label: Caption, widget: string, required: false }
-      - { name: body, label: Words, widget: markdown }
       - name: gallery
         label: More photos and videos
         widget: list

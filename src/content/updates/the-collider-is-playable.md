@@ -11,5 +11,3 @@ gallery: []
 comments: []
 draft: false
 ---
-
-Ten iterations later and it's done. Type a word or two, pick a colour and background, and watch the chaos and resolution.
