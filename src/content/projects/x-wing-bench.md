@@ -1,7 +1,7 @@
 ---
 title: X-wing
 titleEnd: Bench
-stage: Planning
+stage: Making
 summary: Bench with storage made from two identical bent ply pressings. Does it function? Will it look less weird in real life?
 intro: ''
 kind: Physical · Furniture
