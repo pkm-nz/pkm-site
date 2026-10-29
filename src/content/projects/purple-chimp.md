@@ -33,6 +33,9 @@ facts:
   - label: Finished
     value: Oct 2026
 gallery:
+  - image: ''
+    video: https://youtu.be/ZpCnZF6CtMY
+    caption: ''
   - image: /uploads/p1030396.webp
     video: ''
     caption: Preparing the laser cut acrylic sheets for the next stage.
@@ -45,9 +48,6 @@ gallery:
   - image: /uploads/p1030595.webp
     video: ''
     caption: The top layer, giving the darkest tone. Scarily thin in places.
-  - image: ''
-    video: https://youtu.be/ZpCnZF6CtMY
-    caption: ''
 accent: '#4a2ad0'
 accentDark: '#9c88ff'
 bg: '#ece8fb'
