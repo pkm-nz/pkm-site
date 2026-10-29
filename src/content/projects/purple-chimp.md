@@ -42,15 +42,9 @@ gallery:
   - image: /uploads/p1030408.webp
     video: ''
     caption: Judging how far apart to position the layers. Then we can construct the display plinth which will clamp the sheets in position.
-  - image: ''
-    video: ''
-    caption: ''
   - image: /uploads/p1030586.webp
     video: ''
     caption: Positioning the floating nostril detail pieces using clear acrylic rod
-  - image: ''
-    video: ''
-    caption: ''
   - image: /uploads/p1030594.webp
     video: ''
     caption: Curing the glue with UV light
