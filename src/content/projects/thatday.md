@@ -24,8 +24,6 @@ facts:
     value: Registered charitable trust (CC59983)
   - label: Cost to use
     value: Free
-  - label: Based in
-    value: Auckland
 gallery: []
 accent: '#d8232a'
 accentDark: '#ffb27a'
