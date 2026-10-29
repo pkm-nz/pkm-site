@@ -18,20 +18,10 @@ heroImage: /uploads/therapy-ball.jpg
 heroNote: The reference. Progress photos of the drawing will follow.
 embed: ''
 embedNote: ''
-decisions:
-  - title: Spikes in rings
-    text: Rings of 3, 10, 15, 19 and 22 spikes around the one facing the camera.
-  - title: Tip marks
-    text: A small circle wherever a spike's point faces the viewer.
-  - title: No tone yet
-    text: The outline is the foundation; colour and shading come next.
+decisions: []
 facts:
   - label: Medium
     value: Line drawing
-  - label: Line
-    value: 3 px, no fill
-  - label: Spikes
-    value: Rings of 3 to 22
 gallery: []
 accent: '#c4262e'
 accentDark: '#ef5a5f'
