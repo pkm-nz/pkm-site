@@ -29,4 +29,4 @@ bg: '#f6e4e2'
 bgDark: '#331c1d'
 ---
 
-Outline only, with no shading, shadows or background. Every spike is drawn as a straight-sided cone with a slightly rounded point, so the form is fully described before any colour goes on.
+Not quite sure what approach to take. Maybe just a simple line drawing to start with and see how it goes from there. I'll probably try one with my (good) right hand first. I want to go into this without any preconceived outcomes.
