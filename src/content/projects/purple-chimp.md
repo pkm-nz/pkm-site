@@ -32,7 +32,10 @@ facts:
     value: 4, 40 mm apart
   - label: Finished
     value: Oct 2026
-gallery: []
+gallery:
+  - image: ''
+    video: https://youtu.be/ZpCnZF6CtMY
+    caption: Video here
 accent: '#4a2ad0'
 accentDark: '#9c88ff'
 bg: '#ece8fb'
