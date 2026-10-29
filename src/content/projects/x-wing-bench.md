@@ -2,7 +2,8 @@
 title: X-wing
 titleEnd: Bench
 stage: Planning
-summary: A three-seater made from two identical bent ply pressings, one flipped to become the shelf. From the front, the legs read as a clean X.
+summary: A three-seater bench with storage made from two identical bent ply pressings. Does it function? Will it look less weird in real life?
+intro: ''
 kind: Physical · Furniture
 section: art
 mode: model
