@@ -9,4 +9,4 @@ export const SITE = {
 
 export const MENU = S.menu;
 
-export const STAGES = ["Idea", "Planning", "Prototype", "Making", "Finished"] as const;
+export const STAGES = ["Planning", "Making", "Finished"] as const;

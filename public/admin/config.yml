@@ -40,7 +40,7 @@ collections:
         search_fields: [title, titleEnd]
         display_fields: ["{{title}} {{titleEnd}}"]
       - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
-      - { name: stage, label: Stage at this point, widget: select, options: [Idea, Planning, Prototype, Making, Finished], default: Planning }
+      - { name: stage, label: Stage at this point, widget: select, options: [Planning, Making, Finished], default: Planning }
       - { name: excerpt, label: Text, hint: Shows in the updates list and on the update itself. Leave a blank line between paragraphs., widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text] }
       - { name: image, label: Main photo, widget: image, required: false }
       - { name: video, label: Main video (YouTube or Vimeo link; shows instead of the photo), widget: string, required: false }
@@ -79,7 +79,7 @@ collections:
     fields:
       - { name: title, label: Title (first part; leave empty for a one-word name), widget: string, required: false }
       - { name: titleEnd, label: Title (last part, shown in colour), widget: string }
-      - { name: stage, label: Stage, widget: select, options: [Idea, Planning, Prototype, Making, Finished], required: false }
+      - { name: stage, label: Stage, widget: select, options: [Planning, Making, Finished], required: false }
       - { name: summary, label: Short text (on the project cards), widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], minimal: true }
       - { name: intro, label: "Longer intro (on the project's own page; leave empty to use the short text)", widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], required: false }
       - { name: kind, label: "Type line (e.g. Physical · layered acrylic)", widget: string }
