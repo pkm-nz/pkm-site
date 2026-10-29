@@ -27,7 +27,7 @@ facts:
   - label: Based in
     value: Auckland
 gallery: []
-accent: '#c5242b'
+accent: '#d8232a'
 accentDark: '#ffb27a'
 bg: '#fbeadb'
 bgDark: '#33200f'
