@@ -36,14 +36,14 @@ const n = d.comments.length;
     {d.gallery.length > 0 && <Gallery items={d.gallery} />}
 
     <section class="comments" aria-labelledby="cH">
-      <div class="sechead"><h2 id="cH">{n ? `${n} comment${n > 1 ? "s" : ""}` : "Ask a question or leave a note"}</h2></div>
+      <div class="sechead"><h2 id="cH">{n ? `${n} comment${n > 1 ? "s" : ""}` : "Ask a question or leave a comment"}</h2></div>
       {d.comments.map(c => (
         <div class={`cm${c.artist ? " me" : ""}`}>
           <div class="who"><b>{c.artist ? SITE.owner : c.name}</b>{c.artist && <span class="you">Artist</span>}<time datetime={isoDate(c.date)}>{fmtDate(c.date)}</time></div>
           <p>{c.text}</p>
         </div>
       ))}
-      <form class="form cform" data-send data-subject={`Comment on "${d.title}"`} data-missing="Write a comment first, then press Send."
+      <form class="form cform" data-send data-subject={`Comment on "${d.title}"`} data-missing="Write your question or comment first, then press Send."
         data-done="Thanks. Your comment will appear once I've approved it." novalidate>
         <input type="hidden" name="post" value={`${Astro.site}updates/${u.id}/`} />
         <input class="hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -51,7 +51,7 @@ const n = d.comments.length;
           <label>Name<input name="name" autocomplete="name" placeholder="Your name" /></label>
           <label>Email (not shown)<input name="email" type="email" autocomplete="email" placeholder="So I can reply" /></label>
         </div>
-        <label>{n ? "Add a comment" : "Your note"}<textarea name="comment" required placeholder={`What would you like to know about ${fullTitle(p)}?`}></textarea></label>
+        <label>{n ? "Add a question or comment" : "Your question or comment"}<textarea name="comment" required placeholder="Write your question or comment"></textarea></label>
         <div class="crow"><button class="btn" type="submit">Send</button><span class="toast" aria-live="polite"></span></div>
       </form>
       <p class="mail">Rather write privately? Email <a class="addr" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
