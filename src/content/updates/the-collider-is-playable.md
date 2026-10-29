@@ -12,6 +12,4 @@ comments: []
 draft: false
 ---
 
-Ten versions in, the letters now only travel along the same angles they're drawn with.
-
-Try a dark background: the letters switch from multiplying to screening, so overlaps get lighter instead of darker.
+Ten iterations later and it's done. Type a word or two, pick a colour and background, and watch the chaos and resolution.
