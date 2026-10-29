@@ -2,7 +2,7 @@
 title: Therapy
 titleEnd: (ball)
 stage: Planning
-summary: The red spiked therapy ball, traced spike by spike from a reference photo into a clean outline drawing, ready to colour and shade.
+summary: Using this ball for neuro rehabilitation on my left hand has been good. Will drawing it with my left hand also help?
 intro: ''
 kind: Physical · Drawing · Therapy
 section: art
