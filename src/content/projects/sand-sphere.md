@@ -1,7 +1,7 @@
 ---
 title: Sand
 titleEnd: Sphere
-stage: Planning
+stage: Making
 summary: Can art be created simply by relocating what already exists?
 intro: ''
 kind: Physical · Sculpture · Performance
