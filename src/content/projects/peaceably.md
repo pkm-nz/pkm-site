@@ -1,8 +1,9 @@
 ---
 title: ''
-titleEnd: Peaceably
+titleEnd: Peaceably.
 stage: ''
 summary: Life and legacy planning, made simple and secure. A startup I'm building now and raising investment for.
+intro: ''
 kind: Startup · Pre-launch
 section: not-art
 mode: venture
