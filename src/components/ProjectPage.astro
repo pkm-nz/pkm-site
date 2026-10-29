@@ -3,6 +3,8 @@ import { inline, plain, paragraphs } from "../lib/inline";
 import Base from "../layouts/Base.astro";
 import Entry from "./Entry.astro";
 import Gallery from "./Gallery.astro";
+import Comments from "./Comments.astro";
+import SendForm from "./SendForm.astro";
 import { render } from "astro:content";
 import { getUpdates, paStyle, fullTitle, linkHost, type Project } from "../lib/content";
 
@@ -68,5 +70,8 @@ const facts = status ? [...d.facts, { label: venture ? "Status" : "Stage", value
         </div>
       </section>
     )}
+
+    <Comments comments={d.comments} title={fullTitle(p)} url={`${Astro.site}${Astro.url.pathname.slice(1)}`} />
   </div>
+  <SendForm />
 </Base>

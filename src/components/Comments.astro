@@ -1,0 +1,28 @@
+---
+import { SITE } from "../site.config";
+import { fmtDate, isoDate } from "../lib/content";
+// Questions and comments: visitors send them by email; approved ones are pasted into /admin and listed here.
+const { comments, title, url } = Astro.props as { comments: { name: string; date: Date; text: string; artist: boolean }[]; title: string; url: string };
+const n = comments.length;
+---
+<section class="comments" aria-labelledby="cH">
+  <div class="sechead"><h2 id="cH">{n ? `${n} comment${n > 1 ? "s" : ""}` : "Ask a question or leave a comment"}</h2></div>
+  {comments.map(c => (
+    <div class={`cm${c.artist ? " me" : ""}`}>
+      <div class="who"><b>{c.artist ? SITE.owner : c.name}</b>{c.artist && <span class="you">Artist</span>}<time datetime={isoDate(c.date)}>{fmtDate(c.date)}</time></div>
+      <p>{c.text}</p>
+    </div>
+  ))}
+  <form class="form cform" data-send data-subject={`Comment on "${title}"`} data-missing="Write your question or comment first, then press Send."
+    data-done="Thanks. Your comment will appear once I've approved it." novalidate>
+    <input type="hidden" name="post" value={url} />
+    <input class="hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <div class="row">
+      <label>Name<input name="name" autocomplete="name" placeholder="Your name" /></label>
+      <label>Email (not shown)<input name="email" type="email" autocomplete="email" placeholder="So I can reply" /></label>
+    </div>
+    <textarea name="comment" required aria-label="Your question or comment" placeholder="Write your question or comment"></textarea>
+    <div class="crow"><button class="btn" type="submit">Send</button><span class="toast" aria-live="polite"></span></div>
+  </form>
+  <p class="mail">Rather write privately? Email <a class="addr" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+</section>

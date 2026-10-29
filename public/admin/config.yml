@@ -121,6 +121,17 @@ collections:
           - { name: image, label: Photo, widget: image, required: false }
           - { name: video, label: Video link, widget: string, required: false }
           - { name: caption, label: Caption, widget: string, required: false }
+      - name: comments
+        label: Approved comments
+        hint: Paste in comments you've approved from your inbox. Tick "My reply" for your own answers.
+        widget: list
+        required: false
+        summary: "{{name}}: {{text}}"
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
+          - { name: text, label: Comment, widget: text }
+          - { name: artist, label: My reply, widget: boolean, default: false }
       - { name: accent, label: Colour, widget: color }
       - { name: accentDark, label: Colour (dark mode), widget: color }
       - { name: bg, label: Background tint, widget: color }

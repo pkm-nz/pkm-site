@@ -12,6 +12,13 @@ const media = z.object({
   caption: opt(z.string()),
 });
 
+const comment = z.object({
+  name: z.string(),
+  date: z.coerce.date(),
+  text: z.string(),
+  artist: z.boolean().default(false),
+});
+
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: z.object({
@@ -41,6 +48,7 @@ const projects = defineCollection({
     facts: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     decisions: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
     gallery: z.array(media).default([]),
+    comments: z.array(comment).default([]),
   }),
 });
 
@@ -57,12 +65,7 @@ const updates = defineCollection({
     caption: opt(z.string()),
     gallery: z.array(media).default([]),
     draft: z.boolean().default(false),
-    comments: z.array(z.object({
-      name: z.string(),
-      date: z.coerce.date(),
-      text: z.string(),
-      artist: z.boolean().default(false),
-    })).default([]),
+    comments: z.array(comment).default([]),
   }),
 });
 
