@@ -31,7 +31,7 @@ facts:
   - label: Sheets
     value: 4, 40 mm apart
   - label: Finished
-    value: Oct 2026
+    value: Sep 2012
 gallery:
   - image: ''
     video: https://youtu.be/ZpCnZF6CtMY
