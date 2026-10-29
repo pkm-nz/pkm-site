@@ -89,7 +89,7 @@ h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); } }
-.card { display: grid; grid-template-rows: auto 1fr; text-decoration: none; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; min-width: 0; transition: transform .2s, border-color .2s; }
+.card { position: relative; display: grid; grid-template-rows: auto 1fr; text-decoration: none; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; min-width: 0; transition: transform .2s, border-color .2s; }
 .card:hover { transform: translateY(-2px); border-color: var(--pa); }
 .card .art { aspect-ratio: 4 / 3; max-width: 100%; position: relative; background: var(--pa-bg); border-bottom: 1px solid var(--rule); }
 .card .art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -98,6 +98,13 @@ h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-
 .card .kind { font: 500 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
 .card p { margin: 0; color: var(--soft); font-size: calc(var(--ts) * 15px); }
 .card .play { font: 500 12px var(--mono); color: var(--pa); }
+/* The whole card opens the project; an outside link on it sits above and goes to that site. */
+.card .go { color: inherit; text-decoration: none; }
+.card .go::after { content: ""; position: absolute; inset: 0; }
+.card .go:focus-visible { outline: none; }
+.card:has(.go:focus-visible) { outline: 2px solid var(--pa); outline-offset: 2px; }
+.card .out { position: relative; z-index: 1; justify-self: start; text-decoration: none; }
+.card .out:hover { text-decoration: underline; }
 .card.empty { border-style: dashed; background: transparent; place-content: center; text-align: center; padding: 28px; min-height: 260px; grid-template-rows: auto; color: var(--soft); }
 .card.empty:hover { transform: none; border-color: var(--rule); }
 

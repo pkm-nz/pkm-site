@@ -7,14 +7,16 @@ import Cover from "./Cover.astro";
 const { p } = Astro.props as { p: Project };
 const d = p.data;
 ---
-<a class="card pa" href={projectHref(p)} style={paStyle(p)}>
+<article class="card pa" style={paStyle(p)}>
   <div class="art"><Cover p={p} /></div>
   <div class="body">
     <div class="meta"><span class="kind">{d.kind}</span>{(d.status ?? d.stage) && <Stage stage={d.status ?? d.stage!} />}</div>
-    <h3>{fullTitle(p)}</h3>
+    <h3><a class="go" href={projectHref(p)}>{fullTitle(p)}</a></h3>
     <p set:html={inline(d.summary)} />
     {d.mode === "digital" && <span class="play">▶ Play it here</span>}
     {d.mode === "model" && d.embed && <span class="play">◇ Explore the 3D model</span>}
-    {d.link && <span class="play">{d.link.startsWith("/") ? "→" : "↗"} {d.linkLabel ?? linkHost(d.link)}</span>}
+    {d.link && (d.link.startsWith("/")
+      ? <span class="play">→ {d.linkLabel ?? linkHost(d.link)}</span>
+      : <a class="play out" href={d.link} target="_blank" rel="noopener">↗ {d.linkLabel ?? linkHost(d.link)}</a>)}
   </div>
-</a>
+</article>
