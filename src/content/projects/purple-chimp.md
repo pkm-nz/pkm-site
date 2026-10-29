@@ -2,7 +2,7 @@
 title: Purple
 titleEnd: Chimp
 stage: Finished
-summary: Four sheets of the same translucent purple acrylic. Head-on the Chimp looks like a flat print; step to the side and it comes apart.
+summary: Blurring the line between two and three dimensions. Viewed head-on it looks like a flat print; step to the side and it comes apart.
 intro: ''
 kind: Physical · Sculpture
 section: art
