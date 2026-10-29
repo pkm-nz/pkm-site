@@ -18,20 +18,10 @@ heroImage: /uploads/therapy-scan.jpg
 heroNote: The source scan. Progress photos of the drawing will follow.
 embed: ''
 embedNote: ''
-decisions:
-  - title: Tone the whole sheet first
-    text: Powdered charcoal smoothed with a chamois becomes the mid-grey.
-  - title: Lift, don't outline
-    text: Work in from the edges so the folded outline forms as I go.
-  - title: Edge still open
-    text: Black to the paper's edge feels clinical; a ragged fade feels more like a drawing.
+decisions: []
 facts:
   - label: Medium
-    value: Charcoal
-  - label: Sheet
-    value: '40 × 50 cm, 4 : 5'
-  - label: Values
-    value: 3 to 5 bands
+    value: Charcoal?
 gallery: []
 accent: '#606060'
 accentDark: '#d97a5c'
