@@ -41,7 +41,7 @@ gallery:
     caption: Preparing the laser cut acrylic sheets for the next stage.
   - image: /uploads/p1030399.webp
     video: ''
-    caption: Finally getting to see if the concept actually works - lining up the layers at the Acryform workshop. The 3 floating nostril pieces are yet to be installed.
+    caption: Finally getting to see if the concept actually works - lining up the layers at the Acryform workshop.
   - image: /uploads/p1030586.webp
     video: ''
     caption: Positioning the floating nostril detail pieces using clear acrylic rod
