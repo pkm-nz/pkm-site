@@ -14,7 +14,7 @@ order: 102
 cover: /uploads/Peacaebly.webp
 coverFit: cover
 coverBg: ''
-heroImage: /uploads/Peacaebly.webp
+heroImage: ''
 heroNote: ''
 embed: ''
 embedNote: ''
