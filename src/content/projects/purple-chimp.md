@@ -33,9 +33,30 @@ facts:
   - label: Finished
     value: Oct 2026
 gallery:
-  - image: ''
+  - image: /uploads/p1030396.webp
     video: https://youtu.be/ZpCnZF6CtMY
     caption: Video here
+  - image: /uploads/p1030399.webp
+    video: ''
+    caption: ''
+  - image: /uploads/p1030408.webp
+    video: ''
+    caption: Finally getting to see if the concept actually works - lining up the layers at the Acryform workshop.
+  - image: ''
+    video: ''
+    caption: ''
+  - image: /uploads/p1030586.webp
+    video: ''
+    caption: Positioning the 'floating' detail pieces using clear acrylic rod
+  - image: ''
+    video: ''
+    caption: ''
+  - image: /uploads/p1030594.webp
+    video: ''
+    caption: Curing the glue with UV light
+  - image: /uploads/p1030595.webp
+    video: ''
+    caption: The top layer, giving the darkest tone. Scarily thin in places.
 accent: '#4a2ad0'
 accentDark: '#9c88ff'
 bg: '#ece8fb'
