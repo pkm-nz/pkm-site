@@ -25,7 +25,7 @@ facts:
   - label: Seeking
     value: Investment
 gallery: []
-accent: '#a687d5'
+accent: '#987dc6'
 accentDark: '#8fd3c8'
 bg: '#e2f0ed'
 bgDark: '#12302c'
