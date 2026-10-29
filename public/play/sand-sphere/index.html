@@ -51,7 +51,8 @@ svg text { font-family: var(--mono); fill: var(--ink); }
 
 /* animation */
 .stage svg { width: 100%; height: auto; }
-.view3d { width: 100%; aspect-ratio: 16 / 9; max-width: 100%; cursor: grab; touch-action: pan-y; }
+/* 16:9, but short enough that the caption and controls below stay in view */
+.view3d { width: 100%; height: min(calc((min(100vw, 980px) - 42px) * 9 / 16), max(220px, calc(100vh - 240px))); max-width: 100%; cursor: grab; touch-action: pan-y; }
 .view3d canvas { display: block; }
 .sheet-head.sub { border-top: 1px solid var(--rule); }
 .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
@@ -315,9 +316,9 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule)
     scene.add(cascade);
 
     function size() {
-      const w = host.clientWidth || 600, h = Math.round(w * 9 / 16);
+      const w = host.clientWidth || 600, h = host.clientHeight || Math.round(w * 9 / 16);
       renderer.setSize(w, h, false);
-      renderer.domElement.style.width = "100%"; renderer.domElement.style.height = "auto";
+      renderer.domElement.style.width = "100%"; renderer.domElement.style.height = "100%";
       cam.aspect = w / h; cam.updateProjectionMatrix();
     }
     size();
