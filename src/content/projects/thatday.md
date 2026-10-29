@@ -2,7 +2,7 @@
 title: ''
 titleEnd: ThatDay
 stage: ''
-summary: A free retirement planner for New Zealanders. In 2023 founded a charitable trust to help Kiwis work out what they'll need, and how to get there.
+summary: A free retirement planner for New Zealanders. In 2023 founded a charitable trust to help Kiwis work out what they'll need to retire, and how to get there. ThatDay encourages conscious spending, helping people buy less and choose better, which is good for their future and for the planet.
 intro: ''
 kind: Retirement planning · Free for everyone
 section: not-art
