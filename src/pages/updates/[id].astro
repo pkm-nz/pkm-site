@@ -51,7 +51,7 @@ const n = d.comments.length;
           <label>Name<input name="name" autocomplete="name" placeholder="Your name" /></label>
           <label>Email (not shown)<input name="email" type="email" autocomplete="email" placeholder="So I can reply" /></label>
         </div>
-        <label>{n ? "Add a question or comment" : "Your question or comment"}<textarea name="comment" required placeholder="Write your question or comment"></textarea></label>
+        <textarea name="comment" required aria-label="Your question or comment" placeholder="Write your question or comment"></textarea>
         <div class="crow"><button class="btn" type="submit">Send</button><span class="toast" aria-live="polite"></span></div>
       </form>
       <p class="mail">Rather write privately? Email <a class="addr" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
