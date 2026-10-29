@@ -2,7 +2,7 @@
 title: ''
 titleEnd: ThatDay
 stage: ''
-summary: A free retirement planner for New Zealanders. I founded a charitable trust to help Kiwis work out what they'll need, and how to get there.
+summary: A free retirement planner for New Zealanders. In 2023 founded a charitable trust to help Kiwis work out what they'll need, and how to get there.
 intro: ''
 kind: Retirement planning · Free for everyone
 section: not-art
