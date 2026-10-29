@@ -14,7 +14,7 @@ order: 101
 cover: /uploads/activekiwi.webp
 coverFit: cover
 coverBg: ''
-heroImage: ''
+heroImage: /uploads/activekiwi.webp
 heroNote: ''
 embed: ''
 embedNote: ''
