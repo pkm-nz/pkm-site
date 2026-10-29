@@ -2,7 +2,7 @@
 title: Purple
 titleEnd: Chimp
 stage: Finished
-summary: Blurring the line between two and three dimensions. Viewed head-on it looks like a flat print; step to the side and its depth is revealed.
+summary: Blurring the line between two and three dimensions. Head-on it looks like a flat print; side-on its depth is revealed.
 intro: ''
 kind: Physical · Sculpture
 section: art
