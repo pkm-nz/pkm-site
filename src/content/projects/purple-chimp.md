@@ -34,20 +34,14 @@ facts:
     value: Oct 2026
 gallery:
   - image: /uploads/p1030396.webp
-    video: https://youtu.be/ZpCnZF6CtMY
+    video: ''
     caption: Preparing the laser cut acrylic sheets for the next stage.
   - image: /uploads/p1030399.webp
     video: ''
     caption: Finally getting to see if the concept actually works - lining up the layers at the Acryform workshop. The 3 floating nostril pieces are yet to be installed.
-  - image: /uploads/p1030408.webp
-    video: ''
-    caption: Judging how far apart to position the layers. Then we can construct the display plinth which will clamp the sheets in position.
   - image: /uploads/p1030586.webp
     video: ''
     caption: Positioning the floating nostril detail pieces using clear acrylic rod
-  - image: /uploads/p1030594.webp
-    video: ''
-    caption: Curing the glue with UV light
   - image: /uploads/p1030595.webp
     video: ''
     caption: The top layer, giving the darkest tone. Scarily thin in places.
