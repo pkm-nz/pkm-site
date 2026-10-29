@@ -2,7 +2,8 @@
 title: Sand
 titleEnd: Sphere
 stage: Planning
-summary: One shell, one rod and one turn cut a hemisphere of hard-packed sand out of the beach, left beside its own hole for the tide to take back.
+summary: Can art be created simply by relocating what already exists?
+intro: ''
 kind: Physical · Performance · Sculpture
 section: art
 mode: model
