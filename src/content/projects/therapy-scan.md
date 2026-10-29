@@ -2,7 +2,7 @@
 title: Therapy
 titleEnd: (scan)
 stage: Planning
-summary: 'A charcoal study of an axial brain scan: a pale shape floating in a dark field, worked by lifting light out of a toned sheet.'
+summary: I can't undo that white spot. But it doesn't have to be there in a drawing.
 intro: ''
 kind: Physical · Drawing · Therapy
 section: art
