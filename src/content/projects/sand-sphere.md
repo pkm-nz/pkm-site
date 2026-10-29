@@ -4,7 +4,7 @@ titleEnd: Sphere
 stage: Planning
 summary: Can art be created simply by relocating what already exists?
 intro: ''
-kind: Physical · Performance · Sculpture
+kind: Physical · Sculpture · Performance
 section: art
 mode: model
 status: ''
