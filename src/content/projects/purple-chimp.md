@@ -25,6 +25,8 @@ decisions:
     text: There's fifth tone - the small bright white highlights in the Chimp's eyes. This is light passing uninterrupted through all four layers.
   - title: Some details need to float
     text: The 'floating' details on layers 3 and 4 are glued to the layers behind them with clear acrylic rods.
+  - title: Ape not human
+    text: People will think they know who it is 'supposed to be' which distracts from the purpose.
 facts:
   - label: Size
     value: 1235 × 1116 mm
