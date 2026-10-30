@@ -3,7 +3,7 @@ title: Therapy
 titleEnd: (scan)
 stage: Planning
 summary: I can't undo that white spot. But it doesn't have to be there in a drawing.
-intro: ''
+intro: I've had quite a few MRI scans since this thalamic lesion was first discovered in 1998. The old scans were hard copies that were pretty difficult to decipher. Nowadays the imaging place has (of course) an app where I can download all 400 digital images from the last appointment. I'm going to redraw this without that white spot. A little bit 1984 I know, but I like the idea of rewriting history.
 kind: Physical · Drawing · Therapy
 section: art
 mode: drawing
@@ -23,10 +23,11 @@ facts:
   - label: Medium
     value: Charcoal?
 gallery: []
+comments: []
 accent: '#606060'
 accentDark: '#d97a5c'
 bg: '#dcdcd8'
 bgDark: '#232426'
 ---
 
-The image is mostly dark, so most of the charcoal goes on the background. The brain is lifted out with a kneaded eraser as one quiet mid-tone, and the brightest points come last with an eraser pen.
+The scan looks like a charcoal drawing already.
