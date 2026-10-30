@@ -55,7 +55,7 @@ collections:
           - { name: caption, label: Caption, widget: string, required: false }
       - name: comments
         label: Approved comments
-        hint: Paste in comments you've approved from your inbox. Tick "My reply" for your own answers.
+        hint: Click Add for each comment you approve. To reply, click Add again, write your answer in the Comment box and switch on "This is my reply".
         widget: list
         required: false
         summary: "{{name}}: {{text}}"
@@ -63,7 +63,7 @@ collections:
           - { name: name, label: Name, widget: string }
           - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
           - { name: text, label: Comment, widget: text }
-          - { name: artist, label: My reply, widget: boolean, default: false }
+          - { name: artist, label: This is my reply, widget: boolean, default: false }
       - { name: draft, label: Draft (hidden from the site), widget: boolean, default: false, required: false }
 
   - name: projects
@@ -123,7 +123,7 @@ collections:
           - { name: caption, label: Caption, widget: string, required: false }
       - name: comments
         label: Approved comments
-        hint: Paste in comments you've approved from your inbox. Tick "My reply" for your own answers.
+        hint: Click Add for each comment you approve. To reply, click Add again, write your answer in the Comment box and switch on "This is my reply".
         widget: list
         required: false
         summary: "{{name}}: {{text}}"
@@ -131,7 +131,7 @@ collections:
           - { name: name, label: Name, widget: string }
           - { name: date, label: Date, widget: datetime, format: YYYY-MM-DD, time_format: false }
           - { name: text, label: Comment, widget: text }
-          - { name: artist, label: My reply, widget: boolean, default: false }
+          - { name: artist, label: This is my reply, widget: boolean, default: false }
       - { name: accent, label: Colour, widget: color }
       - { name: accentDark, label: Colour (dark mode), widget: color }
       - { name: bg, label: Background tint, widget: color }
