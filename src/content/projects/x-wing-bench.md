@@ -3,7 +3,7 @@ title: X-wing
 titleEnd: Bench
 stage: Making
 summary: Will it function? Will it look less weird in real life?
-intro: This design has been kicking around for a while. I chucked the original .ai drawings into Claude which made it so easy to test all the practical stuff like if it will be strong enough and how it could be manufactured. It's probably not something you'd have in your home but I could see a three seater bench with storage being used in schools, offices, foyer/waiting rooms.
+intro: 'This design has been kicking around for a while. Loading the original Illustrator drawings into Claude made it easy to test the practical side: whether it would be strong enough, and how it could be manufactured. It’s probably not something you’d have at home, but I can see a three-seater bench with storage working well in schools, offices, foyers and waiting rooms.'
 kind: Physical · Furniture
 section: art
 mode: model
