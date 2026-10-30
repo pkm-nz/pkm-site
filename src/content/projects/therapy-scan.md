@@ -3,7 +3,7 @@ title: Therapy
 titleEnd: (scan)
 stage: Planning
 summary: Can you redraw the past?
-intro: 'This is an MRI scan of a thalamic lesion I was diagnosed with in 1998. Rereading _1984_ got me thinking: what if I could rewrite history, and a different version of this scan existed, one without the lesion? If I get really good at doublethink, maybe I can convince myself it never existed.'
+intro: 'This is an MRI scan of a thalamic lesion I was diagnosed with in 1998. Rereading _1984_ got me thinking: what if I could rewrite history and replace this scan with one that shows no lesion? And if I can master doublethink, maybe I can convince myself it never existed.'
 kind: Physical · Drawing · Therapy
 section: art
 mode: drawing
