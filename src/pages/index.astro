@@ -4,6 +4,7 @@ import PAGES from "../data/pages.json";
 import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
 import Entry from "../components/Entry.astro";
+import Subscribe from "../components/Subscribe.astro";
 import { getProjects, getArt, getUpdates } from "../lib/content";
 const projects = await getArt();
 const updates = (await getUpdates()).slice(0, 3);
@@ -24,4 +25,5 @@ const byId = Object.fromEntries((await getProjects()).map(p => [p.id, p]));
       <div class="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
     </section>
   )}
+  <Subscribe />
 </Base>

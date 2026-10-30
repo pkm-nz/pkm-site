@@ -1,0 +1,30 @@
+---
+// Email sign-up for new updates. Buttondown holds the list and sends the emails.
+const BUTTONDOWN = "PKM";
+---
+<section class="subscribe" aria-labelledby="subH">
+  <div>
+    <h2 id="subH">Get updates by email</h2>
+    <p>A short email when there's something new. Unsubscribe any time.</p>
+  </div>
+  <form class="form subform" action={`https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN}`} method="post" target="_blank">
+    <div class="subrow">
+      <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Your email" />
+      <input type="hidden" name="embed" value="1" />
+      <button class="btn" type="submit">Subscribe</button>
+    </div>
+    <span class="toast" aria-live="polite"></span>
+  </form>
+</section>
+<script>
+  // Sign up without leaving the page; if that fails the form still works the normal way.
+  document.querySelectorAll<HTMLFormElement>(".subform").forEach(f => f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const toast = f.querySelector(".toast")!;
+    try {
+      await fetch(f.action, { method: "POST", mode: "no-cors", body: new FormData(f) });
+      f.reset();
+      toast.textContent = "Nearly done. Check your inbox to confirm.";
+    } catch { f.submit(); }
+  }));
+</script>

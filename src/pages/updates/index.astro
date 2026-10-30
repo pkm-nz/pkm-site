@@ -4,6 +4,7 @@ import { MENU } from "../../site.config";
 import PAGES from "../../data/pages.json";
 import Base from "../../layouts/Base.astro";
 import Entry from "../../components/Entry.astro";
+import Subscribe from "../../components/Subscribe.astro";
 import { getProjects, getUpdates } from "../../lib/content";
 const projects = await getProjects();
 const updates = await getUpdates();
@@ -15,4 +16,5 @@ const byId = Object.fromEntries(projects.map(p => [p.id, p]));
   <section style="display:grid;gap:12px">
     <div class="feed">{updates.map(u => byId[u.data.project] && <Entry u={u} p={byId[u.data.project]} />)}</div>
   </section>
+  <Subscribe />
 </Base>

@@ -223,3 +223,13 @@ body { margin: 0; }
 /* outside link on Not Art pages */
 .golink { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; padding: 9px 16px; border-radius: 999px; background: var(--pa); color: var(--paper); }
 .golink:hover { filter: brightness(1.08); }
+/* email sign-up */
+.subscribe { display: grid; grid-template-columns: 1fr minmax(0, 1.1fr); gap: 16px 32px; align-items: center; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 24px; }
+.subscribe h2 { margin: 0 0 4px; font-size: 24px; }
+.subscribe p { margin: 0; color: var(--soft); }
+.subscribe .subrow { display: flex; gap: 8px; }
+.subscribe .subrow input { flex: 1; min-width: 0; }
+.subscribe .btn { flex: none; }
+.subscribe .toast { font: 500 13px var(--mono); color: var(--soft); }
+.subscribe .toast:empty { display: none; }
+@media (max-width: 720px) { .subscribe { grid-template-columns: minmax(0, 1fr); } }
