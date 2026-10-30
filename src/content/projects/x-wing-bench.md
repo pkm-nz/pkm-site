@@ -23,8 +23,8 @@ decisions:
     text: One mould, one shape. Flip one and it becomes the shelf.
   - title: No plug at the crossing
     text: The slot walls are cut at the crossing angle, so the legs sit flat on each other with no gaps.
-  - title: Arm height still open
-    text: 175, 190 or 205 mm above the seat pad. A full-size mock-up decides.
+  - title: Arm height still to be decided
+    text: 175, 190 or 205 mm above the seat pad. A full-size mock-up is needed.
 facts:
   - label: Length
     value: ≈ 2.3 m
