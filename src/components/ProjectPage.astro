@@ -23,7 +23,7 @@ const facts = status ? [...d.facts, { label: venture ? "Status" : "Stage", value
     <section class="phead">
       <span class="eyebrow">{d.kind}</span>
       <h1>{d.title ? `${d.title} ` : ""}<em>{d.titleEnd}</em></h1>
-      <div class={d.intro ? "lede story" : "lede"} set:html={paragraphs(d.intro ?? d.summary)} />
+      <div class={d.intro ? (d.intro.length > 500 ? "lede story cols" : "lede story") : "lede"} set:html={paragraphs(d.intro ?? d.summary)} />
       {d.link && (d.link.startsWith("/")
         ? <p><a class="golink" href={d.link}>{d.linkLabel ?? "More"} →</a></p>
         : <p><a class="golink" href={d.link} target="_blank" rel="noopener">{d.linkLabel ?? `Visit ${linkHost(d.link)}`} ↗</a></p>)}
