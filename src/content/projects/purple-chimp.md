@@ -3,7 +3,7 @@ title: Purple
 titleEnd: Chimp
 stage: Finished
 summary: Blurring the line between two and three dimensions. Head-on it looks like a flat print; side-on its depth is revealed.
-intro: 'Unless they’re purely abstract, painting and drawing generally use two dimensions to portray three-dimensional things. I wondered: could I use three dimensions to portray something two-dimensional? Watercolour painters build tone by overlaying transparent washes of colour. _What if those layers were objects?_ That was the original thinking behind the Purple Chimp. It was exciting to see that a two-dimensional image could be made from sheets of translucent coloured acrylic. Even more exciting was realising I’d made something that was both two- _and_ three-dimensional. Watching the Chimp come apart as you step to the side, then lock back into place when you’re front-on, still thrills me'
+intro: 'Unless they’re purely abstract, painting and drawing generally use two dimensions to portray three-dimensional things. I wondered: could I use three dimensions to portray something two-dimensional? Watercolour painters build tone by overlaying transparent washes of colour. _What if those layers were objects?_ That was the original thinking behind the Purple Chimp. It was exciting to see that a two-dimensional image could be made from sheets of translucent coloured acrylic. Even more exciting was realising I’d made something that was both two- _and_ three-dimensional. Watching the Chimp come apart as you step to the side, then lock back into place when you’re front-on, still thrills me.'
 kind: Physical · Sculpture
 section: art
 mode: model
