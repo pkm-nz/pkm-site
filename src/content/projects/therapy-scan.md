@@ -30,4 +30,4 @@ bg: '#dcdcd8'
 bgDark: '#232426'
 ---
 
-The scan looks like a charcoal drawing already.
+Draw the scan without the lesion. The scan already looks like a charcoal drawing.
