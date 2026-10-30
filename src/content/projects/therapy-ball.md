@@ -2,8 +2,8 @@
 title: Therapy
 titleEnd: (ball)
 stage: Planning
-summary: Using this ball for neuro rehabilitation on my left hand has been good. Will drawing it with my left hand also help?
-intro: ''
+summary: Will drawing it with my left hand also help?
+intro: I've been using this ball for neuro rehabilitation on my left hand as the spikes are good for sensory feedback. Doing fairly straightforward stuff with my left hand is pretty tricky nowadays so drawing this thing might be asking too much - but I'll give it a go.
 kind: Physical · Drawing · Therapy
 section: art
 mode: drawing
@@ -23,6 +23,7 @@ facts:
   - label: Medium
     value: Line drawing
 gallery: []
+comments: []
 accent: '#c4262e'
 accentDark: '#ef5a5f'
 bg: '#f6e4e2'
