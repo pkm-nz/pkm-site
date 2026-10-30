@@ -19,12 +19,12 @@ heroNote: The planned performance, from the 3D model.
 embed: /play/sand-sphere/
 embedNote: Interactive 3D model of the planned performance. Press play, drag to look around.
 decisions:
-  - title: The rod stays still
-    text: A half-round rod lies flat on the beach and the shell turns around it, so it never digs a groove.
+  - title: The rod positions and stabilises the shell
+    text: A half-round rod lies flat on the beach and the shell turns around it.
   - title: The lever attaches at the rim
     text: The half turn mirrors the shell through the beach, so the rim is the only part that finishes the turn at the surface.
   - title: The lever swaps faces halfway
-    text: At the top of the arc I re-pin it to the other face. The swap becomes a natural pause in the performance.
+    text: At the top of the arc the lever is pinned to other face, so it finishes flat on the surface.
 facts:
   - label: Prototype
     value: Ø300 mm shell
@@ -33,10 +33,11 @@ facts:
   - label: Sand
     value: ≈ 14 kg, 7.1 L
 gallery: []
+comments: []
 accent: '#c41f78'
 accentDark: '#ff5fae'
 bg: '#efe6d2'
 bgDark: '#3a3122'
 ---
 
-The sand is carried out, turned over beside its own hole, and left as a positive and negative pair. The rod stays still while the shell turns around it, so the top of the captured sand is the untouched beach surface.
+The device scoops out a perfect hemisphere of sand, then flips it over beside the hole it leaves, forming a positive and negative pair. That’s the human part of the performance; the incoming tide takes care of the rest.
