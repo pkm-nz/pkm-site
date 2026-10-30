@@ -22,7 +22,7 @@ decisions:
   - title: One colour, four tones
     text: As each piece is cut from the same original sheet, depth of colour comes only from how many layers light passes through.
   - title: Eye highlights cut through all four layers
-    text: There's fifth tone - the small bright white highlights in the Chimp's eyes. This is light passing uninterrupted through all four layers.
+    text: There's a fifth tone - the small bright white highlights in the Chimp's eyes. This is light passing uninterrupted through all four layers.
   - title: Some details need to float
     text: The 'floating' details on layers 3 and 4 are glued to the layers behind them with clear acrylic rods.
   - title: Ape not human

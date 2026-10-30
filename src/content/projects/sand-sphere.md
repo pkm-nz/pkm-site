@@ -24,7 +24,7 @@ decisions:
   - title: The lever attaches at the rim
     text: The half turn mirrors the shell through the beach, so the rim is the only part that finishes the turn at the surface.
   - title: The lever swaps faces halfway
-    text: At the top of the arc the lever is pinned to other face, so it finishes flat on the surface.
+    text: At the top of the arc the lever is pinned to the other face, so it finishes flat on the surface.
 facts:
   - label: Prototype
     value: Ø300 mm shell
