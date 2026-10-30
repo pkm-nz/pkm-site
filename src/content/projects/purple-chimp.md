@@ -50,7 +50,15 @@ gallery:
   - image: /uploads/p1030595.webp
     video: ''
     caption: The top layer, giving the darkest tone. Scarily thin in places.
-comments: []
+comments:
+  - name: Steve
+    date: 2026-10-31
+    text: Love this….have you thought about other subjects/objects to create now 15 years later. There’s something about transparency and politicians that creates an additional tension. What if you used tiny words/images instead of pixels? Trump could be made up of layers of lies, greed, hate and bully, or objects like bullets, dollar signs and swastika’s, that only become obvious when you see each layer?
+    artist: false
+  - name: Paul
+    date: 2026-10-31
+    text: Yes, I have a few subjects in mind Steve. I like your tiny word/image idea but I'm not trying to make any big statement with these acrylic sculptures, it's more about exploring the materials and light. I'd like to do one using stacked transparent tiles to build the tone. The stack heights would create the third dimension.
+    artist: true
 accent: '#4a2ad0'
 accentDark: '#9c88ff'
 bg: '#ece8fb'
