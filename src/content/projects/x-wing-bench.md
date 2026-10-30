@@ -24,7 +24,7 @@ decisions:
   - title: No plug at the crossing
     text: The slot walls are cut at the crossing angle, so the legs sit flat on each other with no gaps.
   - title: Arm height still to be decided
-    text: 175, 190 or 205 mm above the seat pad. A full-size mock-up is needed.
+    text: 175, 190 or 205 mm above the seat pad? A full-size mock-up is needed.
 facts:
   - label: Length
     value: ≈ 2.3 m
@@ -40,4 +40,4 @@ bg: '#efe3cf'
 bgDark: '#2f241a'
 ---
 
-One mould makes both halves. The shelf pressing slides through the seat pressing at an angled halving joint, and two ribs lock them together into one stiff box.
+One mould makes both halves. The shelf pressing slides through the seat pressing at an angled halving joint, and two ribs lock them together into one stiff box, creating storage bays.
