@@ -3,7 +3,7 @@ title: Sand
 titleEnd: Sphere
 stage: Making
 summary: Can art be created simply by relocating what already exists?
-intro: ''
+intro: 'The idea for the Sand Sphere came after seeing Anish Kapoor’s _Dismemberment, Site 1_ at Gibbs Farm. It’s an undeniably amazing sculpture, but I couldn’t help thinking: all that work rearranging the land, just to plonk a big, impressive hunk of something on it in order to give us a thrill. Maya Lin’s _A Fold in the Field_, on the same farm, is impressive in a completely different way. It got me thinking: instead of adding to the land, could you simply reposition what’s already there? Take what’s hidden below ground and make it visible, without reshaping it at all? And how could it be done?'
 kind: Physical · Sculpture · Performance
 section: art
 mode: model
