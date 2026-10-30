@@ -2,8 +2,8 @@
 title: Therapy
 titleEnd: (scan)
 stage: Planning
-summary: I can't undo that white spot. But it doesn't have to be there in a drawing.
-intro: I've had quite a few MRI scans since this thalamic lesion was first discovered in 1998. The old scans were hard copies that were pretty difficult to decipher. Nowadays the imaging place has (of course) an app where I can download all 400 digital images from the last appointment. I'm going to redraw this without that white spot. A little bit 1984 I know, but I like the idea of rewriting history.
+summary: Can you redraw the past?
+intro: 'This is an MRI scan of a thalamic lesion I was diagnosed with in 1998. Rereading _1984_ got me thinking: what if I could rewrite history, and a different version of this scan existed, one without the lesion? If I get really good at doublethink, maybe I can convince myself it never existed.'
 kind: Physical · Drawing · Therapy
 section: art
 mode: drawing
