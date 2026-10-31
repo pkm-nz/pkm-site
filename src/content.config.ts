@@ -49,6 +49,7 @@ const projects = defineCollection({
     decisions: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
     gallery: z.array(media).default([]),
     comments: z.array(comment).default([]),
+    draft: z.boolean().default(false),  // hidden from the live site until unticked
   }),
 });
 

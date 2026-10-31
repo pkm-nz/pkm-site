@@ -4,7 +4,7 @@ export type Project = CollectionEntry<"projects">;
 export type Update = CollectionEntry<"updates">;
 
 export async function getProjects() {
-  return (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+  return (await getCollection("projects", p => import.meta.env.DEV || !p.data.draft)).sort((a, b) => a.data.order - b.data.order);
 }
 
 export async function getUpdates() {

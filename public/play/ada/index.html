@@ -1,0 +1,513 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ADA Wall Sign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+  /* Layout: full-bleed 3D stage with a slim control rail along the bottom. Single dark look, matched to the charcoal render wall. */
+  :root {
+    --ground: #1c1d20;
+    --panel: rgba(28, 29, 33, 0.82);
+    --line: rgba(255, 255, 255, 0.12);
+    --ink: #eceae6;
+    --muted: #9c9a97;
+    --accent: #f7931d;
+    --red: #ef4136;
+    --display: "Jost", "Futura", "Avenir Next", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--display); overflow: hidden; }
+  #stage { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+  .head {
+    position: fixed; top: calc(14px + env(safe-area-inset-top, 0px));
+    left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; pointer-events: none;
+  }
+  .head h1 { margin: 0; font-weight: 500; font-size: 15px; letter-spacing: 0.32em; text-transform: uppercase; }
+  .head p { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: right; }
+  .rail {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 12px calc(14px + env(safe-area-inset-bottom, 0px));
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+    background: linear-gradient(to top, var(--panel) 60%, transparent);
+  }
+  .group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+  .label { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 4px; }
+  button {
+    font: 500 13px/1 var(--display); letter-spacing: 0.04em; color: var(--ink);
+    background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 13px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button[aria-pressed="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  input[type="range"] { width: 140px; accent-color: var(--accent); }
+  .hint { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  #err:not([hidden]) { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  @media (max-width: 560px) {
+    .head p { display: none; }
+    .hint { display: none; }
+    input[type="range"] { width: 110px; }
+  }
+</style>
+
+<canvas id="stage" aria-label="Interactive 3D model of the ADA sculptural wall sign"></canvas>
+<div id="err" hidden>The 3D view needs WebGL, which this browser has turned off.</div>
+
+<div class="head">
+  <h1>ADA</h1>
+  <p id="spec">3 layers · 1000 × 500 mm · 80 mm deep each</p>
+</div>
+
+<div class="rail">
+  <div class="group" role="group" aria-label="Camera views">
+    <span class="label">View</span>
+    <button id="v-front" data-view="front" aria-pressed="true">Front</button>
+    <button id="v-street" data-view="street" aria-pressed="false">Street</button>
+    <button id="v-below" data-view="below" aria-pressed="false">From below</button>
+    <button id="v-side" data-view="side" aria-pressed="false">Profile</button>
+  </div>
+  <div class="group">
+    <label class="label" for="sun">Sun</label>
+    <input id="sun" type="range" min="0" max="100" value="38">
+  </div>
+  <div class="group" role="group" aria-label="Sign form">
+    <span class="label">Form</span>
+    <button id="f-blocks" data-form="blocks" aria-pressed="true">Blocks</button>
+    <button id="f-wire" data-form="wire" aria-pressed="false">Wire</button>
+  </div>
+  <div class="group" role="group" aria-label="Wire colour" id="wire-colours" hidden>
+    <span class="label">Wire</span>
+    <button id="c-white" data-wire="white" aria-pressed="true">White</button>
+    <button id="c-red" data-wire="red" aria-pressed="false">Red</button>
+    <button id="c-letters" data-wire="letters" aria-pressed="false">Letter colours</button>
+  </div>
+  <div class="group">
+    <button id="explode" aria-pressed="false">Separate layers</button>
+  </div>
+  <span class="hint">Drag to orbit · scroll or pinch to zoom</span>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const canvas = document.getElementById("stage");
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+} catch (e) {
+  document.getElementById("err").hidden = false;
+  throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xb9c3cc);
+scene.fog = new THREE.Fog(0xb9c3cc, 18, 45);
+
+const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 200);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 0.6;
+controls.maxDistance = 14;
+controls.maxPolarAngle = Math.PI * 0.62;
+// keep the camera in front of the wall
+controls.minAzimuthAngle = -Math.PI / 2 + 0.06;
+controls.maxAzimuthAngle = Math.PI / 2 - 0.06;
+
+// ---------- Procedural textures (textured render + sprayed sign paint) ----------
+function heightCanvas(size, blobs, rMin, rMax, seed) {
+  let s = seed;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const g = c.getContext("2d", { willReadFrequently: true });
+  g.fillStyle = "#808080";
+  g.fillRect(0, 0, size, size);
+  for (let i = 0; i < blobs; i++) {
+    const x = rnd() * size, y = rnd() * size, r = rMin + rnd() * (rMax - rMin);
+    const light = rnd() > 0.5;
+    const grad = g.createRadialGradient(x, y, 0, x, y, r);
+    const a = 0.05 + rnd() * 0.12;
+    grad.addColorStop(0, light ? `rgba(255,255,255,${a})` : `rgba(0,0,0,${a})`);
+    grad.addColorStop(1, "rgba(128,128,128,0)");
+    g.fillStyle = grad;
+    // draw wrapped so the texture tiles
+    for (const dx of [-size, 0, size]) for (const dy of [-size, 0, size]) {
+      g.save(); g.translate(dx, dy);
+      g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+      g.restore();
+    }
+  }
+  return c;
+}
+function addGrain(c, amount, seed) {
+  let s = seed;
+  const rnd = () => (s = (s * 48271) % 2147483647) / 2147483647;
+  const g = c.getContext("2d");
+  const img = g.getImageData(0, 0, c.width, c.height);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = (rnd() - 0.5) * amount;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = Math.max(0, Math.min(255, img.data[i] + n));
+  }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+function normalFromHeight(src, strength) {
+  const w = src.width, h = src.height;
+  const d = src.getContext("2d").getImageData(0, 0, w, h).data;
+  const out = document.createElement("canvas");
+  out.width = w; out.height = h;
+  const og = out.getContext("2d");
+  const img = og.createImageData(w, h);
+  const H = (x, y) => d[(((y + h) % h) * w + ((x + w) % w)) * 4] / 255;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const dx = (H(x + 1, y) - H(x - 1, y)) * strength;
+    const dy = (H(x, y + 1) - H(x, y - 1)) * strength;
+    const len = Math.hypot(dx, dy, 1);
+    const i = (y * w + x) * 4;
+    img.data[i] = ((-dx / len) * 0.5 + 0.5) * 255;
+    img.data[i + 1] = ((dy / len) * 0.5 + 0.5) * 255;
+    img.data[i + 2] = ((1 / len) * 0.5 + 0.5) * 255;
+    img.data[i + 3] = 255;
+  }
+  og.putImageData(img, 0, 0);
+  return out;
+}
+function tex(c, repeat, srgb) {
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeat, repeat);
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// Wall: coarse trowelled render, roughly 0.6 m per tile
+const wallH = addGrain(heightCanvas(512, 1400, 8, 60, 7), 22, 3);
+const wallNormal = tex(normalFromHeight(wallH, 9), 1);
+const wallRough = tex(wallH, 1);
+// Sign: fine sprayed texture coat, roughly 0.12 m per tile (the photos show a sandy, stippled paint finish)
+const signH = addGrain(heightCanvas(256, 500, 1.5, 6, 11), 60, 5);
+const signNormal = tex(normalFromHeight(signH, 3.2), 1);
+
+// ---------- Wall, ground ----------
+const WALL_W = 9, WALL_H = 5.2, SIGN_Y = 3.0;
+const wallMat = new THREE.MeshStandardMaterial({
+  color: 0x6e7076, roughness: 0.95, normalMap: wallNormal, normalScale: new THREE.Vector2(1.4, 1.4),
+});
+wallNormal.repeat.set(WALL_W / 0.9, WALL_H / 0.9);
+const wall = new THREE.Mesh(new THREE.BoxGeometry(WALL_W, WALL_H, 0.3), wallMat);
+wall.position.set(0, WALL_H / 2, -0.15);
+wall.receiveShadow = true; wall.castShadow = true;
+scene.add(wall);
+
+const flashing = new THREE.Mesh(
+  new THREE.BoxGeometry(WALL_W + 0.04, 0.06, 0.36),
+  new THREE.MeshStandardMaterial({ color: 0x232427, roughness: 0.6, metalness: 0.3 })
+);
+flashing.position.set(0, WALL_H + 0.03, -0.15);
+scene.add(flashing);
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(240, 240),
+  new THREE.MeshStandardMaterial({ color: 0x8d8c88, roughness: 1, normalMap: tex(normalFromHeight(addGrain(heightCanvas(256, 300, 2, 10, 21), 40, 9), 2), 1) })
+);
+ground.material.normalMap.repeat.set(240, 240);
+ground.rotation.x = -Math.PI / 2;
+ground.position.z = 120 - 0.3;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Small wall details from the photos: vents and the alarm box
+function vent(x, y, w, h) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.012), new THREE.MeshStandardMaterial({ color: 0x1e1f22, roughness: 0.8 }));
+  m.position.set(x, y, 0.004);
+  scene.add(m);
+}
+vent(-1.2, 4.35, 0.22, 0.07);
+vent(0.25, 0.75, 0.2, 0.17);
+const alarm = new THREE.Group();
+const box = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.09), new THREE.MeshStandardMaterial({ color: 0x2b2c2f, roughness: 0.5 }));
+box.position.z = 0.045; box.castShadow = true;
+const lens = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.02), new THREE.MeshStandardMaterial({ color: 0x8a1414, emissive: 0x3a0505, roughness: 0.3 }));
+lens.position.set(0, -0.08, 0.092);
+alarm.add(box, lens);
+alarm.position.set(0.55, 4.45, 0);
+scene.add(alarm);
+
+// ---------- Sign geometry, traced from the ADA5.ai artwork (units: points) ----------
+// Bounding box of the mark in the drawing: x 170 → 398.23, y 204.75 → 318.86
+const PT = { x0: 170, x1: 398.226562, y0: 204.75, y1: 318.863281 };
+const SIGN_H = 0.5; // metres: shapes are 500 mm high (artwork is 2:1, so 1000 mm wide)
+const S = SIGN_H / (PT.y1 - PT.y0);
+const cx = (PT.x0 + PT.x1) / 2, cy = (PT.y0 + PT.y1) / 2;
+const P = (x, y) => new THREE.Vector2((x - cx) * S, -(y - cy) * S);
+
+function triShape(ax, bx, apx) {
+  const s = new THREE.Shape();
+  const a = P(ax, PT.y1), b = P(bx, PT.y1), c = P(apx, PT.y0);
+  s.moveTo(a.x, a.y); s.lineTo(b.x, b.y); s.lineTo(c.x, c.y); s.closePath();
+  return s;
+}
+function dShape() {
+  const s = new THREE.Shape();
+  const left = 238.675781, cxD = 284.363281, r = (PT.y1 - PT.y0) / 2;
+  const tl = P(left, PT.y0), tr = P(cxD, PT.y0), bl = P(left, PT.y1);
+  const c = P(cxD, (PT.y0 + PT.y1) / 2);
+  s.moveTo(bl.x, bl.y);
+  s.lineTo(tl.x, tl.y);
+  // no explicit point at the top of the arc: a duplicate vertex there breaks the bevel
+  s.absarc(c.x, c.y, r * S, Math.PI / 2, -Math.PI / 2, true);
+  return s;
+}
+
+const DEPTH = 0.08, BEVEL = 0.003, STANDOFF = 0.02;
+const layers = [
+  // back to front, as fixed on the wall
+  { name: "orange triangle", shape: triShape(284.113281, 398.226562, 341.171875), color: 0xf98c10 },
+  { name: "D", shape: dShape(), color: 0xef4136 },
+  { name: "red triangle", shape: triShape(170, 284.113281, 227.058594), color: 0xbf1e2d },
+];
+
+const sign = new THREE.Group();
+sign.position.set(0, SIGN_Y, 0);
+scene.add(sign);
+
+const fixingMat = new THREE.MeshStandardMaterial({ color: 0x9a9da1, metalness: 0.8, roughness: 0.35 });
+layers.forEach((L, i) => {
+  const geo = new THREE.ExtrudeGeometry(L.shape, {
+    depth: DEPTH - BEVEL * 2, bevelEnabled: true, bevelThickness: BEVEL, bevelSize: BEVEL, bevelSegments: 2, curveSegments: 64,
+  });
+  const n = signNormal.clone();
+  n.repeat.set(1 / 0.12, 1 / 0.12);
+  n.needsUpdate = true;
+  const mat = new THREE.MeshStandardMaterial({
+    color: L.color, roughness: L.roughness ?? 0.82, normalMap: n, normalScale: new THREE.Vector2(L.grain ?? 0.55, L.grain ?? 0.55),
+    // cast from the light-facing surfaces so the shadow reaches right into each joint
+    shadowSide: THREE.FrontSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  const g = new THREE.Group();
+  g.add(mesh);
+  // sink each front layer's rounded back edge into the layer behind so no lit sliver shows in the joint
+  g.userData.baseZ = STANDOFF + i * DEPTH + BEVEL - (i > 0 ? BEVEL * 1.5 : 0);
+  g.userData.explodeZ = STANDOFF + i * (DEPTH + 0.12) + BEVEL;
+  g.position.z = g.userData.baseZ;
+
+  // hidden stand-off pins behind each layer, only seen when layers are separated
+  const pts = i === 0 ? [[300, 300], [380, 300], [341, 240]] : i === 1 ? [[255, 220], [255, 300], [300, 262]] : [[200, 300], [255, 300], [227, 250]];
+  pts.forEach(([x, y]) => {
+    const p = P(x, y);
+    const len = g.userData.explodeZ;
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 1, 12), fixingMat);
+    pin.rotation.x = Math.PI / 2;
+    pin.position.set(p.x, p.y, 0);
+    pin.userData.isPin = true;
+    pin.castShadow = true;
+    g.add(pin);
+  });
+  sign.add(g);
+  L.group = g;
+});
+
+// ---------- Wire: one continuous strand, traced from the ADA outline (metres, sign centre at origin) ----------
+// Front faces sit 80 / 160 / 240 mm off the wall; the orange back right edge and back base lie on the wall as fixing edges.
+const ROUTE = [0.20044,0.15087,0.08000,0.25001,0.25000,0.08000,0.25001,0.25000,0.00000,0.50000,-0.25000,0.00000,-0.00000,-0.25000,0.00000,-0.00000,-0.25000,0.16000,0.00769,-0.24991,0.16000,0.01429,-0.24965,0.16000,0.02087,-0.24922,0.16000,0.02745,-0.24861,0.16000,0.03400,-0.24783,0.16000,0.04053,-0.24687,0.16000,0.04703,-0.24574,0.16000,0.05350,-0.24445,0.16000,0.05994,-0.24298,0.16000,0.06633,-0.24134,0.16000,0.07268,-0.23953,0.16000,0.07898,-0.23756,0.16000,0.08522,-0.23542,0.16000,0.09141,-0.23312,0.16000,0.09753,-0.23065,0.16000,0.10358,-0.22803,0.16000,0.10957,-0.22524,0.16000,0.11547,-0.22230,0.16000,0.12130,-0.21920,0.16000,0.12705,-0.21595,0.16000,0.13270,-0.21255,0.16000,0.13827,-0.20901,0.16000,0.14374,-0.20531,0.16000,0.14911,-0.20148,0.16000,0.15437,-0.19750,0.16000,0.15953,-0.19338,0.16000,0.16458,-0.18913,0.16000,0.16952,-0.18475,0.16000,0.17434,-0.18024,0.16000,0.17903,-0.17561,0.16000,0.18361,-0.17085,0.16000,0.18805,-0.16597,0.16000,0.19237,-0.16098,0.16000,0.19655,-0.15587,0.16000,0.20060,-0.15066,0.16000,0.20451,-0.14534,0.16000,0.20827,-0.13992,0.16000,0.21189,-0.13440,0.16000,0.21537,-0.12879,0.16000,0.21869,-0.12309,0.16000,0.22187,-0.11730,0.16000,0.22489,-0.11143,0.16000,0.22775,-0.10549,0.16000,0.23046,-0.09947,0.16000,0.23300,-0.09338,0.16000,0.23539,-0.08723,0.16000,0.23761,-0.08101,0.16000,0.23966,-0.07474,0.16000,0.24155,-0.06842,0.16000,0.24327,-0.06204,0.16000,0.24483,-0.05563,0.16000,0.24621,-0.04918,0.16000,0.24742,-0.04269,0.16000,0.24846,-0.03617,0.16000,0.24933,-0.02963,0.16000,0.25003,-0.02307,0.16000,0.25055,-0.01649,0.16000,0.25090,-0.00990,0.16000,0.25107,-0.00330,0.16000,0.25107,0.00330,0.16000,0.25090,0.00990,0.16000,0.25055,0.01649,0.16000,0.25003,0.02307,0.16000,0.24933,0.02963,0.16000,0.24846,0.03617,0.16000,0.24742,0.04269,0.16000,0.24621,0.04918,0.16000,0.24483,0.05563,0.16000,0.24327,0.06204,0.16000,0.24155,0.06842,0.16000,0.23966,0.07474,0.16000,0.23761,0.08101,0.16000,0.23539,0.08723,0.16000,0.23300,0.09338,0.16000,0.23046,0.09947,0.16000,0.22775,0.10549,0.16000,0.22489,0.11143,0.16000,0.22187,0.11730,0.16000,0.21869,0.12309,0.16000,0.21537,0.12879,0.16000,0.21189,0.13440,0.16000,0.20827,0.13992,0.16000,0.20451,0.14534,0.16000,0.20060,0.15066,0.16000,0.19655,0.15587,0.16000,0.19237,0.16098,0.16000,0.18805,0.16597,0.16000,0.18361,0.17085,0.16000,0.17903,0.17561,0.16000,0.17434,0.18024,0.16000,0.16952,0.18475,0.16000,0.16458,0.18913,0.16000,0.15953,0.19338,0.16000,0.15437,0.19750,0.16000,0.14911,0.20148,0.16000,0.14374,0.20531,0.16000,0.13827,0.20901,0.16000,0.13270,0.21255,0.16000,0.12705,0.21595,0.16000,0.12130,0.21920,0.16000,0.11547,0.22230,0.16000,0.10957,0.22524,0.16000,0.10358,0.22803,0.16000,0.09753,0.23065,0.16000,0.09141,0.23312,0.16000,0.08522,0.23542,0.16000,0.07898,0.23756,0.16000,0.07268,0.23953,0.16000,0.06633,0.24134,0.16000,0.05994,0.24298,0.16000,0.05350,0.24445,0.16000,0.04703,0.24574,0.16000,0.04053,0.24687,0.16000,0.03400,0.24783,0.16000,0.02745,0.24861,0.16000,0.02087,0.24922,0.16000,0.01429,0.24965,0.16000,0.00769,0.24991,0.16000,0.00110,0.25000,0.16000,-0.19909,0.25000,0.16000,-0.19909,0.14820,0.16000,-0.24999,0.25000,0.16000,-0.24999,0.25000,0.24000,-0.50000,-0.25000,0.24000,-0.00000,-0.25000,0.24000,-0.19909,0.14820,0.24000];
+// letter each stretch traces, per point (the segment arriving at it): R = front A, D = D, O = back A
+const ROUTE_LETTERS = "OOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDRRRRR";
+const WIRE_R = 0.003; // 6 mm rod
+const WIRE_COLOURS = {
+  red:     { R: 0xd3202a, D: 0xd3202a, O: 0xd3202a },
+  white:   { R: 0xf2f1ee, D: 0xf2f1ee, O: 0xf2f1ee },
+  letters: { R: 0xbf1e2d, D: 0xef4136, O: 0xf98c10 },
+};
+const wireMats = { R: null, D: null, O: null };
+for (const k in wireMats) wireMats[k] = new THREE.MeshStandardMaterial({ color: WIRE_COLOURS.white[k], roughness: 0.38, metalness: 0.25 });
+const wire = new THREE.Group();
+wire.visible = false;
+wire.position.set(0, SIGN_Y, 0.003); // wire radius off the wall face
+scene.add(wire);
+const wirePts = [];
+for (let i = 0; i < ROUTE.length; i += 3) wirePts.push(new THREE.Vector3(ROUTE[i], ROUTE[i + 1], ROUTE[i + 2]));
+const segGeo = new THREE.CylinderGeometry(WIRE_R, WIRE_R, 1, 16, 1, true);
+const jointGeo = new THREE.SphereGeometry(WIRE_R, 16, 12);
+const wireUp = new THREE.Vector3(0, 1, 0);
+wirePts.forEach((p, i) => {
+  const mat = wireMats[ROUTE_LETTERS[i]];
+  const joint = new THREE.Mesh(jointGeo, mat);
+  joint.position.copy(p); // no shadows for the wire: they read as extra lines on the wall
+  wire.add(joint);
+  if (i === 0) return;
+  const a = wirePts[i - 1], dir = new THREE.Vector3().subVectors(p, a), len = dir.length();
+  if (len < 1e-6) return;
+  const seg = new THREE.Mesh(segGeo, mat);
+  seg.scale.set(1, len, 1);
+  seg.position.copy(a).addScaledVector(dir, 0.5);
+  seg.quaternion.setFromUnitVectors(wireUp, dir.normalize());
+  
+  wire.add(seg);
+});
+
+// ---------- Light ----------
+const hemi = new THREE.HemisphereLight(0xdfe8f2, 0x6b6862, 1.5);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xfff1de, 2.1);
+sun.castShadow = true;
+sun.shadow.mapSize.set(4096, 4096);
+// tight frustum around the sign and alarm box so the shadow map is sharp right into the joints
+sun.shadow.camera.left = -1.3; sun.shadow.camera.right = 1.3;
+sun.shadow.camera.top = 1.8; sun.shadow.camera.bottom = -1.3;
+sun.shadow.camera.near = 8; sun.shadow.camera.far = 16;
+sun.shadow.bias = -0.0002;
+sun.shadow.normalBias = 0.001;
+sun.shadow.radius = 5;
+sun.target.position.set(0, SIGN_Y, 0);
+scene.add(sun, sun.target);
+
+const sunInput = document.getElementById("sun");
+function placeSun() {
+  const t = sunInput.value / 100; // 0 = low from the left, 1 = low from the right
+  const az = THREE.MathUtils.lerp(-1.15, 1.15, t);
+  const el = 0.25 + Math.sin(t * Math.PI) * 0.7;
+  const r = 12;
+  sun.position.set(Math.sin(az) * Math.cos(el) * r, SIGN_Y + Math.sin(el) * r, Math.cos(az) * Math.cos(el) * r);
+  sun.color.setHSL(0.09, 0.6, 0.55 + Math.sin(t * Math.PI) * 0.35);
+}
+sunInput.addEventListener("input", placeSun);
+placeSun();
+
+// ---------- Views ----------
+const VIEWS = {
+  // front is a true elevation: same framing, but seen from 60x further away through a 60x narrower lens,
+  // so the layers no longer shift against each other with depth
+  front:  { pos: [0, SIGN_Y - 0.05, 3.0],    target: [0, SIGN_Y - 0.05, 0.12], tele: 60 },
+  street: { pos: [-2.6, 1.65, 3.2],          target: [0, SIGN_Y - 0.1, 0.05] },
+  below:  { pos: [1.5, 1.6, 1.25],           target: [0, SIGN_Y, 0.05] },
+  side:   { pos: [2.1, SIGN_Y + 0.05, 0.7], target: [0, SIGN_Y, 0.14] },
+};
+let tween = null, tele = 1, baseFov = 38;
+// tele > 1 pushes the camera back along its line of sight and narrows the lens to match
+function applyTele() {
+  camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(baseFov) / 2) / tele));
+  camera.near = 0.05 * tele; camera.far = 200 * tele;
+  camera.updateProjectionMatrix();
+  scene.fog.near = 18 * tele; scene.fog.far = 45 * tele;
+  controls.minDistance = 0.6 * tele; controls.maxDistance = 14 * tele;
+}
+function basePos() { return controls.target.clone().add(camera.position.clone().sub(controls.target).divideScalar(tele)); }
+function place(pos, target, t) {
+  tele = t; controls.target.copy(target);
+  camera.position.copy(target).add(pos.clone().sub(target).multiplyScalar(t));
+  applyTele();
+}
+function goTo(name, instant) {
+  const v = VIEWS[name];
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === name)));
+  const to = { pos: new THREE.Vector3(...v.pos), target: new THREE.Vector3(...v.target), tele: v.tele || 1 };
+  if (instant || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    place(to.pos, to.target, to.tele); tween = null; return;
+  }
+  tween = { from: { pos: basePos(), target: controls.target.clone(), tele }, to, t: 0 };
+}
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => goTo(b.dataset.view)));
+controls.addEventListener("start", () => {
+  tween = null;
+  if (tele !== 1) place(basePos(), controls.target.clone(), 1); // orbiting leaves the elevation
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", "false"));
+});
+
+// ---------- Separate layers ----------
+let explode = 0, explodeTarget = 0;
+const explodeBtn = document.getElementById("explode");
+explodeBtn.addEventListener("click", () => {
+  explodeTarget = explodeTarget ? 0 : 1;
+  explodeBtn.setAttribute("aria-pressed", String(!!explodeTarget));
+  explodeBtn.textContent = explodeTarget ? "Assemble layers" : "Separate layers";
+});
+function applyExplode() {
+  layers.forEach(L => {
+    const g = L.group;
+    g.position.z = THREE.MathUtils.lerp(g.userData.baseZ, g.userData.explodeZ, explode);
+    g.children.forEach(c => {
+      if (!c.userData.isPin) return;
+      const len = Math.max(g.position.z, 0.001);
+      c.scale.set(1, len, 1);
+      c.position.z = -len / 2;
+      c.visible = explode > 0.02;
+    });
+  });
+}
+
+// ---------- Blocks or wire ----------
+const SPEC = { blocks: "3 layers · 1000 × 500 mm · 80 mm deep each", wire: "one continuous 6 mm wire · 1000 × 500 × 240 mm · 4.20 m" };
+function setForm(name) {
+  const isWire = name === "wire";
+  sign.visible = !isWire; wire.visible = isWire;
+  document.querySelectorAll("[data-form]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.form === name)));
+  document.getElementById("spec").textContent = SPEC[name];
+  document.getElementById("explode").parentElement.hidden = isWire;
+  document.getElementById("wire-colours").hidden = !isWire;
+  if (isWire && explodeTarget) document.getElementById("explode").click();
+}
+document.querySelectorAll("[data-form]").forEach(b => b.addEventListener("click", () => setForm(b.dataset.form)));
+function setWireColour(name) {
+  for (const k in wireMats) wireMats[k].color.setHex(WIRE_COLOURS[name][k]);
+  document.querySelectorAll("[data-wire]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.wire === name)));
+}
+document.querySelectorAll("[data-wire]").forEach(b => b.addEventListener("click", () => setWireColour(b.dataset.wire)));
+
+// ---------- Loop ----------
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  baseFov = w < 600 ? 50 : 38;
+  applyTele();
+}
+window.addEventListener("resize", resize);
+resize();
+goTo("front", true);
+applyExplode();
+
+const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+let last = performance.now();
+renderer.setAnimationLoop(now => {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  if (tween) {
+    tween.t = Math.min(1, tween.t + dt / 1.2);
+    const k = ease(tween.t);
+    place(new THREE.Vector3().lerpVectors(tween.from.pos, tween.to.pos, k),
+          new THREE.Vector3().lerpVectors(tween.from.target, tween.to.target, k),
+          Math.exp(THREE.MathUtils.lerp(Math.log(tween.from.tele), Math.log(tween.to.tele), k)));
+    if (tween.t >= 1) tween = null;
+  }
+  if (explode !== explodeTarget) {
+    explode += Math.sign(explodeTarget - explode) * dt / 0.7;
+    explode = THREE.MathUtils.clamp(explode, 0, 1);
+    applyExplode();
+  }
+  controls.update();
+  if (controls.target.z < 0.05) controls.target.z = 0.05;
+  if (camera.position.z < 0.3) camera.position.z = 0.3;
+  renderer.render(scene, camera);
+});
+</script>
+
+</body></html>
