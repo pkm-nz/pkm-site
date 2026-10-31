@@ -29,8 +29,10 @@ facts:
   - label: Medium
     value: Interactive web piece
   - label: Finished
-    value: Oct 2026
+    value: October 2026
 gallery: []
+comments: []
+draft: false
 accent: '#3b3f44'
 accentDark: '#c4c4c4'
 bg: '#e8302a'
