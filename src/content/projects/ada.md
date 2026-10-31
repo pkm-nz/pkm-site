@@ -19,11 +19,11 @@ heroNote: ''
 embed: /play/ada/
 embedNote: Interactive 3D model. Change the view and the sun, or see it as a single wire.
 decisions:
-  - title: Darmatic cantilever
+  - title: Dramatic cantilever
     text: With each shape being 80 mm deep, the frontmost shape will float 160mm off the wall surface. Fixings can be hidden in ovelaps and unseen areas.
   - title: Solid appearance
-    text: Depth of shapes and textured render finish give the form a massive, solid look.
-  - title: Alternative wire version
+    text: Depth of shapes and a textured render give the form a massive, solid look.
+  - title: Alternate wire version
     text: Create a version using a single continuous, unbroken wire.
 facts:
   - label: Size
