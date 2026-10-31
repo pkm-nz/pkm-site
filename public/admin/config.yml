@@ -121,6 +121,7 @@ collections:
           - { name: image, label: Photo, widget: image, required: false }
           - { name: video, label: Video link, widget: string, required: false }
           - { name: caption, label: Caption, widget: string, required: false }
+      - { name: further, label: Further thoughts (optional), hint: Longer commentary shown folded away above the comments. Leave empty to hide the section., widget: markdown, buttons: [bold, italic, link], editor_components: [], modes: [rich_text], required: false }
       - name: comments
         label: Approved comments
         hint: Click Add for each comment you approve. To reply, click Add again, write your answer in the Comment box and switch on "This is my reply".
