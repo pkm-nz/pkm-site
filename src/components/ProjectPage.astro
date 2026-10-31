@@ -63,6 +63,13 @@ const facts = status && !finished ? [...d.facts, { label: venture ? "Status" : "
       </section>
     )}
 
+    {d.further && (
+      <details class="further">
+        <summary><h2>Further thoughts</h2><span class="chev" aria-hidden="true"></span></summary>
+        <div class="prose" set:html={paragraphs(d.further)} />
+      </details>
+    )}
+
     {(!venture || updates.length > 0) && (
       <section style="display:grid;gap:8px">
         <div class="sechead"><h2>Updates</h2><a href="/updates/">All updates →</a></div>
@@ -70,13 +77,6 @@ const facts = status && !finished ? [...d.facts, { label: venture ? "Status" : "
           {updates.length ? updates.map(u => <Entry u={u} p={p} />) : <p class="lede" style="color:var(--soft);padding-block:16px">No updates yet.</p>}
         </div>
       </section>
-    )}
-
-    {d.further && (
-      <details class="further">
-        <summary><h2>Further thoughts</h2><span class="chev" aria-hidden="true"></span></summary>
-        <div class="prose" set:html={paragraphs(d.further)} />
-      </details>
     )}
 
     <Comments comments={d.comments} title={fullTitle(p)} url={`${Astro.site}${Astro.url.pathname.slice(1)}`} />

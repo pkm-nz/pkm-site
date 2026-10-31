@@ -34,7 +34,7 @@ const projects = defineCollection({
     linkLabel: opt(z.string()),
     summary: z.string(),                // short text on the project cards
     intro: opt(z.string()),             // longer intro on the project's own page (falls back to summary)
-    further: opt(z.string()),           // optional "Further thoughts", folded away above the comments
+    further: opt(z.string()),           // optional "Further thoughts", folded away above the updates
     accent: z.string(),
     accentDark: z.string(),
     bg: z.string(),
