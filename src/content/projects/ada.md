@@ -36,9 +36,6 @@ gallery:
   - image: /uploads/img_3365.webp
     video: ''
     caption: ''
-  - image: ''
-    video: ''
-    caption: ''
   - image: /uploads/img_3367.webp
     video: ''
     caption: ''
