@@ -30,9 +30,12 @@ facts:
     value: 1000 × 500 mm
   - label: Layers
     value: 3, 80 mm deep each
-  - label: Finished
-    value: Placeholder
-gallery: []
+  - label: Location
+    value: 47 Mt Eden Road, Auckland
+gallery:
+  - image: ''
+    video: ''
+    caption: ''
 comments: []
 draft: true
 accent: '#ef4136'
