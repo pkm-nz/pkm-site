@@ -58,4 +58,4 @@ bg: '#eceae6'
 bgDark: '#2a2b2f'
 ---
 
-What was the brief, where does the sign live, and what was the thinking behind turning three letters into three solid shapes? Talk about how it changes as people walk past, how it handles the sun through the day, and what the wire version was exploring.
+Turn the flat logo into an object without losing the logo. Seen straight on, the three shapes must line up into ADA exactly as they appear on Tony’s business card. From the street, at an angle, they should separate into a stack of solid geometric forms that seem to hang off the wall with no visible means of support. Let the sun do the rest: as it moves across the building, the shadows between the layers keep redrawing the sign.
