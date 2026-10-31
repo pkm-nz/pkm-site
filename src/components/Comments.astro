@@ -22,6 +22,7 @@ const n = comments.length;
       <label>Email (not shown)<input name="email" type="email" autocomplete="email" placeholder="So I can reply" /></label>
     </div>
     <textarea name="comment" required aria-label="Your question or comment" placeholder="Write your question or comment"></textarea>
+    <label class="tick"><input type="checkbox" name="subscribe" value="yes" checked /> Also send me project updates by email</label>
     <div class="crow"><button class="btn" type="submit">Send</button><span class="toast" aria-live="polite"></span></div>
   </form>
   <p class="mail">Rather write privately? Email <a class="addr" href={`mailto:${SITE.email}`}>{SITE.email}</a></p>

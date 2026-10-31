@@ -10,3 +10,7 @@ export const SITE = {
 export const MENU = S.menu;
 
 export const STAGES = ["Planning", "Making", "Finished"] as const;
+
+// Buttondown account that holds the email-updates list.
+export const BUTTONDOWN = "PKM";
+export const subscribeUrl = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN}`;

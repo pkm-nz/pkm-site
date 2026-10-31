@@ -1,13 +1,13 @@
 ---
 // Email sign-up for new updates. Buttondown holds the list and sends the emails.
-const BUTTONDOWN = "PKM";
+import { subscribeUrl } from "../site.config";
 ---
 <section class="subscribe" aria-labelledby="subH">
   <div>
     <h2 id="subH">Get updates by email</h2>
     <p>A short email when there's something new. Unsubscribe any time.</p>
   </div>
-  <form class="form subform" action={`https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN}`} method="post" target="_blank">
+  <form class="form subform" action={subscribeUrl} method="post" target="_blank">
     <div class="subrow">
       <input type="email" name="email" required autocomplete="email" placeholder="Your email" aria-label="Your email" />
       <input type="hidden" name="embed" value="1" />

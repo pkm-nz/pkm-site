@@ -2,9 +2,9 @@
 // Wires up any <form data-send> on the page. Messages go to SITE.formEndpoint
 // (/api/send, the site's own sender in worker/index.js), which emails them to you.
 // With no endpoint set, the visitor's own email app opens with the message filled in.
-import { SITE } from "../site.config";
+import { SITE, subscribeUrl } from "../site.config";
 ---
-<script is:inline define:vars={{ endpoint: SITE.formEndpoint, email: SITE.email }}>
+<script is:inline define:vars={{ endpoint: SITE.formEndpoint, email: SITE.email, subscribeUrl }}>
   document.querySelectorAll("form[data-send]").forEach(form => {
     const toast = form.querySelector(".toast");
     form.addEventListener("submit", async e => {
@@ -25,6 +25,12 @@ import { SITE } from "../site.config";
         const r = await fetch(endpoint, { method: "POST", body: fd, headers: { Accept: "application/json" } });
         if (!r.ok) throw new Error();
         toast.textContent = form.dataset.done;
+        // Ticked "send me updates": add them to the email list (Buttondown emails them to confirm).
+        if (fd.get("subscribe") && fd.get("email")) {
+          const sub = new FormData(); sub.append("email", fd.get("email")); sub.append("embed", "1");
+          fetch(subscribeUrl, { method: "POST", mode: "no-cors", body: sub }).catch(() => {});
+          toast.textContent += " Check your inbox to confirm your email updates.";
+        }
         form.reset();
       } catch {
         toast.textContent = `That didn't send. Please email ${email} instead.`;
