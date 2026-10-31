@@ -2,7 +2,7 @@
 title: ''
 titleEnd: ADA
 stage: Finished
-summary: Can a sign be read as a sculpture first, and a name second?
+summary: Three pure shapes that read as a logo and letters head-on, and as sculpture from the side.
 intro: When I designed the branding for Anthony Davis Architects (ADA), I always pictured the logo as a three-dimensional object. I wanted to use the archetypal geometric forms of circle, square and triangle, which suited the letters ADA perfectly. Tony understood the thinking straight away, so convincing him he needed a three-dimensional version of his logo on the side of his building was an easy sell. I originally planned to make the three shapes from reinforced pumice concrete, using a mix I’d formulated when building my pizza oven. I abandoned that idea once I worked out each shape would weigh at least 8 kg, too much for the cantilever to support. We switched to polystyrene with a coarse render, which meant the anchoring rods could be hidden and the drama of the cantilever kept intact. Technically it’s a design piece rather than art, but I figure that if you see the three forms as abstract shapes rather than letters, it counts as art. You can see it on the side of Tony’s building at 47 Mt Eden Road, Auckland.
 kind: Physical · Sculpture
 section: art
