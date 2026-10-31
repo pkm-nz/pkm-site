@@ -20,7 +20,7 @@ embed: /play/ada/
 embedNote: Interactive 3D model. Change the view and the sun, or see it as a single wire.
 decisions:
   - title: Darmatic cantilever
-    text: With each shape being 80 mm deep the frontmost shape will float 160mm off wall surface. Fixings can be hidden in ovelaps and unseen areas.
+    text: With each shape being 80 mm deep, the frontmost shape will float 160mm off wall surface. Fixings can be hidden in ovelaps and unseen areas.
   - title: Solid appearance
     text: Depth of shapes and textured render finish give the form a massive, solid look.
   - title: Alternative wire version
@@ -33,7 +33,22 @@ facts:
   - label: Location
     value: 47 Mt Eden Road, Auckland
 gallery:
-  - image: ''
+  - image: /uploads/img_3365.webp
+    video: ''
+    caption: ''
+  - image: /uploads/img_3366.webp
+    video: ''
+    caption: ''
+  - image: /uploads/img_3367.webp
+    video: ''
+    caption: ''
+  - image: /uploads/img_3368.webp
+    video: ''
+    caption: ''
+  - image: /uploads/adalogo1.webp
+    video: ''
+    caption: ''
+  - image: /uploads/adalogo2.webp
     video: ''
     caption: ''
 comments: []
