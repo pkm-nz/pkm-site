@@ -52,7 +52,7 @@ gallery:
     video: ''
     caption: ''
 comments: []
-draft: true
+draft: false
 accent: '#ef4136'
 accentDark: '#ff6a5c'
 bg: '#eceae6'
