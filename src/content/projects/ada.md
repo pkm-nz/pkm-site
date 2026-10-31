@@ -4,7 +4,7 @@ titleEnd: Wall Sign
 stage: Finished
 summary: Placeholder. Can a sign be read as a sculpture first, and a name second?
 intro: Placeholder intro. Two triangles and a D, built as three solid layers that step out from the wall, so the name ADA reads head-on and turns into a sculpture as you walk past. Replace this with the story of how the sign came about, who it was for and what you wanted it to do.
-kind: Physical · Sculpture · Signage
+kind: Physical · Sculpture
 section: art
 mode: model
 status: ''
@@ -34,11 +34,11 @@ facts:
     value: Placeholder
 gallery: []
 comments: []
-draft: true
 accent: '#ef4136'
 accentDark: '#ff6a5c'
 bg: '#eceae6'
 bgDark: '#2a2b2f'
+draft: true
 ---
 
 Placeholder for the longer story. What was the brief, where does the sign live, and what was the thinking behind turning three letters into three solid shapes? Talk about how it changes as people walk past, how it handles the sun through the day, and what the wire version was exploring.
