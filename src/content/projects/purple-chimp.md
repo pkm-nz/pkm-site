@@ -33,7 +33,7 @@ facts:
   - label: Sheets
     value: 4, 40 mm apart
   - label: Finished
-    value: Sep 2012
+    value: September 2012
 gallery:
   - image: ''
     video: https://youtu.be/ZpCnZF6CtMY
@@ -59,6 +59,7 @@ comments:
     date: 2026-10-31
     text: Yes, I have a few subjects in mind Steve. I like your tiny word/image idea but I'm not trying to make any big statement with these acrylic sculptures, it's more about exploring the materials and light. I'd like to do one using stacked transparent tiles to build the tone. The stack heights would create the third dimension.
     artist: true
+draft: false
 accent: '#4a2ad0'
 accentDark: '#9c88ff'
 bg: '#ece8fb'
