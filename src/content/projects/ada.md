@@ -32,6 +32,8 @@ facts:
     value: 3, 80 mm deep each
   - label: Location
     value: 47 Mt Eden Road, Auckland
+  - label: Finished
+    value: April 2023
 gallery:
   - image: /uploads/img_3365.webp
     video: ''
