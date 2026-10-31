@@ -306,8 +306,9 @@ layers.forEach((L, i) => {
   mesh.castShadow = true; mesh.receiveShadow = true;
   const g = new THREE.Group();
   g.add(mesh);
-  // sink each front layer's rounded back edge into the layer behind so no lit sliver shows in the joint
-  g.userData.baseZ = STANDOFF + i * DEPTH + BEVEL - (i > 0 ? BEVEL * 1.5 : 0);
+  // assembled, the back layer sits flat on the wall: its rounded back edge is sunk into the wall,
+  // and each front layer's rounded back edge into the layer behind, so no lit sliver or shadow shows in a joint
+  g.userData.baseZ = i * DEPTH + BEVEL - (i > 0 ? BEVEL * 1.5 : BEVEL * 1.5);
   g.userData.explodeZ = STANDOFF + i * (DEPTH + 0.12) + BEVEL;
   g.position.z = g.userData.baseZ;
 
