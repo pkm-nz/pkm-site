@@ -16,7 +16,8 @@ const venture = d.mode === "venture";
 const finished = d.stage === "Finished";
 const galleryTitle = d.mode === "drawing" ? "Progress" : finished || venture ? "Photos and video" : "As it gets made";
 const status = d.status ?? d.stage;
-const facts = status ? [...d.facts, { label: venture ? "Status" : "Stage", value: status }] : d.facts;
+// a finished project already gives its finish date, so the Stage line would repeat it
+const facts = status && !finished ? [...d.facts, { label: venture ? "Status" : "Stage", value: status }] : d.facts;
 ---
 <Base title={fullTitle(p)} description={plain(d.summary)} image={d.cover} nav={venture ? "not-art" : "home"}>
   <div class="view pa" style={paStyle(p)}>
