@@ -11,7 +11,7 @@ status: ''
 link: ''
 linkLabel: ''
 order: 7
-cover: /uploads/ada-sign.svg
+cover: /uploads/adacover.webp
 coverFit: cover
 coverBg: ''
 heroImage: ''
