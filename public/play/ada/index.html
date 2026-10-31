@@ -313,7 +313,7 @@ layers.forEach((L, i) => {
   g.position.z = g.userData.baseZ;
 
   // hidden stand-off pins behind each layer, only seen when layers are separated
-  const pts = i === 0 ? [[300, 300], [380, 300], [341, 240]] : i === 1 ? [[255, 220], [255, 300], [300, 262]] : [[200, 300], [255, 300], [227, 250]];
+  const pts = i === 0 ? [[300, 300], [380, 300], [341, 240]] : i === 1 ? [[255, 220], [255, 300], [300, 262]] : [[255, 300], [227, 250]];
   pts.forEach(([x, y]) => {
     const p = P(x, y);
     const len = g.userData.explodeZ;
