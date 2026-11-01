@@ -66,7 +66,7 @@ const facts = status && !finished ? [...d.facts, { label: venture ? "Status" : "
     {d.further && (
       <details class="further">
         <summary><h2>Further thoughts</h2><span class="chev" aria-hidden="true"></span></summary>
-        <div class="prose" set:html={paragraphs(d.further)} />
+        <div class={d.further.length > 500 ? "lede story cols" : "lede story"} set:html={paragraphs(d.further)} />
       </details>
     )}
 
