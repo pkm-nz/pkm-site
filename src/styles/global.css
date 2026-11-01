@@ -243,5 +243,8 @@ body { margin: 0; }
 .further .chev { width: 12px; height: 12px; border-right: 2px solid var(--pa, var(--ink)); border-bottom: 2px solid var(--pa, var(--ink)); transform: rotate(45deg) translate(-3px, -3px); transition: transform .2s; flex: none; margin-right: 6px; }
 .further[open] .chev { transform: rotate(-135deg) translate(-3px, -3px); }
 .further summary:focus-visible { outline: 2px solid var(--pa, var(--ink)); outline-offset: 4px; }
-.further .lede { padding-bottom: 24px; }
+.further .prose { max-width: none; padding-bottom: 24px; }
+.further .prose.cols { display: block; columns: 2 300px; column-gap: 40px; }
+.further .prose.cols p { margin: 0 0 14px; }
+.further .prose.cols p:last-child { margin-bottom: 0; }
 @media (prefers-reduced-motion: reduce) { .further .chev { transition: none; } }
