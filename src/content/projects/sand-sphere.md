@@ -40,7 +40,7 @@ further: |-
 
   Museums have gone the same way, and interactive exhibitions are now pretty much de rigueur. It’s a real contrast to the glass cases of insects and artefacts I remember from regular visits to the Auckland Museum as a kid. I can’t imagine anyone settling for that nowadays.
 
-  I’ve no idea whether today’s hyper-exciting, interactive exhibitions actually help us learn more. I’m pretty sure, though, that we now expect some kind of sensory hit, and I don’t think our modern goldfish attention spans would settle for anything less.
+  I’ve no idea whether today’s hyper-exciting, interactive exhibitions actually help us learn more. I’m pretty sure, though, that we now expect some kind of sensory hit, and I don’t think our modern goldfish attention spans will settle for anything less.
 comments: []
 draft: false
 accent: '#c41f78'
