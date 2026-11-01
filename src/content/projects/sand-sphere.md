@@ -34,7 +34,7 @@ facts:
     value: ≈ 14 kg, 7.1 L
 gallery: []
 further: |-
-  To come back to the Anish Kapoor sculpture: don’t get me wrong, I think it’s an amazing work, and I love almost everything he’s made. But wandering around Gibbs Farm, I felt like I was in a huge arty amusement park, surrounded by people silently saying, _“Come on, wow me. Give me more.”_
+  To come back to the Anish Kapoor sculpture: don’t get me wrong, I think it’s an astonishing work, and I love almost everything he’s made. But wandering around Gibbs Farm, I felt like I was in a huge arty amusement park, surrounded by people silently saying, _“Come on, wow me. Give me more.”_ 
 
   I’ve noticed the same thing in a lot of galleries. Fill an entire room with string, or with coloured balls. Bigger is better, and more is better still.
 
