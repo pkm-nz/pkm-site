@@ -50,6 +50,12 @@ gallery:
   - image: /uploads/adalogo2.webp
     video: ''
     caption: ''
+further: |-
+  Of all the branding work I’ve done over the years, my three most satisfying projects have all been for architects. I think it’s because they work in design themselves. They trust a professional and see the value in letting them get on with the job they’ve been hired to do. Whatever the reason, I’m glad Tony agreed to the sign and could see the value in it.
+
+  I also really enjoyed how collaborative the project was. I worked closely with the people who formed the shapes, applied the render and helped with the installation. The key was making sure they understood what I was trying to achieve. Once they did, and were on board, they were far more likely to offer genuine expert advice than the usual “I wouldn’t do it like that if I were you.”
+
+  This project was a great example of client, designer and contractors all working in sync.
 comments: []
 draft: false
 accent: '#ef4136'
