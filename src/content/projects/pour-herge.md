@@ -21,7 +21,7 @@ embedNote: This is the work. Pick a skill level, press Go and name the character
 decisions:
   - title: Colour by percentage and order
     text: Each band is a percentage of the colour used on the character, from shoes to hair or hat (or tiara).
-  - title: How long does it take to recognise a character purely from a combintion of colours?
+  - title: How long does it take to recognise a character purely from a combination of colours?
     text: The pouring speed needs to be fast enough to make it challenging.
   - title: Difficulty comes with the number of characters
     text: The pouring speed remains constant. The number of characters increase the difficulty.
