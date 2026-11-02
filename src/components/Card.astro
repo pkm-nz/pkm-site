@@ -14,7 +14,7 @@ const d = p.data;
     <h3><a class="go" href={projectHref(p)}>{fullTitle(p)}</a></h3>
     <p set:html={inline(d.summary)} />
     {d.mode === "digital" && <span class="play">▶ Play it here</span>}
-    {d.mode === "model" && d.embed && <span class="play">◇ Explore the 3D model</span>}
+    {d.mode === "model" && d.embed && <span class="play">◇ {/performance/i.test(d.kind) && !/sculpture/i.test(d.kind) ? "Watch the performance" : "Explore the 3D model"}</span>}
     {d.link && (d.link.startsWith("/")
       ? <span class="play">→ {d.linkLabel ?? linkHost(d.link)}</span>
       : <a class="play out" href={d.link} target="_blank" rel="noopener">↗ {d.linkLabel ?? linkHost(d.link)}</a>)}

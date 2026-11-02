@@ -11,9 +11,9 @@ status: ''
 link: ''
 linkLabel: ''
 order: 9
-cover: /uploads/human-venn.svg
-coverFit: cover
-coverBg: ''
+cover: /uploads/human-venn.webp
+coverFit: contain
+coverBg: "#000000"
 heroImage: ''
 heroNote: ''
 embed: /play/human-venn/
