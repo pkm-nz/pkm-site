@@ -13,7 +13,7 @@ linkLabel: ''
 order: 9
 cover: /uploads/human-venn.webp
 coverFit: contain
-coverBg: "#000000"
+coverBg: '#000000'
 heroImage: ''
 heroNote: ''
 embed: /play/human-venn/
@@ -34,7 +34,7 @@ gallery: []
 further: ''
 comments: []
 draft: false
-accent: '#c45a00'
+accent: '#ff6a00'
 accentDark: '#ff8a1f'
 bg: '#e6ebe4'
 bgDark: '#141c16'
