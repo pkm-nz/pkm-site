@@ -38,4 +38,4 @@ bg: '#e3e8ee'
 bgDark: '#1d2228'
 ---
 
-Placeholder for the thinking. What sparked it, how you chose the colours for each character, and what you wanted people to notice while they play.
+I didn't intend for this to be a game but found the idea irresistible. I figure if you're going to do something digital you may as well make it properly interactive.
