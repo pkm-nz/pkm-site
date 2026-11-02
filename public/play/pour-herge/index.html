@@ -452,7 +452,11 @@ renderer.domElement.addEventListener('pointerleave', () => { if (exploring) setH
 function frameCamera() {
   const w = view.clientWidth || 800, h = view.clientHeight || 600, aspect = w / h;
   const e = ease(explodeT);   // separated bands stand taller, so step back a little
-  const halfW = ((n - 1) * SPACE) / 2 + R + 0.7, halfH = H / 2 + 1.4 + 1.1 * e;
+  // spread the glasses to use a wide screen's spare width (2.5 on narrow screens, up to 3.8 on wide ones)
+  const fitW = (H / 2 + 1.4) * aspect * 0.94 - R - 0.7;
+  const sp = THREE.MathUtils.clamp(2 * fitW / Math.max(n - 1, 1), SPACE, 3.8);
+  glasses.forEach((g, i) => { g.group.position.x = (i - (n - 1) / 2) * sp; });
+  const halfW = ((n - 1) * sp) / 2 + R + 0.7, halfH = H / 2 + 1.4 + 1.1 * e;
   target.y = 0.75 + 0.8 * e;
   const vf = THREE.MathUtils.degToRad(camera.fov) / 2;
   const dist = Math.max(halfH / Math.tan(vf), halfW / (Math.tan(vf) * aspect)) + 2;
