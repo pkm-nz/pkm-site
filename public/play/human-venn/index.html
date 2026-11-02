@@ -357,8 +357,13 @@ function render(t){
   const g=ctx.createRadialGradient(CX,CY,30,CX,CY,520);g.addColorStop(0,'rgba(255,214,150,.20)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   const v=ctx.createRadialGradient(W/2,H/2,H*.45,W/2,H/2,W*.75);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
   // party lights along the top
-  for(let i=0;i<14;i++){const x=380+i*58,y=24+Math.sin(i*.9)*6,on=.5+.5*Math.sin(t*3+i);ctx.fillStyle=['#ff8a1f','#a56bff','#3d8bff','#35d07f','#ffd60a'][i%5];ctx.globalAlpha=.35+.5*on;ctx.beginPath();ctx.arc(x,y,4,0,6.28);ctx.fill()}
-  ctx.globalAlpha=1;ctx.strokeStyle='rgba(255,255,255,.12)';ctx.beginPath();ctx.moveTo(380,24);for(let i=1;i<14;i++)ctx.lineTo(380+i*58,24+Math.sin(i*.9)*6);ctx.stroke();
+  // three strings: along the top, down the right-hand side and along the bottom, so the crowd is surrounded
+  const LIGHTS=[[14,i=>[380+i*58,24+Math.sin(i*.9)*6]],[11,i=>[1172+Math.sin(i*.9)*6,24+(i+1)*56]],[14,i=>[1134-i*58,652+Math.sin(i*.9)*6]]];
+  LIGHTS.forEach(([n,at],k)=>{
+    ctx.globalAlpha=1;ctx.strokeStyle='rgba(255,255,255,.12)';ctx.beginPath();
+    for(let i=0;i<n;i++){const [x,y]=at(i);i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
+    for(let i=0;i<n;i++){const [x,y]=at(i),j=i+k*14,on=.5+.5*Math.sin(t*3+j);ctx.fillStyle=['#ff8a1f','#a56bff','#3d8bff','#35d07f','#ffd60a'][j%5];ctx.globalAlpha=.35+.5*on;ctx.beginPath();ctx.arc(x,y,4,0,6.28);ctx.fill()}
+  });
 
   const P=people.map((_,i)=>posAt(i,t));
   const k=stageOf(t);
