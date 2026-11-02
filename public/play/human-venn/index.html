@@ -257,6 +257,7 @@ function brenda(t,P){
   const bp=bandPath(b,P,t);if(!bp)return{x:HOME[0],y:HOME[1],carry:-1};
   const outward=q=>{const dx=q[0]-CX,dy=q[1]-CY,d=Math.hypot(dx,dy)||1;return[q[0]+dx/d*14,q[1]+dy/d*14]};
   const start=outward(bp.pts[0]);
+  if(u<W[0])return{x:HOME[0],y:HOME[1],carry:-1}; // band still on the pile until she picks it up
   if(u<W[1]){const g=ease((u-W[0])/(W[1]-W[0]));return{x:lerp(HOME[0],start[0],g),y:lerp(HOME[1],start[1],g),carry:b,coil:1}}
   if(u<W[2]){const g=ease((u-W[1])/(W[2]-W[1])),q=outward(pointOn(bp,bp.len*g));return{x:q[0],y:q[1],carry:b,coil:1-g}}
   const g=ease((u-W[2]-.2)/(W[3]-W[2]-.2));return{x:lerp(start[0],HOME[0],g),y:lerp(start[1],HOME[1],g),carry:-1};
