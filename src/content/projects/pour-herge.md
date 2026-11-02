@@ -22,7 +22,7 @@ decisions:
   - title: Colour by percentage and order
     text: Each band is a percentage of the colour used on the character, from shoes to hair or hat (or tiara).
   - title: Difficulty comes with the number of characters
-    text: The filling speed remains constant. The number of characters increase the difficulty.
+    text: The pouring speed remains constant. The number of characters increase the difficulty.
 facts:
   - label: Medium
     value: Interactive web piece
