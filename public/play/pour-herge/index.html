@@ -1,0 +1,514 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Pour Hergé</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: glasses on a stage, a row of name choices under each glass, controls in the top corners */
+:root {
+  --bg: #e9edf1;
+  --stage: #e3e8ee;
+  --ink: #16212b;
+  --muted: #5b6875;
+  --line: #c6cfd8;
+  --accent: #02afd9;
+  --good: #1f8a4c;
+  --bad: #c2402b;
+  --call: #d7262e;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10161c; --stage: #161e26; --ink: #e8eef3; --muted: #93a1ae; --line: #2a3640; --accent: #3cc6ea; --good: #4cc27f; --bad: #ef7a63; --call: #ff5c5f; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #10161c; --stage: #161e26; --ink: #e8eef3; --muted: #93a1ae; --line: #2a3640; --accent: #3cc6ea; --good: #4cc27f; --bad: #ef7a63; --call: #ff5c5f; color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--display); }
+.wrap { height: 100%; box-sizing: border-box; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px; }
+.stage { position: relative; height: 100%; min-height: 560px; background: var(--stage); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+.view { position: relative; flex: 1; min-height: 0; min-width: 0; }
+.view canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.head { position: absolute; left: 18px; top: 16px; display: flex; flex-direction: column; gap: 4px; pointer-events: none; z-index: 2; }
+h1 { margin: 0; font-weight: 800; font-size: 26px; letter-spacing: -0.02em; }
+.sub { margin: 0; font-size: 14px; color: var(--muted); max-width: 34ch; }
+.top-right { position: absolute; right: 16px; top: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; z-index: 2; }
+.count { display: flex; align-items: flex-end; gap: 6px; font: 12px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.count button { min-width: 34px; padding: 6px 0; font: 600 14px var(--display); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.count button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tier { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+.tier + .tier { margin-left: 6px; }
+.tier-name { position: relative; text-align: center; font: 500 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 0 6px 5px; }
+.tier-name::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 0; height: 4px; border: 1px solid var(--line); border-bottom: 0; border-radius: 3px 3px 0 0; }
+.tier-btns { display: flex; gap: 6px; justify-content: center; }
+.count > span { padding-bottom: 8px; }
+.actions { display: flex; gap: 8px; }
+.act { font: 600 15px var(--display); color: var(--bg); background: var(--ink); border: 0; border-radius: 999px; padding: 10px 24px; cursor: pointer; }
+.act.ghost { color: var(--ink); background: transparent; border: 1px solid var(--line); }
+button:disabled { opacity: .35; cursor: default; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.result { font: 600 16px var(--display); min-height: 1.2em; }
+.main { position: relative; flex: 1; min-height: 0; display: flex; }
+.explore { width: 270px; flex: none; overflow-y: auto; border-left: 1px solid var(--line); padding: 14px 14px 24px; box-sizing: border-box; scroll-behavior: smooth; }
+.explore[hidden] { display: none; }
+.explore section + section { margin-top: 18px; }
+.explore h3 { margin: 0 0 6px; font: 800 16px var(--display); letter-spacing: -0.01em; position: sticky; top: -14px; z-index: 1; background: var(--stage); padding: 10px 0 6px; }   /* the character's name stays in view above whichever band is lit */
+.explore ol { list-style: none; margin: 0; padding: 0; }
+.explore li { scroll-margin-top: 44px; scroll-margin-bottom: 8px; display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 8px; padding: 3px 6px; border-radius: 4px; font-size: 13px; cursor: default; }
+.explore li .sw { width: 14px; height: 14px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
+.explore li .pc { font: 12px var(--mono); color: var(--muted); }
+.explore li.hot { background: var(--ink); color: var(--bg); }
+.explore li.hot .pc { color: var(--bg); }
+.hint { position: absolute; left: 18px; bottom: 10px; z-index: 2; font: 12px var(--mono); color: var(--muted); }
+.hint[hidden] { display: none; }
+.hint button { font: inherit; color: var(--ink); background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.checking { position: absolute; left: 0; right: 0; top: 36%; display: flex; justify-content: center; color: #d7262e; opacity: 0; pointer-events: none; z-index: 2; }
+.checking svg { width: min(62%, 440px); height: auto; fill: currentColor; display: block; }
+.checking.run { animation: show 3.1s ease-in-out 1; }
+@keyframes show { 0% { opacity: 0; } 20% { opacity: .62; } 75% { opacity: .62; } 100% { opacity: 0; } }   /* see-through, so the glasses show behind it */
+@media (max-width: 700px) { .main { flex-direction: column; } .explore { width: auto; height: 38%; border-left: 0; border-top: 1px solid var(--line); } }
+.picks[hidden] { display: none; }
+.picks { position: relative; height: var(--picks-h, 150px); flex: none; }
+.pick { position: absolute; top: 4px; transform: translateX(-50%); border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; transition: opacity .25s; }
+.pick legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.pick label { display: flex; align-items: center; gap: 6px; font-size: var(--pick-size, 14px); white-space: nowrap; cursor: pointer; padding: 1px 6px; border-radius: 4px; }
+.pick input { accent-color: var(--ink); margin: 0; }
+.pick label.right { color: var(--good); font-weight: 700; }
+.pick label.wrong { color: var(--bad); text-decoration: line-through; }
+.pick .mark { font: 600 13px var(--mono); padding-left: 6px; min-height: 1em; }
+.pick .mark.good { color: var(--good); } .pick .mark.bad { color: var(--bad); }
+@media (max-width: 560px) { h1 { font-size: 21px; } .sub { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pick { transition: none; } .checking.run { animation-duration: 2s; } .explore { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <div class="stage">
+    <div class="main">
+    <div class="view" id="view">
+      <div class="checking" id="checking" aria-hidden="true"><svg viewBox="118 241 589 57" role="img" aria-label="Checking results"><path d="M147.6,258.7c-1.8-2.1-3.6-3.1-5.3-3.1s-2.2.4-3.3,1.2c-2.9,2.1-5.1,5-6.7,9-1.2,3.1-1.8,6.2-1.8,9.3s0,1.8.2,2.8c.5,4.1,2.6,6.6,6.5,7.4,3.2,0,5.9-1.3,8.1-3.8l7.6,9.1c-4.4,4.6-9.6,7-15.6,7-7.8-1.4-13-5-15.6-10.8-1.8-4.1-2.8-8.3-2.8-12.6s.2-3.8.5-5.7c1.1-6.4,3.6-12,7.4-16.7,4.4-5.5,9.6-8.3,15.5-8.4,5.4,0,9.9,1.9,13.6,5.8l-8.1,9.6Z"/><path d="M161.6,294.6v-49c.1,0,11.7-3,11.7-3v19.4h14.5v-19.4l11.9,2.6v49.4c.1,0-11.5,2.8-11.5,2.8v-23.7c-.1,0-14.9.1-14.9.1v23.8l-11.7-3.1Z"/><path d="M206.8,297.2v-52.3h29.4l-3,11.8h-14.6v8.3h12.5l-3.2,11.8h-9.3v8.4h17.6l-3.1,11.8h-26.3Z"/><path d="M269.5,258.7c-1.8-2.1-3.6-3.1-5.3-3.1s-2.2.4-3.3,1.2c-2.9,2.1-5.1,5-6.7,9-1.2,3.1-1.8,6.2-1.8,9.3s0,1.8.2,2.8c.5,4.1,2.6,6.6,6.5,7.4,3.2,0,5.9-1.3,8.1-3.8l7.6,9.1c-4.4,4.6-9.6,7-15.6,7-7.8-1.4-13-5-15.6-10.8-1.8-4.1-2.8-8.3-2.8-12.6s.2-3.8.5-5.7c1.1-6.4,3.6-12,7.4-16.7,4.4-5.5,9.6-8.3,15.5-8.4,5.4,0,9.9,1.9,13.6,5.8l-8.1,9.6Z"/><path d="M293.8,297.2l-11.7-2.8v-49.1l11.5-2.9v17l14.4-16.8,9.8,6.2-17.7,20.7,17.8,21.2-10.1,6.7-14.2-16.9v16.9Z"/><path d="M321.6,294.3v-47.5c0,0,11.7-3.1,11.7-3.1v53.7c0,0-11.7-3.1-11.7-3.1Z"/><path d="M339.9,294.3v-49.1c.1,0,11.4-2.8,11.4-2.8l14.7,28.8v-28.8l12.3,2.6v49.3c0,0-11.9,2.8-11.9,2.8l-14.7-26.8v27c0,0-11.7-3.1-11.7-3.1Z"/><path d="M413.2,258.4c-1.8-2.1-3.5-3.1-5.3-3.1s-2.2.4-3.4,1.2c-2.9,2.1-5.1,5.2-6.7,9.2-1.2,3.1-1.8,6.3-1.8,9.6s0,1.8.2,2.8c.5,4.2,2.6,6.7,6.5,7.5,5.6,0,9.1-2.1,10.3-6.4h-6.2l2.7-9.8h14.9c.3,1.6.4,3.2.4,4.7,0,2.4-.3,4.6-.9,6.6-1,3.2-2.6,6.4-4.9,9.6-4.4,4.7-9.8,7-16.1,6.9-7.8-1.4-13.1-5-15.7-10.8-1.8-4.1-2.8-8.3-2.8-12.6s.2-3.8.5-5.8c1.1-6.4,3.6-12,7.4-16.7,4.4-5.6,9.6-8.4,15.5-8.4,5.4,0,10,1.9,13.7,5.8l-8.2,9.6Z"/><path d="M450.2,294.6v-48.6c2.7-.6,5.7-1.3,9-2.2,2.5-.6,5-1,7.4-1,3.7,0,6.9,1,9.6,2.9,2.5,1.8,4.4,4.9,5.7,9.2.3,1.1.5,2.5.5,4.3,0,2.8-.7,5.4-2,8-2,3.8-4.7,6.4-8.2,7.6,1.6,1.6,3.7,4.3,6.4,8.1,2.3,3.3,4.7,6,7,8l-8.2,6.5c-2.3-2-4.9-5.2-8-9.7-3.2-4.7-5.8-8-7.8-9.9v19.6l-11.4-2.8ZM461.5,267.7c2.6,0,5.2-1,7.8-2.9,1.9-1.4,2.8-3.2,2.8-5.2s-.1-1.6-.4-2.4c-1-2.4-2.9-3.6-5.6-3.6s-3,.4-4.7,1.1v13.1Z"/><path d="M488.7,297.2v-52.3h29.4l-3,11.8h-14.6v8.3h12.5l-3.2,11.8h-9.3v8.4h17.6l-3.1,11.8h-26.3Z"/><path d="M536.6,297.3c-3.2-.4-5.9-1.6-8.2-3.5-1.8-1.5-3.7-3.9-5.7-7.1l9.6-5.3c1.4,2.1,2.9,3.3,4.5,3.6.5.1,1,.2,1.5.2,2.6,0,4-1.4,4.3-4.3.1-1.6-.6-3.4-2.1-5.3-4.7-3.5-8.9-7-12.5-10.4-2.4-2.2-3.5-5.1-3.5-8.6s.3-3.8.9-5.9c3.4-5.9,8-8.9,14-8.9s5.1.7,7.8,2c2.9,1.4,4.8,3.2,5.8,5.4l-8.3,5.4c-.1,0-.6-.3-1.5-1-.7-.6-1.7-.9-3.1-.9s-.6,0-.9,0c-2.1.7-3.1,1.6-3.1,2.8s0,.4,0,.6c.8,2.6,3.6,5.5,8.6,8.8,2.1,1.4,3.4,2.3,4,2.8,3.3,2.8,5.2,6,5.6,9.7,0,.9.1,1.9.1,2.9,0,6.3-2.4,11.1-7.3,14.6-2.4,1.7-5.2,2.6-8.3,2.6s-1.6,0-2.4-.1Z"/><path d="M563.4,243.7l11.2,2.4c-1.8,9.5-2.7,16.9-2.8,22.1,0,4.4.3,7.8,1.1,10.4,1.3,4.1,3.6,6.2,7.1,6.1,5.6-.1,8.3-5.6,8-16.6-.1-5.2-1.1-12.5-3-21.8l11-2.9c.9,4.4,1.7,9.6,2.5,15.6.5,3.6.8,7.2.8,10.8s-.1,4.7-.4,7c-1.4,13.8-7.7,20.7-18.9,20.7-12.8,0-19.2-9.4-19.2-28.4s.2-6.6.6-10.1c.8-6.6,1.4-11.7,1.9-15.2Z"/><path d="M606,297.2v-52.3l11.8-1.8v42.2h15.4c0-.1-3.1,11.9-3.1,11.9h-24.1Z"/><path d="M647.8,294.9v-39h-10.6l2.4-11.8h31.1s-2.2,11.8-2.2,11.8h-8.8v41.4c0,0-11.9-2.4-11.9-2.4Z"/><path d="M689.1,297.3c-3.2-.4-5.9-1.6-8.2-3.5-1.8-1.5-3.7-3.9-5.7-7.1l9.6-5.3c1.4,2.1,2.9,3.3,4.5,3.6.5.1,1,.2,1.5.2,2.6,0,4-1.4,4.3-4.3.1-1.6-.6-3.4-2.1-5.3-4.7-3.5-8.9-7-12.5-10.4-2.4-2.2-3.5-5.1-3.5-8.6s.3-3.8.9-5.9c3.4-5.9,8-8.9,14-8.9s5.1.7,7.8,2c2.9,1.4,4.8,3.2,5.8,5.4l-8.3,5.4c-.1,0-.6-.3-1.5-1-.7-.6-1.7-.9-3.1-.9s-.6,0-.9,0c-2.1.7-3.1,1.6-3.1,2.8s0,.4,0,.6c.8,2.6,3.6,5.5,8.6,8.8,2.1,1.4,3.4,2.3,4,2.8,3.3,2.8,5.2,6,5.6,9.7,0,.9.1,1.9.1,2.9,0,6.3-2.4,11.1-7.3,14.6-2.4,1.7-5.2,2.6-8.3,2.6s-1.6,0-2.4-.1Z"/></svg></div>
+      <div class="hint" id="hint" hidden>Drag to spin · scroll to zoom · <button type="button" id="reset-view">Reset view</button></div>
+      <div class="head">
+        <h1>Pour Hergé</h1>
+        <p class="sub">Select your skill level, press Go and watch the colours pour in from the feet up. Pick a name under each glass before they're full.</p>
+      </div>
+      <div class="top-right">
+        <div class="count" id="count"><span>Characters</span></div>
+        <div class="actions">
+          <button class="act" id="go">Go</button>
+          <button class="act ghost" id="explore-btn" hidden aria-pressed="false">Explore</button>
+        </div>
+        <div class="result" id="result" aria-live="polite"></div>
+      </div>
+    </div>
+    <aside class="explore" id="explore" hidden aria-label="Colour columns"></aside>
+    </div>
+    <div class="picks" id="picks"></div>
+  </div>
+</div>
+
+<script>
+// each band: [colour, share of that character's column height], top to bottom
+window.ROSTER = [{"name": "Snowy", "height": 1.5, "bands": [["#fbfbf8", 0.12, "Head"], ["#0a0a0a", 0.07, "Nose"], ["#fbfbf8", 0.81, "Body"]], "short": "Snowy"}, {"name": "Tintin", "height": 5, "bands": [["#f6ad21", 0.01266, "Hair"], ["#f8c38e", 0.0914, "Head"], ["#fcfdfc", 0.01088, "Collar"], ["#02afd9", 0.42819, "Jersey"], ["#f7c392", 0.03942, "Hands"], ["#b6592f", 0.35876, "Pants"], ["#fefefe", 0.02271, "Socks"], ["#a9730e", 0.03598, "Shoes"]], "short": "Tintin"}, {"name": "Captain Haddock", "height": 5, "bands": [["#150c0c", 0.028, "Cap (crown)"], ["#f7d900", 0.015, "Cap band"], ["#150c0c", 0.0165, "Cap (peak)"], ["#f8c091", 0.0438, "Face"], ["#160c0d", 0.27769, "Jacket"], ["#0087c7", 0.2981, "Jumper"], ["#fac393", 0.01898, "Hands"], ["#160c0d", 0.28036, "Pants"], ["#bc7753", 0.02157, "Shoes"]], "short": "Haddock"}, {"name": "Professor Calculus", "height": 5, "bands": [["#476926", 0.04806, "Hat"], ["#0a0a0a", 0.02107, "Hair"], ["#fbc28f", 0.08005, "Face"], ["#0a0a0a", 0.01694, "Moustache"], ["#ffffff", 0.06179, "Collar"], ["#476926", 0.36588, "Jacket"], ["#f0c583", 0.11361, "Waistcoat"], ["#fbc28f", 0.02321, "Hands"], ["#0a0a0a", 0.20825, "Pants"], ["#0a0a0a", 0.06113, "Shoes"]], "short": "Calculus"}, {"name": "Thomson & Thompson", "height": 5, "bands": [["#0a0a0a", 0.063, "Bowler hat"], ["#f9c28b", 0.035, "Face"], ["#0a0a0a", 0.012, "Moustache"], ["#f9c28b", 0.014, "Chin"], ["#fdfdfd", 0.032, "Collar and shirt"], ["#0a0a0a", 0.201, "Suit"], ["#f9c28b", 0.042, "Hands"], ["#a8601a", 0.015, "Canes"], ["#0a0a0a", 0.559, "Trousers"], ["#c46d1e", 0.027, "Shoes"]], "short": "Thom(p)son"}, {"name": "Bianca Castafiore", "height": 5, "bands": [["#f6e48c", 0.045, "Hair"], ["#fbbd8e", 0.119, "Face and neck"], ["#da1f48", 0.087, "Dress"], ["#fbbd8e", 0.075, "Arms and hands"], ["#da1f48", 0.586, "Dress"], ["#fbbd8e", 0.076, "Legs"], ["#ffffff", 0.012, "Shoes"]], "short": "Castafiore"}, {"name": "Nestor", "height": 5, "bands": [["#fed095", 0.024, "Head"], ["#3b2e25", 0.014, "Hair"], ["#fed095", 0.048, "Face"], ["#ffffff", 0.02, "Collar"], ["#0a0a0a", 0.012, "Bow tie"], ["#ffffff", 0.015, "Shirt"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#0a0a0a", 0.0115, "Waistcoat (black)"], ["#fdfe06", 0.022, "Waistcoat (yellow)"], ["#fed095", 0.025, "Hands"], ["#0a0a0a", 0.5855, "Sleeves, trousers and shoes"]], "short": "Nestor"}];
+</script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const ROSTER = window.ROSTER;
+const H = 5, R = 0.7, RP = 0.668, F = 0.1, SPACE = 2.5;   // glass height and radius, paint radius, base fillet, glass spacing
+const BOT = -H / 2;
+const SOURCE = 30, FALL = 20, FILL_TIME = 14;              // paint drops from y = 30 at 20 units/s; a full glass takes 14 s
+const MENISCUS = 0.06;
+
+const view = document.getElementById('view'), picksEl = document.getElementById('picks');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(Math.max(Math.round(devicePixelRatio || 1), 2), 3));   // whole-number scale: at least 2x, never a fractional resize that breaks thin lines into dashes
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.localClippingEnabled = true;
+view.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const setBg = () => { scene.background = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--stage').trim() || '#e3e8ee'); };
+setBg(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setBg);
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(13, 1, 0.1, 400);   // narrow lens keeps the glasses upright
+const target = new THREE.Vector3(0, 0.75, 0);
+// once a game is over the player can drag to spin the view; the name lists stay pinned to the home view
+const homeCam = camera.clone();
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enabled = false; controls.enablePan = false; controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.minPolarAngle = 0.15; controls.maxPolarAngle = Math.PI / 2 + 0.25;
+let userMoved = false;
+controls.addEventListener('start', () => { userMoved = true; });
+
+// lights sit with the camera so the glasses are evenly lit
+// same light rig as the colour-column viewer, turned so it sits the same way relative to this camera
+const rig = new THREE.Group(); scene.add(rig);
+const viewerCam = new THREE.PerspectiveCamera(); viewerCam.position.set(6.6, 5.6, 9.4); viewerCam.lookAt(0, 0, 0);
+const viewerQInv = viewerCam.quaternion.clone().invert();
+[[0.9, 4, 8, 5], [0.9, -2.2, -3.4, 10], [0.8, 8, 2, -2], [1.0, 0, 10, 1]].forEach(([i, x, y, z]) => {
+  const l = new THREE.DirectionalLight(0xffffff, i); l.position.set(x, y, z); rig.add(l);
+});
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 0.5), new THREE.AmbientLight(0xffffff, 0.35));
+
+// same glossy finish as the colour-column viewer
+const paintMat = color => new THREE.MeshPhysicalMaterial({ color, roughness: 0.22, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 0.7 });
+// glass: clear in the middle, brighter towards the edges (Fresnel), with crisp reflections; no refraction pass, so edges stay clean
+function makeGlassMat(side, edge) {
+  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.1, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.2, side, transparent: true, depthWrite: false });
+  m.onBeforeCompile = sh => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>',
+      `float fres = smoothstep(0.0, 1.0, pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 1.6));
+       diffuseColor.a = opacity * mix(${edge[0].toFixed(3)}, ${edge[1].toFixed(3)}, fres);
+       #include <opaque_fragment>`);
+  };
+  return m;
+}
+// soft white lip: lit from within so its curved edges stay light rather than drawing a dark outline
+const makeRimMat = () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0, emissive: 0xdfe4ea, emissiveIntensity: 0.45, envMapIntensity: 0.6, transparent: true, opacity: 0.75 });
+// finished column outline: rounded at both ends, like the viewer, from the base (y = 0) up to h
+function columnProfile(h) {
+  const p = [[0, 0]], seg = 24;
+  for (let k = 0; k <= seg; k++) { const a = -Math.PI / 2 + (k / seg) * Math.PI / 2; p.push([R - F + F * Math.cos(a), F + F * Math.sin(a)]); }
+  for (let k = 0; k <= seg; k++) { const a = (k / seg) * Math.PI / 2; p.push([R - F + F * Math.cos(a), h - F + F * Math.sin(a)]); }
+  p.push([0, h]);
+  return p;
+}
+
+// profile with a rounded base and straight sides, from the bottom centre up to height h
+function cupProfile(r, h) {
+  const p = [[0, 0]];
+  for (let k = 0; k <= 24; k++) { const a = -Math.PI / 2 + (k / 24) * Math.PI / 2; p.push([r - F + F * Math.cos(a), F + F * Math.sin(a)]); }
+  p.push([r, h]);
+  return p;
+}
+function slice(p, lo, hi) {
+  const out = [];
+  for (let k = 0; k < p.length; k++) {
+    const [r, y] = p[k];
+    if (y >= lo && y <= hi) out.push([r, y]);
+    const q = p[k + 1]; if (!q) break;
+    for (const c of [lo, hi]) if (y < c && q[1] > c) { const t = (c - y) / (q[1] - y); out.push([r + t * (q[0] - r), c]); }
+  }
+  return out;
+}
+const columnRadius = (y, h) => y < F ? R - F + Math.sqrt(Math.max(0, F * F - (F - y) ** 2)) : y > h - F ? R - F + Math.sqrt(Math.max(0, F * F - (y - h + F) ** 2)) : R;
+const radiusAt = y => y < F ? RP - F + Math.sqrt(Math.max(0, F * F - (F - y) ** 2)) : RP;   // y measured from the base
+
+const RINGS = 40, SEGS = 112;   // rings bunch up towards the edge so the rounded shoulder is smooth
+const discTemplate = new THREE.LatheGeometry(Array.from({ length: RINGS + 1 }, (_, i) => new THREE.Vector2(1 - Math.pow(i / RINGS, 1.7) + 1e-4, 0)), SEGS);
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+
+class Glass {
+  constructor(ch, x) {
+    this.ch = ch; this.h = ch.height;
+    this.group = new THREE.Group(); this.group.position.set(x, BOT, 0);
+    // bands from the base up
+    let y = this.h; this.bands = ch.bands.map(([hex, share, label]) => { const b = { hex, share, label, color: new THREE.Color(hex), top: y, bot: y - share * this.h }; y = b.bot; return b; });
+    this.bands[this.bands.length - 1].bot = 0;
+    // paint column, clipped at the fill level
+    this.clip = new THREE.Plane(new THREE.Vector3(0, -1, 0), BOT);
+    const prof = cupProfile(RP, this.h), colProf = columnProfile(this.h);
+    this.paint = new THREE.Group(); this.group.add(this.paint);          // paint while it pours, inside the glass
+    this.final = new THREE.Group(); this.final.visible = false; this.group.add(this.final);   // finished glossy column
+    for (const b of this.bands) {
+      const pts = slice(prof, b.bot, b.top).map(([r, yy]) => new THREE.Vector2(r, yy));
+      const m = paintMat(b.color); m.clippingPlanes = [this.clip];
+      this.paint.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 112), m));
+      const fp = slice(colProf, b.bot, b.top).map(([r, yy]) => new THREE.Vector2(r, yy));
+      // finished column: one piece per band, with lids that only show when the bands are pulled apart
+      b.mat = paintMat(b.color); b.part = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.LatheGeometry(fp, 160), b.mat); body.userData.band = b; b.part.add(body);
+      b.caps = [];
+      for (const [yy, up] of [[b.top, true], [b.bot, false]]) {
+        if (yy <= 1e-6 || yy >= this.h - 1e-6) continue;
+        const cap = new THREE.Mesh(new THREE.CircleGeometry(columnRadius(yy, this.h), 96), b.mat);
+        cap.rotation.x = up ? -Math.PI / 2 : Math.PI / 2; cap.position.y = yy; cap.visible = false; cap.userData.band = b;
+        b.part.add(cap); b.caps.push(cap);
+      }
+      this.final.add(b.part);
+    }
+    // glass at full height; it can shrink down onto shorter paint
+    this.glass = new THREE.Group(); this.group.add(this.glass);
+    this.glassBack = makeGlassMat(THREE.BackSide, [0.0, 0.1]); this.glassMat = makeGlassMat(THREE.FrontSide, [0.0, 0.22]); this.rimMat = makeRimMat();
+    const glassGeo = new THREE.LatheGeometry(cupProfile(R, H).map(([r, yy]) => new THREE.Vector2(r, yy)), 160);
+    const back = new THREE.Mesh(glassGeo, this.glassBack); back.renderOrder = 1;
+    const front = new THREE.Mesh(glassGeo, this.glassMat); front.renderOrder = 3;
+    // reflections only (black base, added on top) so highlights and streaks read clearly on the clear glass
+    this.glassShine = new THREE.MeshPhysicalMaterial({ color: 0x000000, metalness: 0, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.3, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    const shine = new THREE.Mesh(glassGeo, this.glassShine); shine.renderOrder = 2;
+    this.glass.add(back, shine, front);
+    this.rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.012, 16, 200), this.rimMat); this.rim.rotation.x = Math.PI / 2; this.rim.renderOrder = 4; this.group.add(this.rim);
+    // liquid surface
+    this.surfGeo = discTemplate.clone(); this.surfBase = discTemplate.attributes.position.array;
+    this.surfMat = paintMat(this.bands[this.bands.length - 1].color); this.surfMat.side = THREE.DoubleSide;
+    this.surface = new THREE.Mesh(this.surfGeo, this.surfMat); this.paint.add(this.surface);
+    // stream
+    const SR = 70, SS = 14; this.SR = SR; this.SS = SS;
+    this.sPos = new Float32Array((SR + 1) * SS * 3); this.sCol = new Float32Array((SR + 1) * SS * 3);
+    const idx = [];
+    for (let j = 0; j < SR; j++) for (let k = 0; k < SS; k++) { const a = j * SS + k, b = j * SS + (k + 1) % SS; idx.push(a, a + SS, b, b, a + SS, b + SS); }
+    this.sGeo = new THREE.BufferGeometry(); this.sGeo.setIndex(idx);
+    this.sGeo.setAttribute('position', new THREE.BufferAttribute(this.sPos, 3));
+    this.sGeo.setAttribute('color', new THREE.BufferAttribute(this.sCol, 3));
+    this.stream = new THREE.Mesh(this.sGeo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 0.8 }));
+    this.stream.frustumCulled = false; this.group.add(this.stream);
+    this.phase = Math.random() * 10;
+    this.reach = (SOURCE - BOT) / FALL;
+    this.rate = this.h / FILL_TIME;                              // every glass fills in the same time, so a short column pours slower
+    this.full = this.reach + FILL_TIME;                          // when this glass is full
+    this.stop = this.full - (SOURCE - BOT - this.h) / FALL;      // tap closes so the last drop lands as it fills
+    this.shrinkAt = this.full + 0.35;                            // a short glass slides down onto its paint
+    this.fadeAt = this.h < H ? this.shrinkAt + 0.5 : this.full - 0.3;   // the glass melts away as the last paint lands, so the column settles as if free-standing
+    this.done = this.fadeAt + 1.5;
+    this.update(-1, 0);
+  }
+  // pull the finished column's bands apart (e = 0 together, 1 fully separated)
+  explode(e) {
+    const nb = this.bands.length, gap = Math.min(0.14, 1.6 / Math.max(1, nb - 1));
+    this.bands.forEach((b, i) => { b.part.position.y = e * gap * (nb - 1 - i); b.caps.forEach(c => c.visible = e > 0.001); });
+  }
+  bandAt(y) { return this.bands.find(b => y >= b.bot - 1e-6) || this.bands[this.bands.length - 1]; }
+  levelAt(s) { return s < this.reach ? 0 : Math.min(this.h, (s - this.reach) * this.rate); }
+  update(t, time) {
+    const level = t < 0 ? 0 : this.levelAt(t), lw = BOT + level;   // local and world level
+    this.clip.constant = lw + (level >= this.h ? 0.002 : 0);
+    // glass slides down to the paint once a short column is full
+    const k = this.h < H ? ease((t - this.shrinkAt) / 0.6) : 0;
+    const gh = H + (this.h - H) * k;
+    this.glass.scale.y = gh / H; this.rim.position.y = gh + 0.01;
+    // finish: glass fades, paint swells to the column's full radius, then the rounded glossy column takes over
+    // finish: the glass melts away while the paint swells to the column's radius and its meniscus
+    // relaxes into the column's rounded shoulder; the identical glossy column then takes over unseen
+    const f = ease((t - this.fadeAt) / 1.1), mx = ease((t - this.fadeAt - 0.2) / 1.2);
+    this.glassMat.opacity = this.glassBack.opacity = this.glassShine.opacity = 1 - f; this.rimMat.opacity = 0.75 * (1 - f);
+    this.glass.visible = this.rim.visible = f < 1;
+    const sw = 1 + (R / RP - 1) * f; this.paint.scale.set(sw, 1, sw);
+    this.paint.visible = mx < 1; this.final.visible = mx >= 1;
+    if (level >= this.h) this.clip.constant = lw + 0.002 - mx * F;
+    // surface: ripples while the stream lands, then settles into a domed meniscus at the top
+    const pouring = t >= this.reach && t < this.full;
+    const dome = MENISCUS * ease((level - (this.h - 0.25)) / 0.25) * (1 - mx);
+    this.surface.visible = level > 0.002;
+    if (this.surface.visible) {
+      const r = radiusAt(level), p = this.surfGeo.attributes.position.array, base = this.surfBase;
+      const wob = pouring ? 1 : Math.max(0, 1 - (t - this.full) * 2);
+      for (let i = 0; i < p.length; i += 3) {
+        const x = base[i], z = base[i + 2], d = Math.hypot(x, z);
+        p[i] = x * r; p[i + 2] = z * r;
+        const e = d * r - (r - F), shoulder = e > 0 ? mx * (F - Math.sqrt(Math.max(0, F * F - e * e))) : 0;
+        p[i + 1] = level - shoulder + dome * (1 - d * d) + wob * (0.03 * Math.exp(-28 * d * d) + 0.012 * Math.sin(22 * d - 9 * time + this.phase) * Math.exp(-3.5 * d)) * (1 - d);
+      }
+      this.surfGeo.attributes.position.needsUpdate = true; this.surfGeo.computeVertexNormals();
+      this.surfMat.color.copy(this.bandAt(Math.min(level, this.h - 1e-4)).color);
+    }
+    // stream
+    const srcL = SOURCE - BOT;
+    const head = Math.max(srcL - FALL * Math.max(t, 0), level + dome);
+    const tail = t < this.stop ? srcL : srcL - FALL * (t - this.stop);
+    this.stream.visible = t >= 0 && tail > head + 0.01;
+    if (this.stream.visible) {
+      const c = new THREE.Color(), { SR, SS, sPos, sCol } = this;
+      for (let j = 0; j <= SR; j++) {
+        const y = tail + (head - tail) * (j / SR);
+        c.copy(this.bandAt(Math.min(this.levelAt(t + (y - level) / FALL), this.h - 1e-4)).color);
+        const near = Math.max(0, 1 - (y - head) / 0.6), rad = 0.045 + 0.035 * near * near;
+        const sway = 0.012 * Math.sin(y * 2.3 + time * 4.1 + this.phase) * Math.min(1, (y - head) / 2);
+        for (let k = 0; k < SS; k++) {
+          const a = (k / SS) * Math.PI * 2, i = (j * SS + k) * 3;
+          sPos[i] = Math.cos(a) * rad + sway; sPos[i + 1] = y; sPos[i + 2] = Math.sin(a) * rad;
+          sCol[i] = c.r; sCol[i + 1] = c.g; sCol[i + 2] = c.b;
+        }
+      }
+      this.sGeo.attributes.position.needsUpdate = true; this.sGeo.attributes.color.needsUpdate = true; this.sGeo.computeVertexNormals();
+    }
+  }
+  dispose() { this.group.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+}
+
+// game state
+const row = new THREE.Group(); scene.add(row);
+let glasses = [], n = Math.min(4, ROSTER.length), t = -1, state = 'ready', spinStart = 0, endAt = 0;
+const SPIN = 3.2;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+const countEl = document.getElementById('count'), goBtn = document.getElementById('go'), exploreBtn = document.getElementById('explore-btn'), resultEl = document.getElementById('result');
+const hintEl = document.getElementById('hint'), checkingEl = document.getElementById('checking'), panel = document.getElementById('explore');
+// player levels, bracketed over the numbers
+const TIERS = [['Débutant', 2, 3], ['Intermédiaire', 4, 5], ['Avancé', 6, 7]];
+const setCountDisabled = d => countEl.querySelectorAll('button').forEach(b => b.disabled = d);
+for (const [name, lo, hi] of TIERS) {
+  if (lo > ROSTER.length) break;
+  const tier = document.createElement('div'); tier.className = 'tier';
+  tier.innerHTML = `<span class="tier-name">${name}</span><div class="tier-btns"></div>`;
+  for (let k = lo; k <= Math.min(hi, ROSTER.length); k++) {
+    const b = document.createElement('button'); b.textContent = k; b.setAttribute('aria-pressed', k === n); b.setAttribute('aria-label', `${k} characters, ${name}`);
+    b.onclick = () => { if (state === 'pouring' || state === 'spinning') return; n = k; countEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', +x.textContent === n)); newGame(); };
+    tier.lastChild.appendChild(b);
+  }
+  countEl.appendChild(tier);
+}
+
+function newGame() {
+  glasses.forEach(g => { row.remove(g.group); g.dispose(); });
+  row.rotation.y = 0;
+  const pickChars = shuffle(ROSTER).slice(0, n);
+  glasses = pickChars.map((ch, i) => { const g = new Glass(ch, (i - (n - 1) / 2) * SPACE); row.add(g.group); return g; });
+  endAt = Math.max(...glasses.map(g => g.done));
+  t = -1; state = 'ready';
+  goBtn.disabled = false; goBtn.textContent = 'Go'; resultEl.textContent = '';
+  setExplore(false); exploreBtn.hidden = true; explodeT = 0;
+  userMoved = false; controls.enabled = false; renderer.domElement.style.cursor = ''; hintEl.hidden = true;
+  // names under every glass: the whole cast, so a short game still has every name to choose from
+  const names = ROSTER.map(c => c.short);
+  picksEl.innerHTML = '';
+  glasses.forEach((g, i) => {
+    const fs = document.createElement('fieldset'); fs.className = 'pick';
+    // at 7 (every character in play) each list is shuffled on its own, so the names give no pattern away
+    const list = n === 7 ? shuffle(names) : names;
+    fs.innerHTML = `<legend>Glass ${i + 1}</legend>` + list.map(nm => `<label><input type="radio" name="g${i}" value="${nm}">${nm}</label>`).join('') + `<span class="mark"></span>`;
+    picksEl.appendChild(fs); g.pick = fs;
+  });
+  picksEl.style.setProperty('--picks-h', (names.length * 25 + 34) + 'px');
+  frameCamera(); resize();
+}
+
+goBtn.onclick = () => {
+  if (state === 'checked') { newGame(); return; }   // Play again just resets, so the player can change the number of characters first
+  t = 0; state = 'pouring'; goBtn.disabled = true;
+  setCountDisabled(true);
+};
+function showResults() {
+  let right = 0;
+  glasses.forEach(g => {
+    const chosen = g.pick.querySelector('input:checked');
+    g.pick.querySelectorAll('label').forEach(l => {
+      const v = l.querySelector('input').value;
+      l.classList.toggle('right', v === g.ch.short);
+      l.classList.toggle('wrong', !!chosen && v === chosen.value && v !== g.ch.short);
+    });
+    const ok = chosen && chosen.value === g.ch.short; if (ok) right++;
+    const mark = g.pick.querySelector('.mark'); mark.textContent = ok ? '✓ right' : chosen ? '✗ it’s ' + g.ch.short : 'no guess';
+    mark.className = 'mark ' + (ok ? 'good' : 'bad');
+    g.pick.querySelectorAll('input').forEach(x => x.disabled = true);
+  });
+  resultEl.textContent = `${right} of ${glasses.length} right`;
+  state = 'checked';
+  goBtn.disabled = false; goBtn.textContent = 'Play again'; exploreBtn.hidden = false; setCountDisabled(false);
+  controls.enabled = true; renderer.domElement.style.cursor = 'grab'; hintEl.hidden = false;
+}
+
+// explore: bands pulled apart, with each character's colours listed beside them
+let exploring = false, explodeT = 0, hot = null;
+const fmtPct = v => (v >= 10 ? Math.round(v) : v.toFixed(1)) + '%';
+function setExplore(on) {
+  exploring = on; userMoved = false; exploreBtn.setAttribute('aria-pressed', on); exploreBtn.textContent = on ? 'Close explore' : 'Explore';
+  setHot(null);
+  if (on) {
+    panel.innerHTML = '';
+    glasses.forEach(g => {
+      const sec = document.createElement('section');
+      sec.innerHTML = `<h3>${g.ch.name}</h3><ol></ol>`;
+      g.bands.forEach(b => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="sw" style="background:${b.hex}"></span><span class="nm">${b.label}</span><span class="pc">${fmtPct(100 * b.share)}</span>`;
+        li.onpointerenter = () => setHot(b, false); li.onpointerleave = () => setHot(null);
+        sec.lastChild.appendChild(li); b.li = li;
+      });
+      panel.appendChild(sec);
+    });
+  }
+  panel.hidden = !on;
+  picksEl.hidden = on; resultEl.hidden = on;   // results step aside while exploring
+}
+function setHot(b, scroll = true) {
+  if (hot === b) return;
+  if (hot) { hot.mat.emissive.setHex(0x000000); hot.li && hot.li.classList.remove('hot'); }
+  hot = b;
+  if (b) {
+    b.mat.emissive.setHex(0x2a2a2a); b.li.classList.add('hot');
+    if (scroll) b.li.scrollIntoView({ block: 'nearest' });
+  }
+}
+exploreBtn.onclick = () => setExplore(!exploring);
+document.getElementById('reset-view').onclick = () => { userMoved = false; frameCamera(); };
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+renderer.domElement.addEventListener('pointermove', e => {
+  if (!exploring) return;
+  const r = renderer.domElement.getBoundingClientRect();
+  mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hit = ray.intersectObjects(glasses.map(g => g.final), true).find(h => h.object.userData.band);
+  setHot(hit ? hit.object.userData.band : null);
+});
+renderer.domElement.addEventListener('pointerleave', () => { if (exploring) setHot(null); });
+
+// camera fits the row of glasses plus a little air above them
+function frameCamera() {
+  const w = view.clientWidth || 800, h = view.clientHeight || 600, aspect = w / h;
+  const e = ease(explodeT);   // separated bands stand taller, so step back a little
+  const halfW = ((n - 1) * SPACE) / 2 + R + 0.7, halfH = H / 2 + 1.4 + 1.1 * e;
+  target.y = 0.75 + 0.8 * e;
+  const vf = THREE.MathUtils.degToRad(camera.fov) / 2;
+  const dist = Math.max(halfH / Math.tan(vf), halfW / (Math.tan(vf) * aspect)) + 2;
+  const dir = new THREE.Vector3(0, 0.49 + (0.06 - 0.49) * e, 1).normalize();   // explore swings round to face the bands side on   // looking down at the same angle as the viewer, so the tops show
+  homeCam.aspect = camera.aspect; homeCam.fov = camera.fov; homeCam.updateProjectionMatrix();
+  homeCam.position.copy(target).addScaledVector(dir, dist); homeCam.lookAt(target);
+  controls.minDistance = dist * 0.45; controls.maxDistance = dist * 1.6;
+  if (!userMoved) { camera.position.copy(homeCam.position); camera.quaternion.copy(homeCam.quaternion); controls.target.copy(target); }
+}
+function resize() {
+  const w = view.clientWidth, h = view.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); frameCamera();
+  const per = w / Math.max(n, 1);
+  picksEl.style.setProperty('--pick-size', per < 100 ? '11px' : per < 120 ? '12px' : per < 150 ? '13px' : '14px');
+}
+new ResizeObserver(resize).observe(view);
+
+const v3 = new THREE.Vector3();
+function placePicks() {
+  const w = view.clientWidth;
+  glasses.forEach(g => {
+    v3.set(g.group.position.x, BOT, 0).project(homeCam);
+    g.pick.style.left = ((v3.x + 1) / 2 * w) + 'px';
+    g.pick.style.opacity = state === 'spinning' ? 0.15 : 1;
+  });
+}
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
+  if (state === 'pouring') {
+    t += dt;
+    if (t >= endAt) { state = 'spinning'; spinStart = time; checkingEl.classList.remove('run'); void checkingEl.offsetWidth; checkingEl.classList.add('run'); }
+  }
+  if (state === 'spinning') {
+    // game over: the row turns once on the spot
+    const k = Math.min(1, (time - spinStart) / SPIN);
+    row.rotation.y = ease(k) * Math.PI * 2;
+    if (k >= 1) { row.rotation.y = 0; showResults(); }
+  }
+  glasses.forEach(g => g.update(t, time));
+  explodeT += ((exploring ? 1 : 0) - explodeT) * Math.min(1, dt * 6);
+  glasses.forEach(g => g.explode(ease(explodeT)));
+  if (explodeT > 0.001 && explodeT < 0.999) frameCamera();
+  placePicks();
+  if (controls.enabled) controls.update();
+  rig.quaternion.copy(camera.quaternion).multiply(viewerQInv);
+  renderer.render(scene, camera);
+});
+
+newGame(); resize();
+window.__seek = s => { t = s; state = 'paused'; };
+window.__play = s => { t = s; state = 'pouring'; };
+window.__order = () => glasses.map(g => g.ch.short);
+window.__finish = () => { t = endAt; glasses.forEach(g => g.update(t, 0)); row.rotation.y = 0; showResults(); };
+window.__ready = true;
+</script>
+
+</body></html>
