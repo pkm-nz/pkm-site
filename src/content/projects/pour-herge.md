@@ -38,4 +38,4 @@ bg: '#e3e8ee'
 bgDark: '#1d2228'
 ---
 
-I didn't intend for this to be a game but found the idea irresistible. I figure if you're going to do something digital you may as well make it properly interactive.
+I didn't intend for this to be a game but found the idea irresistible. I figure if you're going to do something digital you may as well make it properly interactive. And I had to include the percentage breakdown for the maths geeks. Now you know that Tintin is 36% plus fours.
