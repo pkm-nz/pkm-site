@@ -6,8 +6,10 @@ import Base from "../layouts/Base.astro";
 import Card from "../components/Card.astro";
 import { getArt } from "../lib/content";
 const projects = await getArt();
-const digital = projects.filter(p => p.data.mode === "digital");
-const models = projects.filter(p => p.data.mode === "model" && p.data.embed);
+// a filmed or animated performance (not a sculpture) sits with the digital work you play
+const performance = (p: typeof projects[number]) => /performance/i.test(p.data.kind) && !/sculpture/i.test(p.data.kind);
+const digital = projects.filter(p => p.data.mode === "digital" || (p.data.embed && performance(p)));
+const models = projects.filter(p => p.data.mode === "model" && p.data.embed && !performance(p));
 ---
 <Base title={MENU.handsOn} nav="play" description={plain(PAGES.handsOn.intro)}>
   <section class="phead"><span class="eyebrow">{MENU.handsOn}</span><h1>{PAGES.handsOn.heading}</h1>
