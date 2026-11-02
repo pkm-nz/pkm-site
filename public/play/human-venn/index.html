@@ -307,10 +307,11 @@ function drawCard(t){
   ctx.save();ctx.translate(x,y);ctx.scale(1,sy);
   const c=CARDS[show];
   if(c[2]==='logo'){ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
-    const rings=[['#2fb34a',100,130],['#e02424',150,92],['#f2d000',200,132]];
-    rings.forEach(r=>{ctx.strokeStyle=r[0];ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(r[1],r[2],72,46,0,0,6.28);ctx.stroke()});
-    ctx.fillStyle='#fff';ctx.font='600 30px Oswald, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('H',100,108);ctx.fillText('V',150,124);ctx.fillText('D',195,108);
+    // traced from the original card artwork (2000 x 1414 page scaled to the 300 x 212 card)
+    const rings=[['#41b04a',92,116.5],['#d2232a',148.8,83.4],['#fff200',207.9,116.5]];
+    rings.forEach(r=>{ctx.strokeStyle=r[0];ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(r[1],r[2],80.5,52,0,0,6.28);ctx.stroke()});
+    ctx.fillStyle='#fff';ctx.font='600 34px Oswald, sans-serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.fillText('H',105,111.5);ctx.fillText('V',150,127.8);ctx.fillText('D',193.2,108.8);
   }else{
     ctx.fillStyle='#fbfbf7';ctx.fillRect(0,0,w,h);
     const lines=c[1].slice(),win=c[2]==='win';
