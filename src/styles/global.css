@@ -16,12 +16,6 @@
   --logo: #662c91;
   --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --logo: #b48be0; --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
-    --note: #3d3510; --note-ink: #f3e3a0; --accent: #e9ebe9; color-scheme: dark;
-  }
-}
 :root[data-theme="dark"] {
   --logo: #b48be0; --paper: #141718; --sheet: #1b1f20; --ink: #e9ebe9; --soft: #9aa3a6; --rule: #2f3537;
   --note: #3d3510; --note-ink: #f3e3a0; --accent: #e9ebe9; color-scheme: dark;
@@ -82,7 +76,6 @@ h3 { font-weight: calc(var(--hw) - 50); font-size: calc(var(--hs) * 19px); line-
 .stage i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .stage.plan { color: #c62828; }
 :root[data-theme="dark"] .stage.plan { color: #ff7a6e; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stage.plan { color: #ff7a6e; } }
 .stage.done { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .stage.done i { background: var(--paper); }
 
@@ -189,7 +182,6 @@ footer.site .in { max-width: 1180px; margin: 0 auto; padding-block: 24px 40px; p
 
 /* project colours: each element carrying a project sets --pa-l/--pa-d/--bg-l/--bg-d */
 .pa { --pa: var(--pa-l); --pa-bg: var(--bg-l); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pa { --pa: var(--pa-d); --pa-bg: var(--bg-d); } }
 :root[data-theme="dark"] .pa { --pa: var(--pa-d); --pa-bg: var(--bg-d); }
 body { margin: 0; }
 .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -248,3 +240,8 @@ body { margin: 0; }
 .further .prose.cols p { margin: 0 0 14px; }
 .further .prose.cols p:last-child { margin-bottom: 0; }
 @media (prefers-reduced-motion: reduce) { .further .chev { transition: none; } }
+
+/* light/dark switch in the footer */
+.theme-switch { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: var(--soft); display: inline-flex; align-items: center; gap: 6px; }
+.theme-switch:hover { color: var(--ink); }
+.theme-switch svg { width: 14px; height: 14px; display: block; }
