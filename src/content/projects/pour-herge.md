@@ -31,7 +31,7 @@ facts:
 gallery: []
 further: ''
 comments: []
-draft: true
+draft: false
 accent: '#1f5fa8'
 accentDark: '#7fb0ea'
 bg: '#e3e8ee'
