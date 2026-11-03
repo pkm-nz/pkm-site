@@ -2,7 +2,7 @@
 title: Pour
 titleEnd: Hergé
 stage: Finished
-summary: Seven of Hergé's characters, reduced to columns of colour. Can you name them before the glasses fill?
+summary: Hergé's famous characters, reduced to columns of colour. Can you name them before the glasses fill?
 intro: We know these characters so well that we recognise them at a glance. For me, at least, it isn’t their shape that registers but their colours. Each one has a unique colour signature, so even reduced to something this abstract, we still know who they are. What a genius Hergé was.
 kind: Digital · Exists only here
 section: art
