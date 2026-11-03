@@ -316,8 +316,10 @@ function figure(x,y,label,cloth,hair,t,q){
     ctx.fillStyle='#e8551c';ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.fill();
     // her blonde fringe at the front, sweeping off to one side
     ctx.save();ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.clip();ctx.translate(-1,0);ctx.rotate(q.dir);
-    ctx.fillStyle='#f3dfa2';ctx.beginPath();ctx.ellipse(2.8,-.6,3.6,4.6,-.35,0,6.28);ctx.fill();
-    ctx.strokeStyle='rgba(200,160,90,.7)';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(.6,-3.2);ctx.quadraticCurveTo(3,-1.5,4.2,2.2);ctx.stroke();
+    // soft blend: blonde at the front of the head fading through strawberry into the red
+    const fg=ctx.createRadialGradient(2.4,-.7,.4,1.6,-.5,4.6);fg.addColorStop(0,'rgba(248,232,178,1)');fg.addColorStop(.4,'rgba(245,220,160,.95)');fg.addColorStop(.7,'rgba(238,160,85,.55)');fg.addColorStop(1,'rgba(232,85,28,0)');
+    ctx.fillStyle=fg;ctx.beginPath();ctx.arc(-1,0,5,0,6.28);ctx.fill();
+    ctx.strokeStyle='rgba(255,240,200,.35)';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(.4,-3.4);ctx.quadraticCurveTo(2.8,-1.6,3.9,1.8);ctx.stroke();
     ctx.restore();
   }
   ctx.restore();ctx.font='500 13px Archivo, sans-serif';ctx.fillStyle='rgba(232,238,229,.75)';ctx.textAlign='center';ctx.fillText(label,x,y+28);
@@ -558,7 +560,7 @@ async function buildParty(){
   const brendaG=makeFigure('#5a3f6e','#e0ac85','#e8551c');
   const quiff=new THREE.Mesh(new THREE.ConeGeometry(.11,.42,12),new THREE.MeshLambertMaterial({color:'#f26b1d',emissive:'#5a1a00'}));
   quiff.geometry.rotateZ(Math.PI/2);quiff.geometry.translate(-.24,0,0);quiff.position.y=1.42;brendaG.add(quiff);
-  const fringe=new THREE.Mesh(new THREE.SphereGeometry(.09,12,8),new THREE.MeshLambertMaterial({color:'#f3dfa2'}));fringe.scale.set(1,.6,1.2);fringe.position.set(.08,1.43,.02);brendaG.add(fringe);
+  const fringe=new THREE.Mesh(new THREE.SphereGeometry(.09,12,8),new THREE.MeshLambertMaterial({color:'#f2cf8e'}));fringe.scale.set(.9,.5,1.1);fringe.position.set(.06,1.41,.02);brendaG.add(fringe);
   const cardC=document.createElement('canvas');cardC.width=600;cardC.height=424;const cardX=cardC.getContext('2d'),cardT=new THREE.CanvasTexture(cardC);cardT.colorSpace=THREE.SRGBColorSpace;
   const card=new THREE.Mesh(new THREE.PlaneGeometry(4.4,3.1),new THREE.MeshBasicMaterial({map:cardT}));scene.add(card);
   const [px,pz]=to3(198,322);paul.position.set(px,0,pz);card.position.set(px,3.1,pz);
