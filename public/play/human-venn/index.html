@@ -380,9 +380,9 @@ let brDir=Math.atan2(372-600,740-1110); // starts facing the crowd
 const LSTART=[0,14,25],LN=39;
 function lightOn(q,t){
   const beat=t*BPM/60,flash=Math.pow(1-(beat%1),2.2);
-  const u=(t+4)%11,RUN=2.6;
-  if(u<RUN){const head=u/RUN*(LN+8)-4;let c=0;for(const h of [head,head-LN/3,head-2*LN/3])c=Math.max(c,Math.exp(-((q-h)**2)/2.5));return .08+.92*c*(.6+.4*flash)}
-  return .2+.8*flash;
+  const u=(t+4)%6,RUN=1.8; // a quick chase every 6 seconds, twice round
+  if(u<RUN){const head=(u/RUN*2*LN)%LN;let c=0;for(const h of [head,head+LN/3,head+2*LN/3])for(const w of [-LN,0,LN])c=Math.max(c,Math.exp(-((q-h-w)**2)/3));return .35+.65*Math.max(c,.3*flash)}
+  return .45+.55*flash;
 }
 function armOf(p,t,k){ // how far someone's hand is up, and whether they're unsure
   let raise=0,hes=false;
