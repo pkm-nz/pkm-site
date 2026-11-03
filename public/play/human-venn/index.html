@@ -360,7 +360,7 @@ function caption(t){
 }
 
 /* ---------- frame ---------- */
-let brDir=-2.4; // at rest the quiff points up and to the left
+let brDir=Math.atan2(372-600,740-1110); // starts facing the crowd
 function render(t){
   ctx.setTransform(scale,0,0,scale,0,0);
   ctx.drawImage(grass,0,0);
@@ -413,8 +413,11 @@ function render(t){
   const bx=br.x,by=br.y;
   // which way she is heading, for the quiff (measured a moment earlier on the timeline, so scrubbing works too)
   const pb=brenda(t-.08,people.map((_,i)=>posAt(i,t-.08))),dx=bx-pb.x,dy=by-pb.y,spd=Math.hypot(dx,dy)/.08;
-  if(spd>8)brDir=Math.atan2(dy,dx);
-  figure(bx,by,'Brenda','#5a3f6e','#e8551c',t,{dir:brDir,speed:spd});
+  // walking: face where she's going; standing in her corner: turn to face the crowd and dance a little
+  const want=spd>8?Math.atan2(dy,dx):Math.atan2(CY-by,CX-bx);
+  let turn=want-brDir;turn=Math.atan2(Math.sin(turn),Math.cos(turn));brDir+=turn*Math.min(1,.18);
+  const still=spd>8?0:1,beatB=t*BPM/60*Math.PI;
+  figure(bx+Math.sin(beatB)*1.6*still,by+Math.abs(Math.cos(beatB))*-1.2*still,'Brenda','#5a3f6e','#e8551c',t,{dir:brDir,speed:spd});
   drawCard(t);
   caption(t);
 }
