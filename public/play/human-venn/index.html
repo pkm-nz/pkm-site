@@ -305,6 +305,11 @@ function figure(x,y,label,cloth,hair,t,q){
     ctx.strokeStyle='rgba(255,220,170,.55)';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(1,-1);ctx.quadraticCurveTo(len*.6,-3+wob*.6,len+1,-1.2+wob);ctx.stroke();
     ctx.restore();
     ctx.fillStyle='#e8551c';ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.fill();
+    // her blonde fringe at the front, sweeping off to one side
+    ctx.save();ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.clip();ctx.translate(-1,0);ctx.rotate(q.dir);
+    ctx.fillStyle='#f3dfa2';ctx.beginPath();ctx.ellipse(2.8,-.6,3.6,4.6,-.35,0,6.28);ctx.fill();
+    ctx.strokeStyle='rgba(200,160,90,.7)';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(.6,-3.2);ctx.quadraticCurveTo(3,-1.5,4.2,2.2);ctx.stroke();
+    ctx.restore();
   }
   ctx.restore();ctx.font='500 13px Archivo, sans-serif';ctx.fillStyle='rgba(232,238,229,.75)';ctx.textAlign='center';ctx.fillText(label,x,y+28);
 }
