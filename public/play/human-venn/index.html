@@ -376,6 +376,14 @@ function caption(t){
 
 /* ---------- frame ---------- */
 let brDir=Math.atan2(372-600,740-1110); // starts facing the crowd
+// party lights: flash on every beat, and every so often a pulse races round all three strings
+const LSTART=[0,14,25],LN=39;
+function lightOn(q,t){
+  const beat=t*BPM/60,flash=Math.pow(1-(beat%1),2.2);
+  const u=(t+4)%11,RUN=2.6;
+  if(u<RUN){const head=u/RUN*(LN+8)-4;let c=0;for(const h of [head,head-LN/3,head-2*LN/3])c=Math.max(c,Math.exp(-((q-h)**2)/2.5));return .08+.92*c*(.6+.4*flash)}
+  return .2+.8*flash;
+}
 function armOf(p,t,k){ // how far someone's hand is up, and whether they're unsure
   let raise=0,hes=false;
   if(k>=1&&t<T.count){const u=t-qT(k),start=1+p.delay*(.5+.25*k);
@@ -397,7 +405,7 @@ function render(t){
   LIGHTS.forEach(([n,at],k)=>{
     ctx.globalAlpha=1;ctx.strokeStyle='rgba(255,255,255,.12)';ctx.beginPath();
     for(let i=0;i<n;i++){const [x,y]=at(i);i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
-    for(let i=0;i<n;i++){const [x,y]=at(i),j=i+k*14,on=.5+.5*Math.sin(t*3+j);ctx.fillStyle=['#ff8a1f','#a56bff','#3d8bff','#35d07f','#ffd60a'][j%5];ctx.globalAlpha=.35+.5*on;ctx.beginPath();ctx.arc(x,y,4,0,6.28);ctx.fill()}
+    for(let i=0;i<n;i++){const [x,y]=at(i),j=i+k*14,on=lightOn(LSTART[k]+i,t);ctx.fillStyle=['#ff8a1f','#a56bff','#3d8bff','#35d07f','#ffd60a'][j%5];ctx.globalAlpha=.18+.82*on;ctx.beginPath();ctx.arc(x,y,3.4+2*on,0,6.28);ctx.fill();if(on>.6){ctx.globalAlpha=(on-.6)*.6;ctx.beginPath();ctx.arc(x,y,10,0,6.28);ctx.fill()}}
   });
   ctx.globalAlpha=1;
 
@@ -527,7 +535,7 @@ async function buildParty(){
   const poleMat=new THREE.MeshLambertMaterial({color:'#2a2f2c'}),wireMat=new THREE.LineBasicMaterial({color:'#55605a'});
   STR.forEach(([n,at],k)=>{const pts=[];
     for(let i=0;i<n;i++){const [x,z]=to3(...at(i)),y=2.7-.18*Math.sin(Math.PI*(i%4)/4);pts.push(new THREE.Vector3(x,y,z));
-      const j=i+k*14,b=new THREE.Mesh(new THREE.SphereGeometry(.07,10,8),new THREE.MeshBasicMaterial({color:LC[j%5]}));b.position.set(x,y-.06,z);b.userData={j,c:new THREE.Color(LC[j%5])};scene.add(b);bulbs.push(b)}
+      const j=i+k*14,b=new THREE.Mesh(new THREE.SphereGeometry(.07,10,8),new THREE.MeshBasicMaterial({color:LC[j%5]}));b.position.set(x,y-.06,z);b.userData={j,q:LSTART[k]+i,c:new THREE.Color(LC[j%5])};scene.add(b);bulbs.push(b)}
     scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),wireMat));
     [pts[0],pts[pts.length-1]].forEach(q=>{const pole=new THREE.Mesh(new THREE.CylinderGeometry(.04,.05,2.8,8),poleMat);pole.position.set(q.x,1.4,q.z);scene.add(pole)})});
   // people: simple 3D versions of the drawn figures
@@ -593,7 +601,7 @@ async function buildParty(){
     // the current card, copied from the drawing
     cardX.drawImage(cv,48*scale,70*scale,300*scale,212*scale,0,0,600,424);cardT.needsUpdate=true;
     // lights twinkle
-    bulbs.forEach(b=>{const on=.5+.5*Math.sin(t*3+b.userData.j);b.material.color.copy(b.userData.c).multiplyScalar(.45+.8*on)});
+    bulbs.forEach(b=>{const on=lightOn(b.userData.q,t);b.material.color.copy(b.userData.c).multiplyScalar(.2+1.1*on);b.scale.setScalar(.8+.6*on)});
     // Sam's moment
     const sa=t>=T.winner?clamp((t-T.winner)/1.5):0;spot.intensity=sa*30;if(P[SAM]){const [sx,sz]=to3(...P[SAM]);spot.position.set(sx,6,sz);spot.target.position.set(sx,0,sz)}
     // you: dancing along with everyone, eyes at head height
