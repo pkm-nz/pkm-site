@@ -293,9 +293,19 @@ function person(p,x,y,t,o){
   ctx.fillStyle=p.hair;ctx.beginPath();ctx.arc(-.9,0,4.2,0,6.28);ctx.fill();
   ctx.restore();
 }
-function figure(x,y,label,cloth,hair,t){
+function figure(x,y,label,cloth,hair,t,q){
   ctx.save();ctx.translate(x,y);ctx.scale(1.4,1.4);ctx.fillStyle=cloth;ctx.beginPath();ctx.ellipse(0,0,10,6.4,0,0,6.28);ctx.fill();
   ctx.fillStyle='#e0ac85';ctx.beginPath();ctx.arc(0,0,5,0,6.28);ctx.fill();ctx.fillStyle=hair;ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.fill();
+  if(q){ // Brenda's famous red quiff: streams out behind her when she walks, wobbles when she stops
+    const sp=Math.min(1,q.speed/120),a=q.dir+Math.PI+Math.sin(t*9)*.12*(1-sp),len=11+9*sp,wob=Math.sin(t*14)*1.6*(.4+sp);
+    ctx.save();ctx.rotate(a);ctx.scale(1.4,1.4);
+    const g=ctx.createLinearGradient(0,0,len+4,0);g.addColorStop(0,'#c2410c');g.addColorStop(.55,'#f97316');g.addColorStop(1,'#ffb347');
+    ctx.fillStyle=g;ctx.strokeStyle='rgba(0,0,0,.45)';ctx.lineWidth=.8;
+    ctx.beginPath();ctx.moveTo(-2,-4.4);ctx.bezierCurveTo(len*.4,-7,len*.8,-6+wob,len+4,-1.5+wob);ctx.bezierCurveTo(len*.75,1+wob,len*.4,4.5,-2,4.4);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.strokeStyle='rgba(255,220,170,.55)';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(1,-1);ctx.quadraticCurveTo(len*.6,-3+wob*.6,len+1,-1.2+wob);ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle='#e8551c';ctx.beginPath();ctx.arc(-1,0,4.6,0,6.28);ctx.fill();
+  }
   ctx.restore();ctx.font='500 13px Archivo, sans-serif';ctx.fillStyle='rgba(232,238,229,.75)';ctx.textAlign='center';ctx.fillText(label,x,y+28);
 }
 function cardAt(t){let i=0;for(let j=0;j<CARDS.length;j++)if(t>=CARDS[j][0])i=j;return i}
@@ -350,6 +360,7 @@ function caption(t){
 }
 
 /* ---------- frame ---------- */
+let brDir=-2.4; // at rest the quiff points up and to the left
 function render(t){
   ctx.setTransform(scale,0,0,scale,0,0);
   ctx.drawImage(grass,0,0);
@@ -400,7 +411,10 @@ function render(t){
   for(let b=0;b<7;b++){if(t>=(b===0?13.8:qT(b)+3.8))continue;ctx.strokeStyle=BANDS[b].c;ctx.lineWidth=2.4;ctx.beginPath();ctx.ellipse(1150+(b%3)*6,620-b*4,16,6,.3*b,0,6.28);ctx.stroke()}
   if(br.carry>=0&&br.coil>0){ctx.strokeStyle=BANDS[br.carry].c;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(br.x+11,br.y-4,4+7*br.coil,2+3*br.coil,.5,0,6.28);ctx.stroke()}
   const bx=br.x,by=br.y;
-  figure(bx,by,'Brenda','#5a3f6e','#8a6234',t);
+  // which way she is heading, for the quiff (measured a moment earlier on the timeline, so scrubbing works too)
+  const pb=brenda(t-.08,people.map((_,i)=>posAt(i,t-.08))),dx=bx-pb.x,dy=by-pb.y,spd=Math.hypot(dx,dy)/.08;
+  if(spd>8)brDir=Math.atan2(dy,dx);
+  figure(bx,by,'Brenda','#5a3f6e','#e8551c',t,{dir:brDir,speed:spd});
   drawCard(t);
   caption(t);
 }
