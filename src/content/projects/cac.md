@@ -31,7 +31,16 @@ facts:
   - label: Finished
     value: October 2026
 gallery: []
-comments: []
+further: ''
+comments:
+  - name: Dave
+    date: 2026-11-04
+    text: Impressive. Can you add a question mark? (I typed in "Is it art?")
+    artist: false
+  - name: Paul
+    date: 2026-11-04
+    text: Happy to oblige. Question mark has been added.
+    artist: true
 draft: false
 accent: '#3b3f44'
 accentDark: '#c4c4c4'
