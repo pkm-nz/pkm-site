@@ -50,6 +50,12 @@ gallery:
   - image: /uploads/p1030595.webp
     video: ''
     caption: The top layer, giving the darkest tone. Scarily thin in places.
+further: |-
+  Before the Chimp, I made a smaller test sculpture. I based it on the high-contrast black and white photo of Nick Cave on the cover of _The Boatman’s Call_, which had just the right tonal balance to test the concept: would four layers of tone make a convincing image, and what would the three-dimensional effect be like?
+
+  It worked, so next I had to choose a subject for a much bigger sculpture. I’d used a face for the test because I wanted a single, instantly recognisable object with enough complexity in its shape to give the effect. What I hadn’t foreseen is that when people are shown a human face, especially like this, they try to work out who it is. Suddenly their attention shifts from deciphering whether they’re looking at a two- or three-dimensional object, and how it’s done, to matching the face against the ones stored in their memory. It didn’t even matter if the face wasn’t famous; people still did it. That wasn’t what I wanted.
+
+  My solution was an anonymous face, human or close to it. A chimp’s face was perfect. After all, how many chimps can you recognise? The extra detail and depth in a chimp’s face compared with a human’s was a bonus.
 comments:
   - name: Steve
     date: 2026-10-31
